@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Questions</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #ece9e6, #ffffff);
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+            font-size: 1.8em;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .container {
+            width: 80%;
+            margin: 30px auto;
+            background: #fff;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.2em;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .highlight a {
+            color: #000;
+            text-decoration: none;
+        }
+        h2 {
+            color: #34495e;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .pdf-links a {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: 0.3s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+        }
+        .pdf-links a i {
+            margin-right: 10px;
+            color: #f39c12;
+        }
+        .pdf-links a:hover {
+            background-color: #f0f8ff;
+            color: #1c5980;
+            transform: translateX(5px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+        }
+        .next-btn {
+            margin-top: 25px;
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .next-btn:hover {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    Previous Questions
+</header>
+
+<div class="container" id="subject-container">
+    <div class="highlight">
+        <a href="https://www.notion.so/Mid-Term-Suggestions-3107af96c1c880caae06d0754c3bd259" target="_blank">
+            <i class="fa-solid fa-lightbulb"></i> MID TERM SUGGESTIONS
+        </a>
+    </div>
+
+    <h2 id="subject-title">EDC</h2>
+    <div class="pdf-links" id="pdf-links">
+        <a href="EDC1.pdf" target="_blank"><i class="fa-solid fa-file-pdf"></i> EDC PDF 1</a>
+        <a href="EDC2.pdf" target="_blank"><i class="fa-solid fa-file-pdf"></i> EDC PDF 2</a>
+        <a href="EDC3.pdf" target="_blank"><i class="fa-solid fa-file-pdf"></i> EDC PDF 3</a>
+        <a href="EDC4.pdf" target="_blank"><i class="fa-solid fa-file-pdf"></i> EDC PDF 4</a>
+    </div>
+    <a href="#" class="next-btn" onclick="nextSubject()">Next Subject</a>
+</div>
+
+<script>
+    const subjects = [
+        { name: "EDC", pdfs: ["EDC1.pdf", "EDC2.pdf", "EDC3.pdf", "EDC4.pdf"] },
+        { name: "DLD", pdfs: ["DLD1.pdf", "DLD2.pdf", "DLD3.pdf", "DLD4.pdf"] },
+        { name: "DSA", pdfs: ["DSA1.pdf", "DSA2.pdf", "DSA3.pdf", "DSA4.pdf"] },
+        { name: "Math", pdfs: ["MATH1.pdf", "MATH2.pdf", "MATH3.pdf", "MATH4.pdf"] },
+        { name: "DBMS", pdfs: ["DBMS1.pdf", "DBMS2.pdf", "DBMS3.pdf", "DBMS4.pdf"] },
+    ];
+
+    let currentIndex = 0;
+
+    function nextSubject() {
+        currentIndex++;
+        if(currentIndex >= subjects.length) currentIndex = 0;
+
+        const subject = subjects[currentIndex];
+        document.getElementById("subject-title").innerText = subject.name;
+
+        const pdfLinksDiv = document.getElementById("pdf-links");
+        pdfLinksDiv.innerHTML = "";
+
+        subject.pdfs.forEach((pdf, index) => {
+            const a = document.createElement("a");
+            a.href = pdf;
+            a.target = "_blank";
+            a.innerHTML = `<i class="fa-solid fa-file-pdf"></i> ${subject.name} PDF ${index + 1}`;
+            pdfLinksDiv.appendChild(a);
+        });
+    }
+</script>
+
+</body>
+</html>
