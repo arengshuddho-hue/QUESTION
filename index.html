@@ -1,152 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Previous Questions</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #ece9e6, #ffffff);
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 25px 20px;
-            font-size: 1.8em;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-        .container {
-            width: 80%;
-            margin: 30px auto;
-            background: #fff;
-            padding: 25px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        .container:hover {
-            transform: translateY(-5px);
-        }
-        .highlight {
-            background-color: #ffeb3b;
-            padding: 15px;
-            font-weight: bold;
-            text-align: center;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            font-size: 1.2em;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .highlight a {
-            color: #000;
-            text-decoration: none;
-        }
-        h2 {
-            color: #34495e;
-            margin-bottom: 15px;
-            text-align: center;
-            letter-spacing: 1px;
-        }
-        .pdf-links a {
-            display: flex;
-            align-items: center;
-            margin: 12px 0;
-            color: #2980b9;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 10px 15px;
-            border-radius: 8px;
-            transition: 0.3s;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-        }
-        .pdf-links a i {
-            margin-right: 10px;
-            color: #f39c12;
-        }
-        .pdf-links a:hover {
-            background-color: #f0f8ff;
-            color: #1c5980;
-            transform: translateX(5px);
-            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
-        }
-        .next-btn {
-            margin-top: 25px;
-            display: inline-block;
-            padding: 12px 25px;
-            background: linear-gradient(45deg, #27ae60, #2ecc71);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.3s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .next-btn:hover {
-            background: linear-gradient(45deg, #2ecc71, #27ae60);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.25);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Previous Questions</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',sans-serif;min-height:100vh;transition:background 0.3s,color 0.3s;}
+  body.dark{background:#12121f;color:#e8e8f0;}
+  body.light{background:#f0f0f8;color:#1a1a2e;}
+ 
+  header{padding:26px 20px;text-align:center;border-bottom:2px solid #e2b96f;transition:background 0.3s;position:relative;}
+  body.dark header{background:#1c1c2e;}
+  body.light header{background:#ffffff;}
+  header h1{font-size:1.7em;font-weight:600;letter-spacing:1px;margin-bottom:4px;}
+  body.dark header h1{color:#fff;}
+  body.light header h1{color:#1a1a2e;}
+  header p{font-size:0.78em;font-family:monospace;}
+  body.dark header p{color:#7070a0;}
+  body.light header p{color:#8080b0;}
+ 
+  .theme-btn{position:absolute;top:20px;right:20px;background:none;border:1.5px solid #e2b96f;
+    border-radius:50px;padding:7px 14px;cursor:pointer;font-size:0.78em;font-weight:600;
+    color:#e2b96f;letter-spacing:1px;transition:all 0.2s;}
+  .theme-btn:hover{background:#e2b96f;color:#12121f;}
+ 
+  .body{padding:28px 20px 48px;max-width:900px;margin:0 auto;}
+ 
+  .section-label{font-size:0.7em;font-family:monospace;color:#5a5a80;letter-spacing:3px;
+    text-transform:uppercase;margin:22px 0 14px;display:flex;align-items:center;gap:10px;}
+  .section-label::after{content:'';flex:1;height:1px;}
+  body.dark .section-label::after{background:rgba(255,255,255,0.07);}
+  body.light .section-label::after{background:rgba(0,0,0,0.1);}
+ 
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:14px;margin-bottom:6px;}
+  @media(max-width:480px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @media(min-width:481px) and (max-width:700px){.grid{grid-template-columns:repeat(3,1fr);}}
+ 
+  .card{border-radius:14px;padding:28px 14px 22px;text-align:center;
+    border:1.5px solid rgba(255,255,255,0.06);cursor:pointer;text-decoration:none;display:block;
+    transition:background 0.2s,border-color 0.2s,transform 0.2s;}
+  body.dark .card{background:#1e1e32;border-color:rgba(255,255,255,0.06);}
+  body.light .card{background:#ffffff;border-color:rgba(0,0,0,0.08);}
+  body.dark .card:hover{background:#26263e;border-color:rgba(226,185,111,0.35);transform:translateY(-5px);}
+  body.light .card:hover{background:#f8f4ff;border-color:rgba(226,185,111,0.55);transform:translateY(-5px);}
+  .card .icon{font-size:2em;color:#6060a0;margin-bottom:13px;transition:color 0.2s;}
+  .card:hover .icon{color:#e2b96f;}
+  .card .name{font-size:1em;font-weight:600;margin-bottom:5px;}
+  body.dark .card .name{color:#e8e8f0;}
+  body.light .card .name{color:#1a1a2e;}
+  .card .code{font-size:0.72em;font-family:monospace;color:#5a5a80;}
+ 
+  /* Suggestions card */
+  .card.sug{border-color:#e2b96f;}
+  body.dark .card.sug{background:#1a1408;}
+  body.light .card.sug{background:#fffbf0;}
+  body.dark .card.sug:hover{background:#261e0a;}
+  body.light .card.sug:hover{background:#fff5d6;}
+  .card.sug .icon{color:#e2b96f;}
+  body.dark .card.sug .name{color:#fff;}
+  body.light .card.sug .name{color:#5a3e00;}
+  .card.sug .code{color:#a07a30;}
+ 
+  /* Notes card */
+  .card.note{border-color:#4fc3f7;}
+  body.dark .card.note{background:#081520;}
+  body.light .card.note{background:#f0faff;}
+  body.dark .card.note:hover{background:#0c1e2e;}
+  body.light .card.note:hover{background:#daf3ff;}
+  .card.note .icon{color:#4fc3f7;}
+  body.dark .card.note .name{color:#fff;}
+  body.light .card.note .name{color:#004a6e;}
+  .card.note .code{color:#2a7a9a;}
+ 
+  /* Exam Routine card */
+  .card.routine{border-color:#7c4dff;}
+  body.dark .card.routine{background:#120a1f;}
+  body.light .card.routine{background:#f5f0ff;}
+  body.dark .card.routine:hover{background:#1e1030;}
+  body.light .card.routine:hover{background:#ece4ff;}
+  .card.routine .icon{color:#7c4dff;}
+  body.dark .card.routine .name{color:#fff;}
+  body.light .card.routine .name{color:#3a0099;}
+  .card.routine .code{color:#5a30b0;}
+ 
+  /* Modal / Overlay */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(5,5,15,0.88);
+    backdrop-filter:blur(6px);z-index:999;align-items:center;justify-content:center;padding:16px;}
+  .overlay.on{display:flex;}
+  .modal{border:1.5px solid rgba(255,255,255,0.09);border-radius:18px;
+    padding:30px 26px 26px;width:100%;max-width:480px;position:relative;
+    animation:mi 0.22s cubic-bezier(.16,1,.3,1);max-height:90vh;overflow-y:auto;}
+  body.dark .modal{background:#1e1e32;}
+  body.light .modal{background:#ffffff;border-color:rgba(0,0,0,0.1);}
+  @keyframes mi{from{opacity:0;transform:scale(0.93) translateY(16px);}to{opacity:1;transform:none;}}
+  .modal-close{position:absolute;top:12px;right:14px;background:none;border:none;
+    color:#5a5a80;font-size:1.2em;cursor:pointer;}
+  .modal-close:hover{color:#f07070;}
+  .modal h3{font-size:1.2em;font-weight:600;color:#e2b96f;margin-bottom:4px;}
+  .modal .sub{font-size:0.72em;font-family:monospace;color:#5a5a80;margin-bottom:20px;}
+ 
+  .pdf-list{display:flex;flex-direction:column;gap:10px;}
+  .pdf-item{display:flex;align-items:center;gap:12px;padding:12px 14px;
+    border:1px solid rgba(255,255,255,0.07);border-radius:10px;
+    text-decoration:none;font-size:0.9em;font-weight:500;
+    transition:background 0.2s,border-color 0.2s,transform 0.18s;}
+  body.dark .pdf-item{background:rgba(255,255,255,0.04);color:#e8e8f0;}
+  body.light .pdf-item{background:rgba(0,0,0,0.03);color:#1a1a2e;border-color:rgba(0,0,0,0.1);}
+  .pdf-item:hover{background:rgba(226,185,111,0.1);border-color:rgba(226,185,111,0.35);transform:translateX(4px);}
+  .pdf-item.pdf-type i{color:#e2b96f;}
+  .pdf-item.img-type i{color:#7c4dff;}
+  .pdf-num{margin-left:auto;font-size:0.7em;font-family:monospace;color:#5a5a80;}
+ 
+  .routine-img-wrap{border-radius:12px;overflow:hidden;border:1.5px solid rgba(124,77,255,0.3);}
+  .routine-img-wrap img{width:100%;display:block;}
+ 
+  .empty-state{text-align:center;padding:24px 12px;color:#5a5a80;font-size:0.85em;line-height:1.6;}
+  .empty-state i{font-size:1.8em;margin-bottom:10px;display:block;opacity:0.4;}
+ 
+  footer{text-align:center;padding:20px;font-size:0.72em;
+    border-top:1px solid rgba(255,255,255,0.05);font-family:monospace;}
+  body.dark footer{color:#3a3a60;}
+  body.light footer{color:#8080a0;border-color:rgba(0,0,0,0.07);}
+</style>
 </head>
-<body>
-
+<body class="dark">
+ 
 <header>
-    Previous Questions
+  <button class="theme-btn" onclick="toggle_theme()" id="theme-btn">☀ Light</button>
+  <h1>Previous Questions</h1>
+  <p>// select a subject to view past papers</p>
 </header>
-
-<div class="container" id="subject-container">
-    <div class="highlight">
-        <a href="https://www.notion.so/Mid-Term-Suggestions-3107af96c1c880caae06d0754c3bd259" target="_blank">
-            <i class="fa-solid fa-lightbulb"></i> CLICK HERE FOR MID TERM SUGGESTIONS
-        </a>
+ 
+<div class="body">
+ 
+  <div class="section-label">resources</div>
+  <div class="grid">
+    <a class="card sug" href="https://share.note.sx/14r962de#t3T4ucxZrbzqzS+BNdBo81JbW1fG77MDvk6PA8ifN6Q" target="_blank">
+      <div class="icon"><i class="fa-solid fa-lightbulb"></i></div>
+      <div class="name">Suggestions</div>
+      <div class="code">Final Term</div>
+    </a>
+    <div class="card note" onclick="open_modal('Notes','All Subjects','NOTES')">
+      <div class="icon"><i class="fa-solid fa-book-open"></i></div>
+      <div class="name">Notes</div>
+      <div class="code">All Subjects</div>
     </div>
-
-    <h2 id="subject-title">EDC</h2>
-    <div class="pdf-links" id="pdf-links">
-        <a href="EDC1.pdf" target="_blank"><i class="fa-solid fa-file-pdf"></i> EDC PDF 1</a>
-        <a href="EDC2.pdf" target="_blank"><i class="fa-solid fa-file-pdf"></i> EDC PDF 2</a>
-        <a href="EDC3.pdf" target="_blank"><i class="fa-solid fa-file-pdf"></i> EDC PDF 3</a>
-        <a href="EDC4.pdf" target="_blank"><i class="fa-solid fa-file-pdf"></i> EDC PDF 4</a>
+    <div class="card routine" onclick="open_modal('Exam Routine','Current Semester','ROUTINE')">
+      <div class="icon"><i class="fa-solid fa-calendar-days"></i></div>
+      <div class="name">Exam Routine</div>
+      <div class="code">Current Semester</div>
     </div>
-    <a href="#" class="next-btn" onclick="nextSubject()">Next Subject</a>
+  </div>
+ 
+  <div class="section-label">subjects</div>
+  <div class="grid">
+    <div class="card" onclick="open_modal('DSA 1','CSE0613211/212','DSA')">
+      <div class="icon"><i class="fa-solid fa-sitemap"></i></div>
+      <div class="name">DSA 1</div>
+      <div class="code">CSE0613211/212</div>
+    </div>
+    <div class="card" onclick="open_modal('DLD','CSE0611215/216','DLD')">
+      <div class="icon"><i class="fa-solid fa-microchip"></i></div>
+      <div class="name">DLD</div>
+      <div class="code">CSE0611215/216</div>
+    </div>
+    <div class="card" onclick="open_modal('DBMS','CSE0612215/216','DBMS')">
+      <div class="icon"><i class="fa-solid fa-database"></i></div>
+      <div class="name">DBMS</div>
+      <div class="code">CSE0612215/216</div>
+    </div>
+    <div class="card" onclick="open_modal('CGLAVA','MATH0541211','CGLAMATH')">
+      <div class="icon"><i class="fa-solid fa-square-root-variable"></i></div>
+      <div class="name">CGLAVA</div>
+      <div class="code">MATH0541211</div>
+    </div>
+    <div class="card" onclick="open_modal('Electronics','EEE0714211/212','EDC')">
+      <div class="icon"><i class="fa-solid fa-plug"></i></div>
+      <div class="name">Electronics</div>
+      <div class="code">EEE0714211/212</div>
+    </div>
+  </div>
+ 
 </div>
-
+ 
+<div class="overlay" id="overlay" onclick="close_outside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="close_modal()"><i class="fa-solid fa-xmark"></i></button>
+    <h3 id="m-title"></h3>
+    <div class="sub" id="m-code"></div>
+    <div class="pdf-list" id="m-pdfs"></div>
+  </div>
+</div>
+ 
+<footer>&copy; 2025 — Previous Questions Portal</footer>
+ 
 <script>
-    const subjects = [
-        { name: "EDC", pdfs: ["EDC1.pdf", "EDC2.pdf", "EDC3.pdf", "EDC4.pdf"] },
-        { name: "DLD", pdfs: ["DLD1.pdf", "DLD2.pdf", "DLD3.pdf", "DLD4.pdf"] },
-        { name: "DSA", pdfs: ["DSA1.pdf", "DSA2.pdf", "DSA3.pdf", "DSA4.pdf"] },
-        { name: "Math", pdfs: ["MATH1.pdf", "MATH2.pdf", "MATH3.pdf", "MATH4.pdf"] },
-        { name: "DBMS", pdfs: ["DBMS1.pdf", "DBMS2.pdf", "DBMS3.pdf", "DBMS4.pdf"] },
-    ];
-
-    let currentIndex = 0;
-
-    function nextSubject() {
-        currentIndex++;
-        if(currentIndex >= subjects.length) currentIndex = 0;
-
-        const subject = subjects[currentIndex];
-        document.getElementById("subject-title").innerText = subject.name;
-
-        const pdfLinksDiv = document.getElementById("pdf-links");
-        pdfLinksDiv.innerHTML = "";
-
-        subject.pdfs.forEach((pdf, index) => {
-            const a = document.createElement("a");
-            a.href = pdf;
-            a.target = "_blank";
-            a.innerHTML = `<i class="fa-solid fa-file-pdf"></i> ${subject.name} PDF ${index + 1}`;
-            pdfLinksDiv.appendChild(a);
-        });
-    }
+let isDark = true;
+ 
+function toggle_theme(){
+  isDark = !isDark;
+  document.body.classList.toggle('dark', isDark);
+  document.body.classList.toggle('light', !isDark);
+  document.getElementById('theme-btn').textContent = isDark ? '☀ Light' : '🌙 Dark';
+}
+ 
+const data={
+  DSA:['DSA1.pdf','DSA2.pdf','DSA3.pdf','DSA4.pdf'],
+  DLD:['DLD1.pdf','DLD2.pdf','DLD3.pdf','DLD4.pdf'],
+  DBMS:['DBMS1.pdf','DBMS2.pdf','DBMS3.pdf','DBMS4.pdf'],
+  CGLAMATH:['CGLAMATH1.pdf','CGLAMATH2.pdf','CGLAMATH3.pdf','CGLAMATH4.pdf'],
+  EDC:['EDC1.pdf','EDC2.pdf','EDC3.pdf','EDC4.pdf'],
+  NOTES:['EDC.pdf','math.pdf'],
+  ROUTINE:['rr.png'],
+};
+ 
+const labels={
+  DSA:'DSA 1',DLD:'DLD',DBMS:'DBMS',
+  CGLAMATH:'CGLAVA',EDC:'Electronics',NOTES:'Notes',ROUTINE:'Exam Routine'
+};
+ 
+function open_modal(name,code,key){
+  document.getElementById('m-title').textContent=name;
+  document.getElementById('m-code').textContent=code;
+  const list=document.getElementById('m-pdfs');
+  list.innerHTML='';
+  const files=data[key]||[];
+ 
+  if(!files.length){
+    list.innerHTML=`<div class="empty-state"><i class="fa-regular fa-folder-open"></i>Kono file nai ekhono.<br>Shighroi add hobe!</div>`;
+  } else if(key==='ROUTINE'){
+    files.forEach((f,i)=>{
+      const isImg=/\.(jpg|jpeg|png|gif|webp)$/i.test(f);
+      if(isImg){
+        const wrap=document.createElement('div');
+        wrap.className='routine-img-wrap';
+        const img=document.createElement('img');
+        img.src=f;
+        img.alt='Exam Routine';
+        img.onerror=()=>{
+          wrap.innerHTML=`<div class="empty-state" style="padding:16px"><i class="fa-solid fa-image"></i>"${f}" — file ta same folder e rakho.</div>`;
+        };
+        wrap.appendChild(img);
+        list.appendChild(wrap);
+        const dlLink=document.createElement('a');
+        dlLink.href=f; dlLink.target='_blank'; dlLink.className='pdf-item img-type';
+        dlLink.style.marginTop='8px';
+        dlLink.innerHTML=`<i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Screen <span class="pdf-num">0${i+1}</span>`;
+        list.appendChild(dlLink);
+      } else {
+        const a=document.createElement('a');
+        a.href=f; a.target='_blank'; a.className='pdf-item pdf-type';
+        a.innerHTML=`<i class="fa-solid fa-file-pdf"></i>${labels[key]} — File <span class="pdf-num">0${i+1}</span>`;
+        list.appendChild(a);
+      }
+    });
+  } else {
+    files.forEach((pdf,i)=>{
+      const a=document.createElement('a');
+      a.href=pdf; a.target='_blank'; a.className='pdf-item pdf-type';
+      a.innerHTML=`<i class="fa-solid fa-file-pdf"></i>${labels[key]||name} — Past Paper <span class="pdf-num">0${i+1}</span>`;
+      list.appendChild(a);
+    });
+  }
+  document.getElementById('overlay').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+ 
+function close_modal(){
+  document.getElementById('overlay').classList.remove('on');
+  document.body.style.overflow='';
+}
+function close_outside(e){if(e.target.id==='overlay')close_modal();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close_modal();});
 </script>
-
 </body>
 </html>
