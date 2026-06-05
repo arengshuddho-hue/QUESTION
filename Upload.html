@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSE-57 | File Upload</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/*
+  ════════════════════════════════════════════════
+  SETUP — Cloudinary (FREE) use korte hobe
+  ════════════════════════════════════════════════
+  1. https://cloudinary.com/users/register_free — free account kholo
+  2. Dashboard theke "Cloud Name" copy koro
+  3. Settings > Upload > "Add upload preset" > Mode: Unsigned
+  4. Preset name copy koro
+  5. Niche CLOUDINARY_CLOUD_NAME & CLOUDINARY_UPLOAD_PRESET e boshao
+ 
+  ADMIN PANEL:
+  - URL: tomar-site.com/upload.html#admin
+  - Password: niche ADMIN_PASSWORD e set koro
+  ════════════════════════════════════════════════
+*/
+ 
+/* ══ CONFIG — EKHANE SHUDHU TUMI CHANGE KORBE ══ */
+/* NOTE: Ei 3ta value set korle system ready */
+ 
+*{margin:0;padding:0;box-sizing:border-box;}
+ 
+:root{
+  --bg:#0a0a14;
+  --surface:#11111e;
+  --surface2:#181828;
+  --border:rgba(255,255,255,0.07);
+  --gold:#e2b96f;
+  --gold-dim:rgba(226,185,111,0.1);
+  --gold-border:rgba(226,185,111,0.3);
+  --green:#34d399;
+  --green-dim:rgba(52,211,153,0.1);
+  --red:#f87171;
+  --red-dim:rgba(248,113,113,0.1);
+  --text:#e2e0f0;
+  --muted:#4a4870;
+  --accent:#a78bfa;
+}
+ 
+body{
+  font-family:'Syne',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+ 
+/* ── BG MESH ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 50% 40% at 20% 20%, rgba(167,139,250,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 80% 80%, rgba(226,185,111,0.04) 0%, transparent 60%);
+  pointer-events:none;z-index:0;
+}
+ 
+.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:40px 20px 80px;}
+ 
+/* ── HEADER ── */
+.top{
+  text-align:center;margin-bottom:40px;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'DM Mono',monospace;font-size:0.65em;letter-spacing:2px;
+  color:var(--muted);text-transform:uppercase;
+  border:1px solid var(--border);border-radius:20px;
+  padding:5px 14px;margin-bottom:18px;
+}
+.badge i{color:var(--gold);font-size:0.9em;}
+h1{font-size:2em;font-weight:800;letter-spacing:-1px;line-height:1.2;margin-bottom:8px;}
+h1 span{color:var(--gold);}
+.sub-text{font-size:0.78em;color:var(--muted);font-family:'DM Mono',monospace;}
+ 
+/* ── CARD ── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:28px;
+  margin-bottom:16px;
+}
+ 
+/* ── FORM ELEMENTS ── */
+.field{margin-bottom:20px;}
+label{
+  display:block;
+  font-size:0.7em;font-family:'DM Mono',monospace;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px;
+}
+label i{margin-right:6px;color:var(--gold);}
+ 
+select,input[type=text],input[type=password]{
+  width:100%;padding:13px 16px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  color:var(--text);
+  font-family:'Syne',sans-serif;font-size:0.9em;
+  outline:none;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  appearance:none;
+}
+select:focus,input:focus{
+  border-color:var(--gold-border);
+  box-shadow:0 0 0 3px var(--gold-dim);
+}
+select option{background:#1a1a2e;}
+ 
+/* ── FILE DROP ZONE ── */
+.drop-zone{
+  border:2px dashed var(--border);
+  border-radius:16px;
+  padding:36px 20px;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s;
+  position:relative;
+  overflow:hidden;
+}
+.drop-zone:hover,.drop-zone.drag{
+  border-color:var(--gold-border);
+  background:var(--gold-dim);
+}
+.drop-zone input[type=file]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+.drop-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:var(--gold-dim);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;font-size:1.3em;color:var(--gold);
+  transition:transform 0.2s;
+}
+.drop-zone:hover .drop-icon,.drop-zone.drag .drop-icon{transform:scale(1.1) rotate(-5deg);}
+.drop-text{font-size:0.88em;font-weight:600;margin-bottom:4px;}
+.drop-hint{font-size:0.65em;font-family:'DM Mono',monospace;color:var(--muted);}
+ 
+/* file selected state */
+.file-preview{
+  display:none;
+  align-items:center;gap:12px;
+  padding:12px 14px;
+  background:var(--surface2);border:1px solid var(--gold-border);
+  border-radius:12px;margin-top:12px;
+}
+.file-preview.show{display:flex;}
+.file-preview .fic{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--gold-dim);color:var(--gold);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.file-preview .fname{font-size:0.8em;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file-preview .fsize{font-size:0.63em;font-family:'DM Mono',monospace;color:var(--muted);}
+.file-preview .frem{
+  background:none;border:none;cursor:pointer;color:var(--muted);
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:0.85em;
+  transition:background 0.15s,color 0.15s;
+}
+.file-preview .frem:hover{background:var(--red-dim);color:var(--red);}
+ 
+/* ── SUBMIT BTN ── */
+.btn{
+  width:100%;padding:15px;
+  border-radius:14px;border:none;cursor:pointer;
+  font-family:'Syne',sans-serif;font-size:0.95em;font-weight:700;
+  letter-spacing:0.5px;
+  transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-gold{
+  background:linear-gradient(135deg,#e2b96f,#c9983a);
+  color:#0a0800;
+}
+.btn-gold:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 30px rgba(226,185,111,0.3);}
+.btn-gold:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+ 
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
+  padding:12px 22px;border-radius:40px;
+  font-size:0.82em;font-weight:600;font-family:'DM Mono',monospace;
+  display:flex;align-items:center;gap:10px;
+  z-index:9999;
+  transition:transform 0.35s cubic-bezier(.16,1,.3,1),opacity 0.3s;
+  opacity:0;white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.success{background:#0d2010;border:1px solid rgba(52,211,153,0.4);color:var(--green);}
+.toast.error{background:#1a0808;border:1px solid rgba(248,113,113,0.4);color:var(--red);}
+ 
+/* progress bar */
+.prog-wrap{display:none;margin-top:14px;}
+.prog-wrap.show{display:block;}
+.prog-bar-bg{background:var(--surface2);border-radius:20px;height:6px;overflow:hidden;}
+.prog-bar{height:100%;background:linear-gradient(90deg,#e2b96f,#34d399);border-radius:20px;width:0%;transition:width 0.3s;}
+.prog-text{font-size:0.62em;font-family:'DM Mono',monospace;color:var(--muted);margin-top:6px;text-align:center;}
+ 
+/* ════ ADMIN PANEL ════ */
+#admin-section{display:none;}
+#admin-section.show{display:block;}
+ 
+/* admin login */
+.admin-login{text-align:center;padding:20px 0;}
+.lock-ic{
+  width:64px;height:64px;border-radius:18px;
+  background:rgba(167,139,250,0.1);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5em;margin:0 auto 20px;
+}
+.admin-login h2{font-size:1.3em;font-weight:800;margin-bottom:6px;}
+.admin-login p{font-size:0.72em;font-family:'DM Mono',monospace;color:var(--muted);margin-bottom:24px;}
+ 
+.btn-purple{
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  color:#fff;
+}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(167,139,250,0.25);}
+ 
+/* admin panel content */
+#admin-content{display:none;}
+#admin-content.show{display:block;}
+ 
+.admin-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;flex-wrap:wrap;gap:12px;
+}
+.admin-header h2{font-size:1.2em;font-weight:800;}
+.tag{
+  font-size:0.6em;font-family:'DM Mono',monospace;
+  padding:4px 12px;border-radius:20px;letter-spacing:1px;
+  background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);color:var(--accent);
+}
+ 
+/* filter bar */
+.filter-bar{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;
+}
+.filter-btn{
+  font-family:'DM Mono',monospace;font-size:0.63em;letter-spacing:1px;
+  padding:6px 14px;border-radius:20px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--muted);cursor:pointer;
+  transition:all 0.15s;
+}
+.filter-btn.active,.filter-btn:hover{
+  border-color:var(--gold-border);background:var(--gold-dim);color:var(--gold);
+}
+ 
+/* submission item */
+.sub-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:16px;border-radius:14px;
+  background:var(--surface2);border:1px solid var(--border);
+  margin-bottom:10px;
+  transition:border-color 0.18s;
+}
+.sub-item:hover{border-color:var(--gold-border);}
+.sub-item .sic{
+  width:40px;height:40px;border-radius:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1em;
+}
+.sic.pdf{background:var(--gold-dim);color:var(--gold);}
+.sic.img{background:rgba(167,139,250,0.1);color:var(--accent);}
+.sic.other{background:var(--green-dim);color:var(--green);}
+ 
+.sub-info{flex:1;min-width:0;}
+.sub-name{font-size:0.85em;font-weight:700;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sub-meta{display:flex;gap:10px;flex-wrap:wrap;}
+.meta-tag{
+  font-size:0.58em;font-family:'DM Mono',monospace;letter-spacing:0.8px;
+  padding:2px 9px;border-radius:20px;
+}
+.meta-sub{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-border);}
+.meta-time{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
+ 
+.sub-actions{display:flex;gap:6px;flex-shrink:0;}
+.act-btn{
+  width:34px;height:34px;border-radius:9px;border:1px solid var(--border);
+  background:var(--surface);cursor:pointer;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;font-size:0.8em;
+  transition:all 0.15s;text-decoration:none;
+}
+.act-btn:hover{border-color:var(--gold-border);background:var(--gold-dim);color:var(--gold);}
+.act-btn.del:hover{border-color:rgba(248,113,113,0.4);background:var(--red-dim);color:var(--red);}
+ 
+/* empty */
+.empty{
+  text-align:center;padding:40px 20px;
+  font-size:0.78em;font-family:'DM Mono',monospace;color:var(--muted);line-height:1.8;
+}
+.empty i{font-size:2em;display:block;margin-bottom:12px;opacity:0.2;}
+ 
+/* stats bar */
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;
+}
+.stat{
+  background:var(--surface2);border:1px solid var(--border);border-radius:12px;
+  padding:14px;text-align:center;
+}
+.stat-num{font-size:1.5em;font-weight:800;color:var(--gold);}
+.stat-lbl{font-size:0.58em;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+ 
+/* logout btn */
+.logout-btn{
+  background:none;border:1px solid var(--border);
+  border-radius:10px;padding:7px 14px;
+  font-family:'DM Mono',monospace;font-size:0.62em;letter-spacing:1px;
+  color:var(--muted);cursor:pointer;
+  transition:all 0.15s;
+}
+.logout-btn:hover{border-color:rgba(248,113,113,0.4);color:var(--red);background:var(--red-dim);}
+ 
+/* ── UPLOAD VIEW / ADMIN toggle ── */
+#upload-section{}
+ 
+/* nav link */
+.nav-link{
+  text-align:center;margin-top:20px;
+  font-size:0.65em;font-family:'DM Mono',monospace;color:var(--muted);
+}
+.nav-link a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(167,139,250,0.3);}
+.nav-link a:hover{color:#c4b5fd;}
+ 
+@media(max-width:480px){
+  h1{font-size:1.6em;}
+  .stats{grid-template-columns:repeat(3,1fr);}
+  .stat-num{font-size:1.2em;}
+}
+</style>
+</head>
+<body>
+ 
+<div class="wrap">
+ 
+  <!-- ══ UPLOAD SECTION ══ -->
+  <div id="upload-section">
+    <div class="top">
+      <div class="badge"><i class="fa-solid fa-cloud-arrow-up"></i> CSE-57 Section C</div>
+      <h1>Share a <span>File</span></h1>
+      <p class="sub-text">PDF, photo, notes — sob kichu submit korte paro</p>
+    </div>
+ 
+    <div class="card">
+      <!-- Subject select -->
+      <div class="field">
+        <label><i class="fa-solid fa-book"></i>Subject</label>
+        <select id="subject">
+          <option value="">— Subject select koro —</option>
+          <option value="DSA">DSA 1 (CSE0613211/212)</option>
+          <option value="DLD">DLD (CSE0611215/216)</option>
+          <option value="DBMS">DBMS (CSE0612215/216)</option>
+          <option value="CGLAMATH">CGLAVA (MATH0541211)</option>
+          <option value="EDC">Electronics (EEE0714211/212)</option>
+          <option value="NOTES">General Notes</option>
+          <option value="ROUTINE">Exam Routine</option>
+          <option value="OTHER">Other</option>
+        </select>
+      </div>
+ 
+      <!-- Description (optional) -->
+      <div class="field">
+        <label><i class="fa-solid fa-pen"></i>Description <span style="color:var(--muted);font-size:0.85em">(optional)</span></label>
+        <input type="text" id="desc" placeholder="e.g. DSA Chapter 3 notes, Mid exam routine...">
+      </div>
+ 
+      <!-- File drop zone -->
+      <div class="field" style="margin-bottom:8px">
+        <label><i class="fa-solid fa-paperclip"></i>File</label>
+        <div class="drop-zone" id="drop-zone">
+          <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif">
+          <div class="drop-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <div class="drop-text">Click koro ba file drag koro</div>
+          <div class="drop-hint">PDF, PNG, JPG, WEBP — max 10MB</div>
+        </div>
+        <div class="file-preview" id="file-preview">
+          <div class="fic"><i class="fa-solid fa-file" id="prev-icon"></i></div>
+          <div>
+            <div class="fname" id="prev-name"></div>
+            <div class="fsize" id="prev-size"></div>
+          </div>
+          <button class="frem" onclick="remove_file()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+ 
+      <!-- Progress -->
+      <div class="prog-wrap" id="prog-wrap">
+        <div class="prog-bar-bg"><div class="prog-bar" id="prog-bar"></div></div>
+        <div class="prog-text" id="prog-text">Uploading...</div>
+      </div>
+    </div>
+ 
+    <button class="btn btn-gold" id="submit-btn" onclick="submit_file()" disabled>
+      <i class="fa-solid fa-paper-plane"></i> Submit File
+    </button>
+ 
+    <div class="nav-link">Admin? <a href="#admin" onclick="show_admin()">Admin panel e jao →</a></div>
+  </div>
+ 
+  <!-- ══ ADMIN SECTION ══ -->
+  <div id="admin-section">
+ 
+    <!-- Login -->
+    <div id="admin-login">
+      <div class="top" style="margin-bottom:24px">
+        <div class="badge"><i class="fa-solid fa-shield-halved"></i> Admin Only</div>
+        <h1>Admin <span>Panel</span></h1>
+      </div>
+      <div class="card">
+        <div class="admin-login">
+          <div class="lock-ic"><i class="fa-solid fa-lock"></i></div>
+          <h2>Restricted Access</h2>
+          <p>Sudhu admin password diye dhukte parbe</p>
+        </div>
+        <div class="field">
+          <label><i class="fa-solid fa-key"></i>Password</label>
+          <input type="password" id="pw-input" placeholder="Admin password" onkeydown="if(event.key==='Enter')do_login()">
+        </div>
+        <button class="btn btn-purple" onclick="do_login()">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+        </button>
+      </div>
+      <div class="nav-link"><a href="#" onclick="show_upload()">← File submit page e ফিরে যাও</a></div>
+    </div>
+ 
+    <!-- Panel content -->
+    <div id="admin-content">
+      <div class="admin-header">
+        <div>
+          <h2>Submitted Files</h2>
+          <div style="margin-top:4px"><span class="tag">ADMIN</span></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="logout-btn" onclick="do_logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+        </div>
+      </div>
+ 
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">Total</div></div>
+        <div class="stat"><div class="stat-num" id="stat-pdf">0</div><div class="stat-lbl">PDFs</div></div>
+        <div class="stat"><div class="stat-num" id="stat-img">0</div><div class="stat-lbl">Images</div></div>
+      </div>
+ 
+      <!-- Filter -->
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-btn active" onclick="filter_subs('ALL',this)">All</button>
+        <button class="filter-btn" onclick="filter_subs('DSA',this)">DSA</button>
+        <button class="filter-btn" onclick="filter_subs('DLD',this)">DLD</button>
+        <button class="filter-btn" onclick="filter_subs('DBMS',this)">DBMS</button>
+        <button class="filter-btn" onclick="filter_subs('CGLAMATH',this)">CGLAVA</button>
+        <button class="filter-btn" onclick="filter_subs('EDC',this)">Electronics</button>
+        <button class="filter-btn" onclick="filter_subs('OTHER',this)">Other</button>
+      </div>
+ 
+      <div id="sub-list"></div>
+ 
+      <div class="nav-link" style="margin-top:24px"><a href="#" onclick="show_upload()">← Student upload page</a></div>
+    </div>
+  </div>
+ 
+</div>
+ 
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+ 
+<script>
+/*
+  ════════════════════════════════════════════════
+  ⚙️  CONFIG — SHUDHU EI 3TA LINE CHANGE KORO
+  ════════════════════════════════════════════════
+*/
+const CLOUDINARY_CLOUD_NAME    = 'YOUR_CLOUD_NAME';
+const CLOUDINARY_UPLOAD_PRESET = 'YOUR_UPLOAD_PRESET';
+const ADMIN_PASSWORD           = 'cse57admin';                // Admin password — change kore dao
+/*
+  ════════════════════════════════════════════════
+*/
+ 
+let selected_file = null;
+let current_filter = 'ALL';
+ 
+/* ── FILE SELECTION ── */
+const file_input = document.getElementById('file-input');
+const drop_zone  = document.getElementById('drop-zone');
+ 
+file_input.addEventListener('change', e => handle_file(e.target.files[0]));
+ 
+drop_zone.addEventListener('dragover', e => { e.preventDefault(); drop_zone.classList.add('drag'); });
+drop_zone.addEventListener('dragleave', () => drop_zone.classList.remove('drag'));
+drop_zone.addEventListener('drop', e => {
+  e.preventDefault();
+  drop_zone.classList.remove('drag');
+  handle_file(e.dataTransfer.files[0]);
+});
+ 
+function handle_file(f) {
+  if (!f) return;
+  if (f.size > 10 * 1024 * 1024) { show_toast('File 10MB er beshi!', 'error'); return; }
+  selected_file = f;
+  const prev = document.getElementById('file-preview');
+  document.getElementById('prev-name').textContent = f.name;
+  document.getElementById('prev-size').textContent = (f.size / 1024).toFixed(1) + ' KB';
+  const ic = document.getElementById('prev-icon');
+  ic.className = f.type.includes('pdf') ? 'fa-solid fa-file-pdf' : 'fa-solid fa-image';
+  prev.classList.add('show');
+  check_ready();
+}
+ 
+function remove_file() {
+  selected_file = null;
+  file_input.value = '';
+  document.getElementById('file-preview').classList.remove('show');
+  check_ready();
+}
+ 
+function check_ready() {
+  const ok = selected_file && document.getElementById('subject').value;
+  document.getElementById('submit-btn').disabled = !ok;
+}
+document.getElementById('subject').addEventListener('change', check_ready);
+ 
+/* ── SUBMIT ── */
+async function submit_file() {
+  if (!selected_file) return;
+  if (CLOUDINARY_CLOUD_NAME === 'YOUR_CLOUD_NAME') {
+    show_toast('Cloudinary config set koro aage!', 'error');
+    return;
+  }
+ 
+  const subject = document.getElementById('subject').value;
+  const desc    = document.getElementById('desc').value.trim();
+  const btn     = document.getElementById('submit-btn');
+  const prog    = document.getElementById('prog-wrap');
+  const bar     = document.getElementById('prog-bar');
+  const ptxt    = document.getElementById('prog-text');
+ 
+  btn.disabled = true;
+  prog.classList.add('show');
+ 
+  /* upload to Cloudinary */
+  const form = new FormData();
+  form.append('file', selected_file);
+  form.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  form.append('folder', 'cse57/' + subject);
+ 
+  try {
+    /* fake progress */
+    let p = 0;
+    const ticker = setInterval(() => {
+      p = Math.min(p + Math.random() * 15, 85);
+      bar.style.width = p + '%';
+      ptxt.textContent = 'Uploading... ' + Math.round(p) + '%';
+    }, 200);
+ 
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`,
+      { method: 'POST', body: form }
+    );
+    clearInterval(ticker);
+ 
+    if (!res.ok) throw new Error('Upload failed');
+    const data = await res.json();
+ 
+    bar.style.width = '100%';
+    ptxt.textContent = 'Done!';
+ 
+    /* save to localStorage */
+    const submissions = get_submissions();
+    submissions.unshift({
+      id: Date.now(),
+      subject,
+      desc: desc || selected_file.name,
+      file_name: selected_file.name,
+      file_url: data.secure_url,
+      file_type: selected_file.type,
+      size: selected_file.size,
+      uploaded_at: new Date().toISOString(),
+    });
+    localStorage.setItem('cse57_submissions', JSON.stringify(submissions));
+ 
+    show_toast('File submit hoyeche! ✓', 'success');
+    setTimeout(() => {
+      prog.classList.remove('show');
+      bar.style.width = '0%';
+      remove_file();
+      document.getElementById('subject').value = '';
+      document.getElementById('desc').value = '';
+      btn.disabled = true;
+    }, 1200);
+ 
+  } catch (err) {
+    show_toast('Upload fail hoyeche. Try again.', 'error');
+    prog.classList.remove('show');
+    bar.style.width = '0%';
+    btn.disabled = false;
+  }
+}
+ 
+/* ── ADMIN ── */
+function show_admin() {
+  document.getElementById('upload-section').style.display = 'none';
+  document.getElementById('admin-section').classList.add('show');
+}
+function show_upload() {
+  document.getElementById('upload-section').style.display = 'block';
+  document.getElementById('admin-section').classList.remove('show');
+  document.getElementById('admin-content').classList.remove('show');
+  document.getElementById('admin-login').style.display = 'block';
+}
+ 
+function do_login() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === ADMIN_PASSWORD) {
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-content').classList.add('show');
+    render_submissions('ALL');
+  } else {
+    show_toast('Wrong password!', 'error');
+    document.getElementById('pw-input').value = '';
+  }
+}
+function do_logout() {
+  document.getElementById('admin-content').classList.remove('show');
+  document.getElementById('admin-login').style.display = 'block';
+  document.getElementById('pw-input').value = '';
+}
+ 
+/* ── SUBMISSIONS ── */
+function get_submissions() {
+  try { return JSON.parse(localStorage.getItem('cse57_submissions') || '[]'); }
+  catch { return []; }
+}
+ 
+function filter_subs(key, el) {
+  current_filter = key;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  render_submissions(key);
+}
+ 
+function render_submissions(filter) {
+  const all  = get_submissions();
+  const list = filter === 'ALL' ? all : all.filter(s => s.subject === filter);
+  const el   = document.getElementById('sub-list');
+ 
+  /* stats */
+  document.getElementById('stat-total').textContent = all.length;
+  document.getElementById('stat-pdf').textContent   = all.filter(s => s.file_type?.includes('pdf')).length;
+  document.getElementById('stat-img').textContent   = all.filter(s => s.file_type?.includes('image')).length;
+ 
+  if (!list.length) {
+    el.innerHTML = `<div class="empty"><i class="fa-regular fa-folder-open"></i>Kono submission nai ekhono.</div>`;
+    return;
+  }
+ 
+  el.innerHTML = list.map(s => {
+    const is_pdf = s.file_type?.includes('pdf');
+    const is_img = s.file_type?.includes('image');
+    const ic_cls = is_pdf ? 'pdf' : is_img ? 'img' : 'other';
+    const ic     = is_pdf ? 'fa-file-pdf' : is_img ? 'fa-image' : 'fa-file';
+    const time   = new Date(s.uploaded_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    const subj_labels = {DSA:'DSA 1',DLD:'DLD',DBMS:'DBMS',CGLAMATH:'CGLAVA',EDC:'Electronics',NOTES:'Notes',ROUTINE:'Routine',OTHER:'Other'};
+    return `
+    <div class="sub-item" id="item-${s.id}">
+      <div class="sic ${ic_cls}"><i class="fa-solid ${ic}"></i></div>
+      <div class="sub-info">
+        <div class="sub-name">${s.desc}</div>
+        <div class="sub-meta">
+          <span class="meta-tag meta-sub">${subj_labels[s.subject]||s.subject}</span>
+          <span class="meta-tag meta-time">${time}</span>
+        </div>
+      </div>
+      <div class="sub-actions">
+        <a class="act-btn" href="${s.file_url}" target="_blank" title="Open file"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <a class="act-btn" href="${s.file_url}" download="${s.file_name}" title="Download"><i class="fa-solid fa-download"></i></a>
+        <button class="act-btn del" onclick="delete_sub(${s.id})" title="Delete"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+ 
+function delete_sub(id) {
+  let subs = get_submissions().filter(s => s.id !== id);
+  localStorage.setItem('cse57_submissions', JSON.stringify(subs));
+  render_submissions(current_filter);
+}
+ 
+/* ── URL hash check ── */
+if (window.location.hash === '#admin') show_admin();
+ 
+/* ── TOAST ── */
+function show_toast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fa-solid ${type==='success'?'fa-circle-check':'fa-circle-xmark'}"></i> ${msg}`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+</script>
+</body>
+</html>

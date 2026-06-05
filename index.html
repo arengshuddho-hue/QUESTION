@@ -19,7 +19,7 @@ body{font-family:'Inter',sans-serif;min-height:100vh;transition:background 0.3s,
 body.dark{background:#12121f;color:#e8e8f0;}
 body.light{background:#f0f0f8;color:#1a1a2e;}
  
-/* ════ HEADER (unchanged) ════ */
+/* ════ HEADER ════ */
 header{border-bottom:2px solid var(--gold-border);position:relative;overflow:hidden;}
 body.dark header{background:#1c1c2e;}
 body.light header{background:#ffffff;}
@@ -115,6 +115,32 @@ body.light .card.note .code{color:#0575a8;background:rgba(56,189,248,0.07);borde
 /* routine code badge */
 body.dark .card.routine .code{color:#9070e0;background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.18);}
 body.light .card.routine .code{color:#6030c0;background:rgba(167,139,250,0.07);border-color:rgba(167,139,250,0.2);}
+ 
+/* ── UPDATE card (green) ── */
+/* NOTE: GitHub repo link — ekhane href e tomar actual GitHub repo URL dao */
+body.dark .card.update .code{color:#30a060;background:rgba(52,211,153,0.07);border-color:rgba(52,211,153,0.18);}
+body.light .card.update .code{color:#057a40;background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.22);}
+.card.update{border-color:rgba(52,211,153,0.35);}
+body.dark .card.update{background:#041510;}
+body.light .card.update{background:#f0fff8;}
+body.dark .card.update:hover{box-shadow:0 16px 40px rgba(52,211,153,0.13);}
+body.light .card.update:hover{box-shadow:0 16px 40px rgba(52,211,153,0.2);}
+.card.update .ic{background:rgba(52,211,153,0.1);color:#34d399;}
+body.dark .card.update .name{color:#6ee7b7;}
+body.light .card.update .name{color:#065f46;}
+ 
+/* ── PQ SOLUTIONS card (orange/amber) ── */
+/* NOTE: PQ Solutions — user nijei PDF add korbe data object e, key='PQS' */
+body.dark .card.pqs .code{color:#c07030;background:rgba(251,146,60,0.07);border-color:rgba(251,146,60,0.18);}
+body.light .card.pqs .code{color:#9a4a10;background:rgba(251,146,60,0.08);border-color:rgba(251,146,60,0.22);}
+.card.pqs{border-color:rgba(251,146,60,0.35);}
+body.dark .card.pqs{background:#150a02;}
+body.light .card.pqs{background:#fffaf0;}
+body.dark .card.pqs:hover{box-shadow:0 16px 40px rgba(251,146,60,0.13);}
+body.light .card.pqs:hover{box-shadow:0 16px 40px rgba(251,146,60,0.2);}
+.card.pqs .ic{background:rgba(251,146,60,0.1);color:#fb923c;}
+body.dark .card.pqs .name{color:#fdba74;}
+body.light .card.pqs .name{color:#7c2d12;}
  
 /* shimmer on hover */
 .card::after{
@@ -241,6 +267,7 @@ body.light .pdf-item:hover{background:#eeeaff;border-color:rgba(226,185,111,0.4)
 }
 .pdf-item.pdf-type .fi{background:rgba(226,185,111,0.12);color:var(--gold);}
 .pdf-item.img-type .fi{background:rgba(167,139,250,0.12);color:#a78bfa;}
+.pdf-item.gh-type .fi{background:rgba(52,211,153,0.12);color:#34d399;}
  
 .pdf-label{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
  
@@ -268,6 +295,16 @@ body.dark .empty-state{color:#44426a;}
 body.light .empty-state{color:#9090b0;}
 .empty-state i{font-size:1.8em;margin-bottom:10px;display:block;opacity:0.3;}
  
+/* info box inside modal */
+.info-box{
+  border-radius:12px;padding:13px 14px;
+  font-size:0.78em;line-height:1.7;margin-bottom:10px;
+  display:flex;gap:10px;align-items:flex-start;
+}
+body.dark .info-box{background:#1a1408;border:1px solid rgba(226,185,111,0.18);color:#a07a30;}
+body.light .info-box{background:#fffbf0;border:1px solid rgba(226,185,111,0.3);color:#7a5010;}
+.info-box i{margin-top:2px;font-size:0.9em;flex-shrink:0;}
+ 
 /* ════ FOOTER ════ */
 footer{
   text-align:center;padding:24px 20px;
@@ -279,7 +316,7 @@ body.light footer{color:#b0aed0;border-top:1px solid rgba(0,0,0,0.06);}
 </head>
 <body class="dark">
  
-<!-- ══ HEADER (unchanged) ══ -->
+<!-- ══ HEADER ══ -->
 <header>
   <div class="header-noise"></div>
   <div class="header-inner">
@@ -293,21 +330,58 @@ body.light footer{color:#b0aed0;border-top:1px solid rgba(0,0,0,0.06);}
  
   <div class="section-label"><span><i class="fa-solid fa-layer-group" style="font-size:.7em"></i></span>Resources<span style="display:none"></span></div>
   <div class="grid">
+ 
+    <!-- Suggestions card — original, unchanged -->
     <a class="card sug" href="https://share.note.sx/14r962de#t3T4ucxZrbzqzS+BNdBo81JbW1fG77MDvk6PA8ifN6Q" target="_blank">
       <div class="ic"><i class="fa-solid fa-lightbulb"></i></div>
       <div class="name">Suggestions</div>
       <div class="code">Final Term</div>
     </a>
+ 
+    <!-- Notes card — original, unchanged -->
     <div class="card note" onclick="open_modal('Notes','All Subjects','NOTES','fa-book-open')">
       <div class="ic"><i class="fa-solid fa-book-open"></i></div>
       <div class="name">Notes</div>
       <div class="code">All Subjects</div>
     </div>
+ 
+    <!-- Exam Routine card — original, unchanged -->
     <div class="card routine" onclick="open_modal('Exam Routine','Current Semester','ROUTINE','fa-calendar-days')">
       <div class="ic"><i class="fa-solid fa-calendar-days"></i></div>
       <div class="name">Exam Routine</div>
       <div class="code">Current Semester</div>
     </div>
+ 
+    <!--
+      ══ UPDATE FILES card ══
+      NOTE: Ei card e click korle GitHub repo upload page a jabe.
+      Niche 'GITHUB_REPO_URL' er jaygay tomar actual GitHub repo URL ta dao.
+      Example: https://github.com/username/cse57-portal/upload/main
+      Tumi directly file drag-and-drop kore upload korte parbe.
+    -->
+    <a class="card update" href="upload.html" target="_blank">
+      <div class="ic"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+      <div class="name">Update Files</div>
+      <div class="code">GitHub Upload</div>
+    </a>
+ 
+    <!--
+      ══ PQ SOLUTIONS card ══
+      NOTE: Ei card e click korle modal open hobe.
+      Sob PQ solution PDF gulo data object e 'PQS' key er modhye add korbe.
+      Example:
+        PQS: [
+          {file:'DSA_PQ_Solution.pdf', label:'DSA PQ Solution'},
+          {file:'DLD_PQ_Solution.pdf', label:'DLD PQ Solution'},
+        ],
+      File gulo GitHub repo te rakho, tahole file path ta direct link hobe.
+    -->
+    <div class="card pqs" onclick="open_modal('PQ Solutions','Previous Questions','PQS','fa-scroll')">
+      <div class="ic"><i class="fa-solid fa-scroll"></i></div>
+      <div class="name">PQ Solutions</div>
+      <div class="code">All Subjects</div>
+    </div>
+ 
   </div>
  
   <div class="section-label"><span><i class="fa-solid fa-book" style="font-size:.7em"></i></span>Subjects</div>
@@ -371,6 +445,36 @@ function toggle_theme(){
   document.getElementById('theme-btn').textContent=isDark?'☀':'🌙';
 }
  
+/*
+  ════════════════════════════════════════════════════
+  DATA OBJECT — sob file path ekhane manage koro
+  ════════════════════════════════════════════════════
+ 
+  FILE ADD KORAR NIYOM:
+  ─────────────────────
+  Subject PDF (past paper):
+    DSA: ['DSA1.pdf','DSA2.pdf', ...],
+    GitHub e file upload korle full URL dao:
+    DSA: ['https://raw.githubusercontent.com/username/repo/main/DSA1.pdf', ...],
+ 
+  Notes:
+    NOTES: [
+      {file:'EDC.pdf', label:'EDC Note'},
+      {file:'math.pdf', label:'Math Note'},
+      // notun note add:
+      // {file:'DSA_note.pdf', label:'DSA Note'},
+    ],
+ 
+  PQ Solutions:
+    PQS: [
+      {file:'DSA_solution.pdf', label:'DSA PQ Solution 2023'},
+      // sob subject er solution ekhane add koro
+    ],
+ 
+  Routine:
+    ROUTINE: ['rr.png'],   // image file
+  ════════════════════════════════════════════════════
+*/
 const data={
   DSA:['DSA1.pdf','DSA2.pdf','DSA3.pdf','DSA4.pdf'],
   DLD:['DLD1.pdf','DLD2.pdf','DLD3.pdf','DLD4.pdf'],
@@ -382,8 +486,22 @@ const data={
     {file:'math.pdf',label:'Math Note'}
   ],
   ROUTINE:['rr.png'],
+ 
+  /* ── PQ SOLUTIONS ──
+     Notun solution add korar jonno niche format follow koro:
+     {file:'FILENAME.pdf', label:'SUBJECT PQ Solution YEAR'}
+     File ta GitHub repo te upload kore raw link dao.
+  */
+  PQS:[
+    // {file:'DSA_solution.pdf', label:'DSA PQ Solution'},
+    // {file:'DLD_solution.pdf', label:'DLD PQ Solution'},
+    // {file:'DBMS_solution.pdf', label:'DBMS PQ Solution'},
+    // {file:'CGLAMATH_solution.pdf', label:'CGLAVA PQ Solution'},
+    // {file:'EDC_solution.pdf', label:'Electronics PQ Solution'},
+  ],
 };
-const labels={DSA:'DSA 1',DLD:'DLD',DBMS:'DBMS',CGLAMATH:'CGLAVA',EDC:'Electronics',NOTES:'Notes',ROUTINE:'Exam Routine'};
+ 
+const labels={DSA:'DSA 1',DLD:'DLD',DBMS:'DBMS',CGLAMATH:'CGLAVA',EDC:'Electronics',NOTES:'Notes',ROUTINE:'Exam Routine',PQS:'PQ Solution'};
  
 function open_modal(name,code,key,icon){
   document.getElementById('m-title').textContent=name;
@@ -418,7 +536,8 @@ function open_modal(name,code,key,icon){
         list.appendChild(a);
       }
     });
-  } else if(key==='NOTES'){
+  } else if(key==='NOTES'||key==='PQS'){
+    /* NOTES & PQS same format — {file, label} object array */
     files.forEach((item,i)=>{
       const a=document.createElement('a');
       a.href=item.file;a.target='_blank';a.className='pdf-item pdf-type';
