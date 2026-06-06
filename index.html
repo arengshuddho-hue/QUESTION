@@ -181,6 +181,134 @@ body.dark .card.sub:hover{border-color:rgba(226,185,111,0.3);}
 body.light .card.sub:hover{border-color:rgba(226,185,111,0.4);}
 .card.sub:hover .ic{background:rgba(226,185,111,0.13);color:var(--gold);}
  
+ 
+/* NOTICE BOARD */
+.notice-board{
+  border-radius:16px;padding:18px 20px;margin-bottom:0;
+  border:1px solid;
+}
+body.dark .notice-board{background:#0d1a0d;border-color:rgba(52,211,153,0.25);}
+body.light .notice-board{background:#f0fff4;border-color:rgba(52,211,153,0.35);}
+.notice-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.notice-dot{width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;animation:pulse-dot 2s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.notice-title{font-size:0.7em;font-family:'JetBrains Mono',monospace;letter-spacing:2px;text-transform:uppercase;}
+body.dark .notice-title{color:#34d399;}
+body.light .notice-title{color:#059669;}
+.notice-list{display:flex;flex-direction:column;gap:8px;}
+.notice-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;border-radius:11px;
+  border:1px solid;
+}
+body.dark .notice-item{background:#111f11;border-color:rgba(52,211,153,0.12);}
+body.light .notice-item{background:#ecfdf5;border-color:rgba(52,211,153,0.2);}
+.notice-item.active{
+  border-color:rgba(226,185,111,0.5)!important;
+  animation:notice-glow 2s ease-in-out infinite;
+}
+body.dark .notice-item.active{background:#1a1408!important;}
+body.light .notice-item.active{background:#fffbf0!important;}
+@keyframes notice-glow{0%,100%{box-shadow:0 0 0 rgba(226,185,111,0);}50%{box-shadow:0 0 12px rgba(226,185,111,0.2);}}
+.notice-exam-badge{
+  font-size:0.58em;font-family:'JetBrains Mono',monospace;letter-spacing:1px;
+  padding:3px 10px;border-radius:20px;font-weight:700;flex-shrink:0;
+  text-transform:uppercase;
+}
+.notice-item.active .notice-exam-badge{background:var(--gold);color:#0a0800;}
+body.dark .notice-item:not(.active) .notice-exam-badge{background:rgba(255,255,255,0.05);color:#5a5a80;border:1px solid rgba(255,255,255,0.07);}
+body.light .notice-item:not(.active) .notice-exam-badge{background:rgba(0,0,0,0.04);color:#9090b0;border:1px solid rgba(0,0,0,0.08);}
+.notice-exam-name{font-size:0.88em;font-weight:600;flex:1;}
+body.dark .notice-item.active .notice-exam-name{color:#fff;}
+body.light .notice-item.active .notice-exam-name{color:#1a1a2e;}
+body.dark .notice-item:not(.active) .notice-exam-name{color:#5a5a80;}
+body.light .notice-item:not(.active) .notice-exam-name{color:#a0a0c0;}
+.notice-countdown{
+  font-size:0.65em;font-family:'JetBrains Mono',monospace;
+  text-align:right;flex-shrink:0;
+}
+.notice-item.active .notice-countdown{color:var(--gold);}
+body.dark .notice-item:not(.active) .notice-countdown{color:#3a3858;}
+body.light .notice-item:not(.active) .notice-countdown{color:#c0c0d8;}
+.notice-done{
+  font-size:0.58em;font-family:'JetBrains Mono',monospace;
+  padding:2px 8px;border-radius:20px;
+  background:rgba(52,211,153,0.1);color:#34d399;border:1px solid rgba(52,211,153,0.2);
+  flex-shrink:0;
+}
+ 
+/* STUDY TIMER */
+.timer-card{
+  border-radius:16px;padding:20px;
+  border:1px solid;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+body.dark .timer-card{background:#0e0918;border-color:rgba(167,139,250,0.25);}
+body.light .timer-card{background:#f8f5ff;border-color:rgba(167,139,250,0.3);}
+.timer-header{display:flex;align-items:center;gap:10px;width:100%;justify-content:space-between;}
+.timer-title{font-size:0.7em;font-family:'JetBrains Mono',monospace;letter-spacing:2px;text-transform:uppercase;}
+body.dark .timer-title{color:#a78bfa;}
+body.light .timer-title{color:#7c3aed;}
+.timer-mode-btns{display:flex;gap:6px;}
+.timer-mode-btn{
+  font-size:0.58em;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;
+  padding:4px 10px;border-radius:20px;border:1px solid;cursor:pointer;
+  transition:all 0.15s;background:none;
+}
+body.dark .timer-mode-btn{border-color:rgba(167,139,250,0.2);color:#5a4a80;}
+body.light .timer-mode-btn{border-color:rgba(167,139,250,0.2);color:#9070c0;}
+.timer-mode-btn.active{background:rgba(167,139,250,0.15);border-color:rgba(167,139,250,0.5);}
+body.dark .timer-mode-btn.active{color:#c4b5fd;}
+body.light .timer-mode-btn.active{color:#6d28d9;}
+ 
+.timer-ring-wrap{position:relative;width:130px;height:130px;}
+.timer-ring-bg{fill:none;stroke-width:8;}
+body.dark .timer-ring-bg{stroke:rgba(167,139,250,0.1);}
+body.light .timer-ring-bg{stroke:rgba(167,139,250,0.15);}
+.timer-ring-fg{fill:none;stroke-width:8;stroke-linecap:round;
+  stroke:url(#timerGrad);
+  transform:rotate(-90deg);transform-origin:center;
+  transition:stroke-dashoffset 0.5s ease;}
+.timer-display{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.timer-time{font-size:1.5em;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:1px;}
+body.dark .timer-time{color:#eae8ff;}
+body.light .timer-time{color:#1a1a2e;}
+.timer-phase{font-size:0.55em;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+body.dark .timer-phase{color:#a78bfa;}
+body.light .timer-phase{color:#7c3aed;}
+ 
+.timer-btns{display:flex;gap:10px;}
+.timer-btn{
+  width:40px;height:40px;border-radius:12px;border:1px solid;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:0.95em;transition:all 0.15s;background:none;
+}
+body.dark .timer-btn{border-color:rgba(167,139,250,0.2);color:#a78bfa;}
+body.light .timer-btn{border-color:rgba(167,139,250,0.25);color:#7c3aed;}
+.timer-btn:hover{background:rgba(167,139,250,0.12);transform:scale(1.05);}
+.timer-btn.start{
+  width:auto;padding:0 20px;font-family:'JetBrains Mono',monospace;
+  font-size:0.68em;letter-spacing:1px;font-weight:700;
+  background:rgba(167,139,250,0.15);
+}
+body.dark .timer-btn.start{color:#c4b5fd;border-color:rgba(167,139,250,0.4);}
+body.light .timer-btn.start{color:#6d28d9;border-color:rgba(167,139,250,0.4);}
+.timer-sessions{font-size:0.6em;font-family:'JetBrains Mono',monospace;letter-spacing:1px;}
+body.dark .timer-sessions{color:#44426a;}
+body.light .timer-sessions{color:#9090b0;}
+ 
+/* two-col layout for notice + timer */
+.notice-timer-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  margin-bottom:0;
+}
+@media(max-width:700px){
+  .notice-timer-row{grid-template-columns:1fr;}
+}
+ 
 /* MODAL */
 .overlay{display:none;position:fixed;inset:0;background:rgba(5,5,18,0.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:999;align-items:center;justify-content:center;padding:16px;}
 .overlay.on{display:flex;}
@@ -324,6 +452,56 @@ body.light footer{color:#b0aed0;border-top:1px solid rgba(0,0,0,0.06);}
   </div>
  
 </div>
+  <!-- NOTICE BOARD + STUDY TIMER -->
+  <div class="section-label" style="margin-top:20px"><span><i class="fa-solid fa-bell" style="font-size:.7em"></i></span>Notice Board & Study Timer</div>
+  <div class="notice-timer-row">
+ 
+    <!-- NOTICE BOARD -->
+    <div class="notice-board">
+      <div class="notice-header">
+        <div class="notice-dot"></div>
+        <div class="notice-title">Upcoming Exams</div>
+      </div>
+      <div class="notice-list" id="notice-list"></div>
+    </div>
+ 
+    <!-- STUDY TIMER -->
+    <div class="timer-card">
+      <div class="timer-header">
+        <div class="timer-title"><i class="fa-solid fa-timer" style="margin-right:6px"></i>Study Timer</div>
+        <div class="timer-mode-btns">
+          <button class="timer-mode-btn active" onclick="set_mode('pomodoro',this)">25m</button>
+          <button class="timer-mode-btn" onclick="set_mode('short',this)">5m</button>
+          <button class="timer-mode-btn" onclick="set_mode('long',this)">15m</button>
+        </div>
+      </div>
+      <div class="timer-ring-wrap">
+        <svg width="130" height="130" viewBox="0 0 130 130">
+          <defs>
+            <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#a78bfa"/>
+              <stop offset="100%" style="stop-color:#e2b96f"/>
+            </linearGradient>
+          </defs>
+          <circle class="timer-ring-bg" cx="65" cy="65" r="56"/>
+          <circle class="timer-ring-fg" id="timer-ring" cx="65" cy="65" r="56"
+            stroke-dasharray="351.86" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-display">
+          <div class="timer-time" id="timer-display">25:00</div>
+          <div class="timer-phase" id="timer-phase">Focus</div>
+        </div>
+      </div>
+      <div class="timer-btns">
+        <button class="timer-btn start" onclick="toggle_timer()" id="timer-start-btn"><i class="fa-solid fa-play"></i> START</button>
+        <button class="timer-btn" onclick="reset_timer()" title="Reset"><i class="fa-solid fa-rotate-left"></i></button>
+      </div>
+      <div class="timer-sessions" id="timer-sessions">Sessions today: 0</div>
+    </div>
+ 
+  </div>
+ 
+ 
  
 <!-- MODAL -->
 <div class="overlay" id="overlay" onclick="close_outside(event)">
@@ -471,6 +649,131 @@ function build_ticker(){
   track.innerHTML=doubled.map(t=>'<span class="ticker-item"><i class="'+t.ic+'"></i>'+t.text+'</span><span style="color:var(--gold);opacity:0.35;padding:0 4px">&#9670;</span>').join('');
 }
 build_ticker();
+ 
+/* ══ EXAM SCHEDULE ══
+   Date format: YYYY, Month(0-indexed), Day
+   June = 5, July = 6 etc.
+   After exam date passes, next exam auto-shows as active */
+const exams = [
+  {name:'DLD Exam',    subject:'DLD',     date: new Date(2026,5,9,1,0,0)},
+  {name:'EDC Exam',    subject:'EDC',     date: new Date(2026,5,15,1,0,0)},
+  {name:'DBMS Exam',   subject:'DBMS',    date: new Date(2026,5,17,1,0,0)},
+  {name:'Math Exam',   subject:'CGLAMATH',date: new Date(2026,5,21,1,0,0)},
+  {name:'DSA Exam',    subject:'DSA',     date: new Date(2026,5,23,1,0,0)},
+];
+ 
+function render_notices(){
+  const list = document.getElementById('notice-list');
+  const now  = new Date();
+  // find next upcoming exam index
+  // Each exam's date is set to 1:00 AM — after 1AM exam is done
+  let active_idx = exams.findIndex(e => e.date >= now);
+  if(active_idx === -1) active_idx = exams.length; // all done
+ 
+  list.innerHTML = exams.map((e,i) => {
+    const done = i < active_idx;
+    const active = i === active_idx;
+    const diff = e.date - now;
+    const days = Math.floor(diff / 86400000);
+    const hrs  = Math.floor((diff % 86400000) / 3600000);
+ 
+    let countdown = '';
+    if(done){
+      countdown = '<span class="notice-done">Done ✓</span>';
+    } else if(active){
+      if(days > 1) countdown = `<div class="notice-countdown">${days}d ${hrs}h left</div>`;
+      else if(days === 1) countdown = `<div class="notice-countdown">Tomorrow!</div>`;
+      else if(diff > 0) countdown = `<div class="notice-countdown">TODAY!</div>`;
+      else countdown = '<span class="notice-done">Done ✓</span>';
+    } else {
+      const d = new Date(e.date);
+      countdown = `<div class="notice-countdown">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>`;
+    }
+ 
+    return `<div class="notice-item${active?' active':''}">
+      <span class="notice-exam-badge">${e.subject}</span>
+      <span class="notice-exam-name">${e.name}</span>
+      ${countdown}
+    </div>`;
+  }).join('');
+}
+render_notices();
+setInterval(render_notices, 60000);
+ 
+/* ══ STUDY TIMER ══ */
+const modes = {pomodoro:25*60, short:5*60, long:15*60};
+let timer_mode = 'pomodoro';
+let timer_total = modes.pomodoro;
+let timer_left  = timer_total;
+let timer_running = false;
+let timer_interval = null;
+let sessions_today = parseInt(localStorage.getItem('timer_sessions_'+new Date().toDateString())||'0');
+ 
+const CIRCUMFERENCE = 2 * Math.PI * 56; // 351.86
+ 
+function set_mode(mode, el){
+  if(timer_running) return;
+  timer_mode  = mode;
+  timer_total = modes[mode];
+  timer_left  = timer_total;
+  document.querySelectorAll('.timer-mode-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const phase = mode==='pomodoro'?'Focus':mode==='short'?'Short Break':'Long Break';
+  document.getElementById('timer-phase').textContent = phase;
+  update_timer_display();
+}
+ 
+function update_timer_display(){
+  const m = Math.floor(timer_left/60).toString().padStart(2,'0');
+  const s = (timer_left%60).toString().padStart(2,'0');
+  document.getElementById('timer-display').textContent = m+':'+s;
+  const progress = 1 - (timer_left / timer_total);
+  document.getElementById('timer-ring').style.strokeDashoffset = CIRCUMFERENCE * (1 - progress) * -1 + CIRCUMFERENCE;
+  document.getElementById('timer-sessions').textContent = 'Sessions today: ' + sessions_today;
+}
+ 
+function toggle_timer(){
+  const btn = document.getElementById('timer-start-btn');
+  if(!timer_running){
+    timer_running = true;
+    btn.innerHTML = '<i class="fa-solid fa-pause"></i> PAUSE';
+    timer_interval = setInterval(()=>{
+      timer_left--;
+      update_timer_display();
+      if(timer_left <= 0){
+        clearInterval(timer_interval);
+        timer_running = false;
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> START';
+        if(timer_mode==='pomodoro'){
+          sessions_today++;
+          localStorage.setItem('timer_sessions_'+new Date().toDateString(), sessions_today);
+        }
+        timer_left = timer_total;
+        update_timer_display();
+        // browser notification
+        if(Notification.permission==='granted'){
+          new Notification('CSE-57 Timer', {body: timer_mode==='pomodoro'?'Focus session done! Take a break.':'Break over! Back to study.'});
+        }
+      }
+    }, 1000);
+    if(Notification.permission==='default') Notification.requestPermission();
+  } else {
+    clearInterval(timer_interval);
+    timer_running = false;
+    btn.innerHTML = '<i class="fa-solid fa-play"></i> START';
+  }
+}
+ 
+function reset_timer(){
+  clearInterval(timer_interval);
+  timer_running = false;
+  timer_left = timer_total;
+  document.getElementById('timer-start-btn').innerHTML = '<i class="fa-solid fa-play"></i> START';
+  update_timer_display();
+}
+update_timer_display();
+ 
+ 
 </script>
 </body>
 </html>
