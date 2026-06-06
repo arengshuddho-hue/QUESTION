@@ -1,3 +1,6 @@
+
+raw
+Index · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +22,7 @@ body{font-family:'Inter',sans-serif;min-height:100vh;transition:background 0.3s,
 body.dark{background:#12121f;color:#e8e8f0;}
 body.light{background:#f0f0f8;color:#1a1a2e;}
  
-/* ════ HEADER ════ */
+/* HEADER */
 header{border-bottom:2px solid var(--gold-border);position:relative;overflow:hidden;}
 body.dark header{background:#1c1c2e;}
 body.light header{background:#ffffff;}
@@ -36,10 +39,23 @@ body.light header h1{color:#1a1a2e;}
   .theme-btn{width:32px;height:32px;font-size:.9em;right:12px;}
 }
  
-/* ════ BODY WRAPPER ════ */
+/* TICKER */
+.ticker-wrap{width:100%;overflow:hidden;border-bottom:1px solid var(--gold-border);display:flex;align-items:center;height:34px;position:relative;}
+body.dark .ticker-wrap{background:#130f02;}
+body.light .ticker-wrap{background:#fffbf0;}
+.ticker-label{flex-shrink:0;padding:0 14px;font-family:'JetBrains Mono',monospace;font-size:0.6em;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:var(--gold);color:#0a0800;height:100%;display:flex;align-items:center;z-index:2;white-space:nowrap;}
+.ticker-track{display:flex;align-items:center;white-space:nowrap;animation:ticker-scroll 70s linear infinite;}
+.ticker-track:hover{animation-play-state:paused;}
+.ticker-item{font-family:'JetBrains Mono',monospace;font-size:0.62em;letter-spacing:0.5px;padding:0 28px;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;}
+body.dark .ticker-item{color:#a07a30;}
+body.light .ticker-item{color:#7a5010;}
+.ticker-item i{color:var(--gold);font-size:0.85em;}
+@keyframes ticker-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+ 
+/* BODY WRAPPER */
 .body{padding:32px 20px 64px;max-width:900px;margin:0 auto;}
  
-/* ════ SECTION LABEL ════ */
+/* SECTION LABEL */
 .section-label{
   display:flex;align-items:center;gap:12px;
   margin:36px 0 16px;
@@ -59,65 +75,30 @@ body.light .section-label span{background:#e8e4ff;color:#6040c0;}
 body.dark .section-label::after{background:rgba(255,255,255,0.06);}
 body.light .section-label::after{background:rgba(0,0,0,0.08);}
  
-/* ════ GRID ════ */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(148px,1fr));
-  gap:14px;
-}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px;}
 @media(max-width:480px){.grid{grid-template-columns:repeat(2,1fr);gap:12px;}}
  
-/* ════ BASE CARD ════ */
-.card{
-  border-radius:18px;
-  padding:26px 14px 22px;
-  text-align:center;
-  cursor:pointer;
-  text-decoration:none;
-  display:flex;flex-direction:column;align-items:center;
-  transition:transform 0.25s cubic-bezier(.16,1,.3,1),box-shadow 0.25s;
-  position:relative;overflow:hidden;
-}
+/* BASE CARD */
+.card{border-radius:18px;padding:26px 14px 22px;text-align:center;cursor:pointer;text-decoration:none;display:flex;flex-direction:column;align-items:center;transition:transform 0.25s cubic-bezier(.16,1,.3,1),box-shadow 0.25s;position:relative;overflow:hidden;}
 body.dark .card{background:#1a1a2e;border:1px solid rgba(255,255,255,0.06);}
 body.light .card{background:#ffffff;border:1px solid rgba(0,0,0,0.07);box-shadow:0 2px 12px rgba(0,0,0,0.04);}
 body.dark .card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.4);}
 body.light .card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.1);}
- 
-/* icon pill */
-.card .ic{
-  width:52px;height:52px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.35em;margin-bottom:16px;
-  transition:transform 0.22s;
-}
+.card .ic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.35em;margin-bottom:16px;transition:transform 0.22s;}
 .card:hover .ic{transform:scale(1.12) rotate(-4deg);}
- 
 .card .name{font-size:0.9em;font-weight:600;margin-bottom:6px;letter-spacing:-0.1px;}
 body.dark .card .name{color:#eae8ff;}
 body.light .card .name{color:#1a1a2e;}
-.card .code{
-  font-size:0.6em;font-family:'JetBrains Mono',monospace;letter-spacing:0.8px;
-  text-transform:uppercase;
-  padding:3px 9px;border-radius:20px;
-  display:inline-block;
-}
+.card .code{font-size:0.6em;font-family:'JetBrains Mono',monospace;letter-spacing:0.8px;text-transform:uppercase;padding:3px 9px;border-radius:20px;display:inline-block;}
 body.dark .card .code{color:#7070a0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);}
 body.light .card .code{color:#7878a8;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.08);}
- 
-/* suggestion code badge */
 body.dark .card.sug .code{color:#a07a30;background:rgba(226,185,111,0.08);border-color:rgba(226,185,111,0.18);}
 body.light .card.sug .code{color:#9a6820;background:rgba(226,185,111,0.1);border-color:rgba(226,185,111,0.25);}
- 
-/* notes code badge */
 body.dark .card.note .code{color:#38a0c8;background:rgba(56,189,248,0.07);border-color:rgba(56,189,248,0.15);}
 body.light .card.note .code{color:#0575a8;background:rgba(56,189,248,0.07);border-color:rgba(56,189,248,0.18);}
- 
-/* routine code badge */
 body.dark .card.routine .code{color:#9070e0;background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.18);}
 body.light .card.routine .code{color:#6030c0;background:rgba(167,139,250,0.07);border-color:rgba(167,139,250,0.2);}
- 
-/* ── UPDATE card (green) ── */
-/* NOTE: GitHub repo link — ekhane href e tomar actual GitHub repo URL dao */
 body.dark .card.update .code{color:#30a060;background:rgba(52,211,153,0.07);border-color:rgba(52,211,153,0.18);}
 body.light .card.update .code{color:#057a40;background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.22);}
 .card.update{border-color:rgba(52,211,153,0.35);}
@@ -128,9 +109,6 @@ body.light .card.update:hover{box-shadow:0 16px 40px rgba(52,211,153,0.2);}
 .card.update .ic{background:rgba(52,211,153,0.1);color:#34d399;}
 body.dark .card.update .name{color:#6ee7b7;}
 body.light .card.update .name{color:#065f46;}
- 
-/* ── PQ SOLUTIONS card (orange/amber) ── */
-/* NOTE: PQ Solutions — user nijei PDF add korbe data object e, key='PQS' */
 body.dark .card.pqs .code{color:#c07030;background:rgba(251,146,60,0.07);border-color:rgba(251,146,60,0.18);}
 body.light .card.pqs .code{color:#9a4a10;background:rgba(251,146,60,0.08);border-color:rgba(251,146,60,0.22);}
 .card.pqs{border-color:rgba(251,146,60,0.35);}
@@ -141,16 +119,8 @@ body.light .card.pqs:hover{box-shadow:0 16px 40px rgba(251,146,60,0.2);}
 .card.pqs .ic{background:rgba(251,146,60,0.1);color:#fb923c;}
 body.dark .card.pqs .name{color:#fdba74;}
 body.light .card.pqs .name{color:#7c2d12;}
- 
-/* shimmer on hover */
-.card::after{
-  content:'';position:absolute;inset:0;border-radius:inherit;
-  background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,transparent 60%);
-  opacity:0;transition:opacity 0.2s;
-}
+.card::after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,transparent 60%);opacity:0;transition:opacity 0.2s;}
 .card:hover::after{opacity:1;}
- 
-/* ── SUGGESTION card ── */
 .card.sug{border-color:var(--gold);}
 body.dark .card.sug{background:#1a1408;}
 body.light .card.sug{background:#fffbf0;}
@@ -160,8 +130,6 @@ body.light .card.sug:hover{box-shadow:0 16px 40px rgba(226,185,111,0.25);}
 body.dark .card.sug .name{color:#fff;}
 body.light .card.sug .name{color:#5a3e00;}
 .card.sug .code{color:#a07a30;}
- 
-/* ── NOTES card ── */
 .card.note{border-color:rgba(56,189,248,0.3);}
 body.dark .card.note{background:#05131e;}
 body.light .card.note{background:#f0faff;}
@@ -170,8 +138,6 @@ body.light .card.note:hover{box-shadow:0 16px 40px rgba(56,189,248,0.15);}
 .card.note .ic{background:rgba(56,189,248,0.1);color:#38bdf8;}
 body.dark .card.note .name{color:#7dd3fc;}
 body.light .card.note .name{color:#0369a1;}
- 
-/* ── ROUTINE card ── */
 .card.routine{border-color:rgba(167,139,250,0.35);}
 body.dark .card.routine{background:#0e0918;}
 body.light .card.routine{background:#f8f5ff;}
@@ -180,143 +146,76 @@ body.light .card.routine:hover{box-shadow:0 16px 40px rgba(167,139,250,0.18);}
 .card.routine .ic{background:rgba(167,139,250,0.12);color:#a78bfa;}
 body.dark .card.routine .name{color:#c4b5fd;}
 body.light .card.routine .name{color:#5b21b6;}
- 
-/* ── SUBJECT cards ── */
-.card.sub .ic{
-  transition:background 0.2s,color 0.2s,transform 0.22s;
-}
+.card.sub .ic{transition:background 0.2s,color 0.2s,transform 0.22s;}
 body.dark .card.sub .ic{background:#1e1e38;color:#6060a0;}
 body.light .card.sub .ic{background:#f0eeff;color:#7060c0;}
 body.dark .card.sub:hover{border-color:rgba(226,185,111,0.3);}
 body.light .card.sub:hover{border-color:rgba(226,185,111,0.4);}
 .card.sub:hover .ic{background:rgba(226,185,111,0.13);color:var(--gold);}
  
-/* ════ MODAL ════ */
-.overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(5,5,18,0.82);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  z-index:999;align-items:center;justify-content:center;padding:16px;
-}
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(5,5,18,0.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:999;align-items:center;justify-content:center;padding:16px;}
 .overlay.on{display:flex;}
- 
-.modal{
-  width:100%;max-width:460px;
-  border-radius:22px;
-  overflow:hidden;
-  animation:mipop 0.26s cubic-bezier(.16,1,.3,1);
-  max-height:90vh;display:flex;flex-direction:column;
-}
+.modal{width:100%;max-width:460px;border-radius:22px;overflow:hidden;animation:mipop 0.26s cubic-bezier(.16,1,.3,1);max-height:90vh;display:flex;flex-direction:column;}
 body.dark .modal{background:#16162a;border:1px solid rgba(255,255,255,0.08);}
 body.light .modal{background:#ffffff;border:1px solid rgba(0,0,0,0.1);box-shadow:0 24px 60px rgba(0,0,0,0.14);}
 @keyframes mipop{from{opacity:0;transform:scale(0.9) translateY(24px);}to{opacity:1;transform:none;}}
- 
-.modal-top{
-  padding:22px 22px 18px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  border-bottom:1px solid;flex-shrink:0;
-}
+.modal-top{padding:22px 22px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid;flex-shrink:0;}
 body.dark .modal-top{border-color:rgba(255,255,255,0.07);}
 body.light .modal-top{border-color:rgba(0,0,0,0.07);}
- 
 .modal-title-group{display:flex;align-items:center;gap:12px;}
-.modal-icon{
-  width:40px;height:40px;border-radius:11px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.1em;flex-shrink:0;
-  background:var(--gold-dim);color:var(--gold);
-}
+.modal-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1em;flex-shrink:0;background:var(--gold-dim);color:var(--gold);}
 .modal h3{font-size:1.05em;font-weight:700;letter-spacing:-0.2px;}
 body.dark .modal h3{color:#eae8ff;}
 body.light .modal h3{color:#1a1a2e;}
 .modal .sub{font-size:0.62em;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;margin-top:2px;}
 body.dark .modal .sub{color:#44426a;}
 body.light .modal .sub{color:#9090b0;}
- 
-.modal-close{
-  background:none;border:none;cursor:pointer;
-  width:32px;height:32px;border-radius:9px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.95em;flex-shrink:0;
-  transition:background 0.18s,color 0.18s;
-}
+.modal-close{background:none;border:none;cursor:pointer;width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:0.95em;flex-shrink:0;transition:background 0.18s,color 0.18s;}
 body.dark .modal-close{color:#44426a;}
 body.light .modal-close{color:#9090b0;}
 body.dark .modal-close:hover{background:rgba(240,80,80,0.1);color:#f08080;}
 body.light .modal-close:hover{background:rgba(240,80,80,0.07);color:#e05050;}
- 
 .modal-body{padding:16px 18px 20px;overflow-y:auto;flex:1;}
- 
 .pdf-list{display:flex;flex-direction:column;gap:9px;}
- 
-.pdf-item{
-  display:flex;align-items:center;gap:13px;
-  padding:13px 14px;border-radius:13px;
-  text-decoration:none;font-size:0.86em;font-weight:500;
-  transition:background 0.18s,border-color 0.18s,transform 0.18s;
-}
+.pdf-item{display:flex;align-items:center;gap:13px;padding:13px 14px;border-radius:13px;text-decoration:none;font-size:0.86em;font-weight:500;transition:background 0.18s,border-color 0.18s,transform 0.18s;}
 body.dark .pdf-item{background:#1e1e34;border:1px solid rgba(255,255,255,0.05);color:#ccc8e8;}
 body.light .pdf-item{background:#f7f6ff;border:1px solid rgba(0,0,0,0.06);color:#1a1a2e;}
 .pdf-item:hover{transform:translateX(4px);}
 body.dark .pdf-item:hover{background:#242440;border-color:rgba(226,185,111,0.3);}
 body.light .pdf-item:hover{background:#eeeaff;border-color:rgba(226,185,111,0.4);}
- 
-.pdf-item .fi{
-  width:36px;height:36px;border-radius:10px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:1em;
-}
+.pdf-item .fi{width:36px;height:36px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1em;}
 .pdf-item.pdf-type .fi{background:rgba(226,185,111,0.12);color:var(--gold);}
 .pdf-item.img-type .fi{background:rgba(167,139,250,0.12);color:#a78bfa;}
 .pdf-item.gh-type .fi{background:rgba(52,211,153,0.12);color:#34d399;}
- 
 .pdf-label{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
- 
-.pdf-num{
-  margin-left:auto;flex-shrink:0;
-  font-size:0.63em;font-family:'JetBrains Mono',monospace;
-  padding:3px 8px;border-radius:20px;
-}
+.pdf-num{margin-left:auto;flex-shrink:0;font-size:0.63em;font-family:'JetBrains Mono',monospace;padding:3px 8px;border-radius:20px;}
 body.dark .pdf-num{background:#0d0d1a;color:#44426a;}
 body.light .pdf-num{background:#e8e4ff;color:#8070c0;}
- 
-.pdf-arrow{
-  font-size:0.7em;flex-shrink:0;
-  transition:transform 0.18s;
-}
+.pdf-arrow{font-size:0.7em;flex-shrink:0;transition:transform 0.18s;}
 body.dark .pdf-arrow{color:#44426a;}
 body.light .pdf-arrow{color:#9090b0;}
 .pdf-item:hover .pdf-arrow{transform:translateX(3px);}
- 
 .routine-img-wrap{border-radius:13px;overflow:hidden;border:1px solid rgba(167,139,250,0.25);margin-bottom:10px;}
 .routine-img-wrap img{width:100%;display:block;}
- 
 .empty-state{text-align:center;padding:32px 12px;font-size:0.82em;line-height:1.8;}
 body.dark .empty-state{color:#44426a;}
 body.light .empty-state{color:#9090b0;}
 .empty-state i{font-size:1.8em;margin-bottom:10px;display:block;opacity:0.3;}
- 
-/* info box inside modal */
-.info-box{
-  border-radius:12px;padding:13px 14px;
-  font-size:0.78em;line-height:1.7;margin-bottom:10px;
-  display:flex;gap:10px;align-items:flex-start;
-}
+.info-box{border-radius:12px;padding:13px 14px;font-size:0.78em;line-height:1.7;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start;}
 body.dark .info-box{background:#1a1408;border:1px solid rgba(226,185,111,0.18);color:#a07a30;}
 body.light .info-box{background:#fffbf0;border:1px solid rgba(226,185,111,0.3);color:#7a5010;}
 .info-box i{margin-top:2px;font-size:0.9em;flex-shrink:0;}
  
-/* ════ FOOTER ════ */
-footer{
-  text-align:center;padding:24px 20px;
-  font-size:0.63em;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;
-}
+/* FOOTER */
+footer{text-align:center;padding:24px 20px;font-size:0.63em;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;}
 body.dark footer{color:#2a2848;border-top:1px solid rgba(255,255,255,0.04);}
 body.light footer{color:#b0aed0;border-top:1px solid rgba(0,0,0,0.06);}
 </style>
 </head>
 <body class="dark">
  
-<!-- ══ HEADER ══ -->
+<!-- HEADER -->
 <header>
   <div class="header-noise"></div>
   <div class="header-inner">
@@ -325,63 +224,46 @@ body.light footer{color:#b0aed0;border-top:1px solid rgba(0,0,0,0.06);}
   </div>
 </header>
  
-<!-- ══ MAIN ══ -->
+<!-- TICKER -->
+<!--
+  Notun message add korte ticker_items array te JS section e add koro:
+  {ic:'fa-solid fa-icon', text:'message'}
+-->
+<div class="ticker-wrap">
+  <div class="ticker-label"><i class="fa-solid fa-bolt" style="margin-right:6px"></i>INFO</div>
+  <div class="ticker-track" id="ticker-track"></div>
+</div>
+ 
+<!-- MAIN -->
 <div class="body">
  
   <div class="section-label"><span><i class="fa-solid fa-layer-group" style="font-size:.7em"></i></span>Resources<span style="display:none"></span></div>
   <div class="grid">
- 
-    <!-- Suggestions card — original, unchanged -->
     <a class="card sug" href="https://share.note.sx/14r962de#t3T4ucxZrbzqzS+BNdBo81JbW1fG77MDvk6PA8ifN6Q" target="_blank">
       <div class="ic"><i class="fa-solid fa-lightbulb"></i></div>
       <div class="name">Suggestions</div>
       <div class="code">Final Term</div>
     </a>
- 
-    <!-- Notes card — original, unchanged -->
     <div class="card note" onclick="open_modal('Notes','All Subjects','NOTES','fa-book-open')">
       <div class="ic"><i class="fa-solid fa-book-open"></i></div>
       <div class="name">Notes</div>
       <div class="code">All Subjects</div>
     </div>
- 
-    <!-- Exam Routine card — original, unchanged -->
     <div class="card routine" onclick="open_modal('Exam Routine','Current Semester','ROUTINE','fa-calendar-days')">
       <div class="ic"><i class="fa-solid fa-calendar-days"></i></div>
       <div class="name">Exam Routine</div>
       <div class="code">Current Semester</div>
     </div>
- 
-    <!--
-      ══ UPDATE FILES card ══
-      NOTE: Ei card e click korle GitHub repo upload page a jabe.
-      Niche 'GITHUB_REPO_URL' er jaygay tomar actual GitHub repo URL ta dao.
-      Example: https://github.com/username/cse57-portal/upload/main
-      Tumi directly file drag-and-drop kore upload korte parbe.
-    -->
     <a class="card update" href="upload.html" target="_blank">
       <div class="ic"><i class="fa-solid fa-cloud-arrow-up"></i></div>
       <div class="name">Update Files</div>
       <div class="code">GitHub Upload</div>
     </a>
- 
-    <!--
-      ══ PQ SOLUTIONS card ══
-      NOTE: Ei card e click korle modal open hobe.
-      Sob PQ solution PDF gulo data object e 'PQS' key er modhye add korbe.
-      Example:
-        PQS: [
-          {file:'DSA_PQ_Solution.pdf', label:'DSA PQ Solution'},
-          {file:'DLD_PQ_Solution.pdf', label:'DLD PQ Solution'},
-        ],
-      File gulo GitHub repo te rakho, tahole file path ta direct link hobe.
-    -->
     <div class="card pqs" onclick="open_modal('PQ Solutions','Previous Questions','PQS','fa-scroll')">
       <div class="ic"><i class="fa-solid fa-scroll"></i></div>
       <div class="name">PQ Solutions</div>
       <div class="code">All Subjects</div>
     </div>
- 
   </div>
  
   <div class="section-label"><span><i class="fa-solid fa-book" style="font-size:.7em"></i></span>Subjects</div>
@@ -415,7 +297,7 @@ body.light footer{color:#b0aed0;border-top:1px solid rgba(0,0,0,0.06);}
  
 </div>
  
-<!-- ══ MODAL ══ -->
+<!-- MODAL -->
 <div class="overlay" id="overlay" onclick="close_outside(event)">
   <div class="modal">
     <div class="modal-top">
@@ -449,30 +331,12 @@ function toggle_theme(){
   ════════════════════════════════════════════════════
   DATA OBJECT — sob file path ekhane manage koro
   ════════════════════════════════════════════════════
+  Subject PDF:
+    DSA: ['DSA1.pdf', ...],
+    GitHub raw link: 'https://raw.githubusercontent.com/username/repo/main/FILE.pdf'
  
-  FILE ADD KORAR NIYOM:
-  ─────────────────────
-  Subject PDF (past paper):
-    DSA: ['DSA1.pdf','DSA2.pdf', ...],
-    GitHub e file upload korle full URL dao:
-    DSA: ['https://raw.githubusercontent.com/username/repo/main/DSA1.pdf', ...],
- 
-  Notes:
-    NOTES: [
-      {file:'EDC.pdf', label:'EDC Note'},
-      {file:'math.pdf', label:'Math Note'},
-      // notun note add:
-      // {file:'DSA_note.pdf', label:'DSA Note'},
-    ],
- 
-  PQ Solutions:
-    PQS: [
-      {file:'DSA_solution.pdf', label:'DSA PQ Solution 2023'},
-      // sob subject er solution ekhane add koro
-    ],
- 
-  Routine:
-    ROUTINE: ['rr.png'],   // image file
+  Notes & PQS format:
+    {file:'FILE.pdf', label:'Label Name'}
   ════════════════════════════════════════════════════
 */
 const data={
@@ -487,12 +351,8 @@ const data={
     {file:'math.pdf',label:'Math Note'}
   ],
   ROUTINE:['rr.png'],
- 
-  /* ── PQ SOLUTIONS ──
-     Notun solution add korar jonno niche format follow koro:
-     {file:'FILENAME.pdf', label:'SUBJECT PQ Solution YEAR'}
-     File ta GitHub repo te upload kore raw link dao.
-  */
+  /* PQ Solutions — notun add korte:
+     {file:'FILE.pdf', label:'SUBJECT PQ Solution YEAR'} */
   PQS:[
     // {file:'DSA_solution.pdf', label:'DSA PQ Solution'},
     // {file:'DLD_solution.pdf', label:'DLD PQ Solution'},
@@ -512,9 +372,8 @@ function open_modal(name,code,key,icon){
   const list=document.getElementById('m-pdfs');
   list.innerHTML='';
   const files=data[key]||[];
- 
   if(!files.length){
-    list.innerHTML=`<div class="empty-state"><i class="fa-regular fa-folder-open"></i>Kono file nai ekhono.<br>Shighroi add hobe!</div>`;
+    list.innerHTML='<div class="empty-state"><i class="fa-regular fa-folder-open"></i>Kono file nai ekhono.<br>Shighroi add hobe!</div>';
   } else if(key==='ROUTINE'){
     files.forEach((f,i)=>{
       const isImg=/\.(jpg|jpeg|png|gif|webp)$/i.test(f);
@@ -523,33 +382,32 @@ function open_modal(name,code,key,icon){
         wrap.className='routine-img-wrap';
         const img=document.createElement('img');
         img.src=f;img.alt='Exam Routine';
-        img.onerror=()=>{wrap.innerHTML=`<div class="empty-state" style="padding:16px"><i class="fa-solid fa-image"></i>"${f}" — same folder e rakho.</div>`;};
+        img.onerror=()=>{wrap.innerHTML='<div class="empty-state" style="padding:16px"><i class="fa-solid fa-image"></i>"'+f+'" — same folder e rakho.</div>';};
         wrap.appendChild(img);
         list.appendChild(wrap);
         const dl=document.createElement('a');
         dl.href=f;dl.target='_blank';dl.className='pdf-item img-type';
-        dl.innerHTML=`<div class="fi"><i class="fa-solid fa-expand"></i></div><span class="pdf-label">Open Full Screen</span><span class="pdf-num">0${i+1}</span><i class="fa-solid fa-arrow-right pdf-arrow"></i>`;
+        dl.innerHTML='<div class="fi"><i class="fa-solid fa-expand"></i></div><span class="pdf-label">Open Full Screen</span><span class="pdf-num">0'+(i+1)+'</span><i class="fa-solid fa-arrow-right pdf-arrow"></i>';
         list.appendChild(dl);
       } else {
         const a=document.createElement('a');
         a.href=f;a.target='_blank';a.className='pdf-item pdf-type';
-        a.innerHTML=`<div class="fi"><i class="fa-solid fa-file-pdf"></i></div><span class="pdf-label">${labels[key]} — File</span><span class="pdf-num">0${i+1}</span><i class="fa-solid fa-arrow-right pdf-arrow"></i>`;
+        a.innerHTML='<div class="fi"><i class="fa-solid fa-file-pdf"></i></div><span class="pdf-label">'+(labels[key])+' — File</span><span class="pdf-num">0'+(i+1)+'</span><i class="fa-solid fa-arrow-right pdf-arrow"></i>';
         list.appendChild(a);
       }
     });
   } else if(key==='NOTES'||key==='PQS'){
-    /* NOTES & PQS same format — {file, label} object array */
     files.forEach((item,i)=>{
       const a=document.createElement('a');
       a.href=item.file;a.target='_blank';a.className='pdf-item pdf-type';
-      a.innerHTML=`<div class="fi"><i class="fa-solid fa-file-pdf"></i></div><span class="pdf-label">${item.label}</span><span class="pdf-num">0${i+1}</span><i class="fa-solid fa-arrow-right pdf-arrow"></i>`;
+      a.innerHTML='<div class="fi"><i class="fa-solid fa-file-pdf"></i></div><span class="pdf-label">'+item.label+'</span><span class="pdf-num">0'+(i+1)+'</span><i class="fa-solid fa-arrow-right pdf-arrow"></i>';
       list.appendChild(a);
     });
   } else {
     files.forEach((pdf,i)=>{
       const a=document.createElement('a');
       a.href=pdf;a.target='_blank';a.className='pdf-item pdf-type';
-      a.innerHTML=`<div class="fi"><i class="fa-solid fa-file-pdf"></i></div><span class="pdf-label">${labels[key]||name} — Past Paper</span><span class="pdf-num">0${i+1}</span><i class="fa-solid fa-arrow-right pdf-arrow"></i>`;
+      a.innerHTML='<div class="fi"><i class="fa-solid fa-file-pdf"></i></div><span class="pdf-label">'+(labels[key]||name)+' — Previous Question</span><span class="pdf-num">0'+(i+1)+'</span><i class="fa-solid fa-arrow-right pdf-arrow"></i>';
       list.appendChild(a);
     });
   }
@@ -563,6 +421,28 @@ function close_modal(){
 }
 function close_outside(e){if(e.target.id==='overlay')close_modal();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close_modal();});
+ 
+/* TICKER
+   Notun message add korte ei array te add koro:
+   {ic:'fa-solid fa-ICONNAME', text:'message'} */
+const ticker_items=[
+  {ic:'fa-solid fa-lightbulb',text:'Suggestions: Final term suggestions are available — click the Suggestions card!'},
+  {ic:'fa-solid fa-book-open',text:'Notes: EDC Note, EDC Note 2 and Math notes are available in the Notes section.'},
+  {ic:'fa-solid fa-calendar-days',text:'Routine: Check the Exam Routine card for current semester schedule.'},
+  {ic:'fa-solid fa-cloud-arrow-up',text:'Upload: Submit your PDFs and photos via the Update Files card.'},
+  {ic:'fa-solid fa-scroll',text:'PQ Solutions: Previous question solutions available in the PQ Solutions section.'},
+  {ic:'fa-solid fa-sitemap',text:'DSA 1: Previous question info available — click the DSA 1 card under Subjects.'},
+  {ic:'fa-solid fa-microchip',text:'DLD: Previous question info available — click the DLD card under Subjects.'},
+  {ic:'fa-solid fa-database',text:'DBMS: Previous question info available — click the DBMS card under Subjects.'},
+  {ic:'fa-solid fa-square-root-variable',text:'CGLAVA: Previous question info available — click the CGLAVA card under Subjects.'},
+  {ic:'fa-solid fa-plug',text:'Electronics: Previous question info available — click the Electronics card under Subjects.'},
+];
+function build_ticker(){
+  const track=document.getElementById('ticker-track');
+  const doubled=[...ticker_items,...ticker_items];
+  track.innerHTML=doubled.map(t=>'<span class="ticker-item"><i class="'+t.ic+'"></i>'+t.text+'</span><span style="color:var(--gold);opacity:0.35;padding:0 4px">&#9670;</span>').join('');
+}
+build_ticker();
 </script>
 </body>
 </html>
