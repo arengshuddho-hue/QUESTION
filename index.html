@@ -180,134 +180,39 @@ body.light .card.sub .ic{background:#f0eeff;color:#7060c0;}
 body.dark .card.sub:hover{border-color:rgba(226,185,111,0.3);}
 body.light .card.sub:hover{border-color:rgba(226,185,111,0.4);}
 .card.sub:hover .ic{background:rgba(226,185,111,0.13);color:var(--gold);}
- 
- 
-/* NOTICE BOARD */
-.notice-board{
-  border-radius:16px;padding:18px 20px;margin-bottom:0;
-  border:1px solid;
-}
-body.dark .notice-board{background:#0d1a0d;border-color:rgba(52,211,153,0.25);}
-body.light .notice-board{background:#f0fff4;border-color:rgba(52,211,153,0.35);}
-.notice-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.notice-dot{width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;animation:pulse-dot 2s infinite;}
-@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.4;}}
-.notice-title{font-size:0.7em;font-family:'JetBrains Mono',monospace;letter-spacing:2px;text-transform:uppercase;}
-body.dark .notice-title{color:#34d399;}
-body.light .notice-title{color:#059669;}
-.notice-list{display:flex;flex-direction:column;gap:8px;}
-.notice-item{
-  display:flex;align-items:center;gap:12px;
-  padding:11px 14px;border-radius:11px;
-  border:1px solid;
-}
-body.dark .notice-item{background:#111f11;border-color:rgba(52,211,153,0.12);}
-body.light .notice-item{background:#ecfdf5;border-color:rgba(52,211,153,0.2);}
-.notice-item.active{
-  border-color:rgba(226,185,111,0.5)!important;
-  animation:notice-glow 2s ease-in-out infinite;
-}
-body.dark .notice-item.active{background:#1a1408!important;}
-body.light .notice-item.active{background:#fffbf0!important;}
-@keyframes notice-glow{0%,100%{box-shadow:0 0 0 rgba(226,185,111,0);}50%{box-shadow:0 0 12px rgba(226,185,111,0.2);}}
-.notice-exam-badge{
-  font-size:0.58em;font-family:'JetBrains Mono',monospace;letter-spacing:1px;
-  padding:3px 10px;border-radius:20px;font-weight:700;flex-shrink:0;
-  text-transform:uppercase;
-}
-.notice-item.active .notice-exam-badge{background:var(--gold);color:#0a0800;}
-body.dark .notice-item:not(.active) .notice-exam-badge{background:rgba(255,255,255,0.05);color:#5a5a80;border:1px solid rgba(255,255,255,0.07);}
-body.light .notice-item:not(.active) .notice-exam-badge{background:rgba(0,0,0,0.04);color:#9090b0;border:1px solid rgba(0,0,0,0.08);}
-.notice-exam-name{font-size:0.88em;font-weight:600;flex:1;}
-body.dark .notice-item.active .notice-exam-name{color:#fff;}
-body.light .notice-item.active .notice-exam-name{color:#1a1a2e;}
-body.dark .notice-item:not(.active) .notice-exam-name{color:#5a5a80;}
-body.light .notice-item:not(.active) .notice-exam-name{color:#a0a0c0;}
-.notice-countdown{
-  font-size:0.65em;font-family:'JetBrains Mono',monospace;
-  text-align:right;flex-shrink:0;
-}
-.notice-item.active .notice-countdown{color:var(--gold);}
-body.dark .notice-item:not(.active) .notice-countdown{color:#3a3858;}
-body.light .notice-item:not(.active) .notice-countdown{color:#c0c0d8;}
-.notice-done{
-  font-size:0.58em;font-family:'JetBrains Mono',monospace;
-  padding:2px 8px;border-radius:20px;
-  background:rgba(52,211,153,0.1);color:#34d399;border:1px solid rgba(52,211,153,0.2);
-  flex-shrink:0;
-}
- 
-/* STUDY TIMER */
-.timer-card{
-  border-radius:16px;padding:20px;
-  border:1px solid;
-  display:flex;flex-direction:column;align-items:center;gap:14px;
-}
-body.dark .timer-card{background:#0e0918;border-color:rgba(167,139,250,0.25);}
-body.light .timer-card{background:#f8f5ff;border-color:rgba(167,139,250,0.3);}
-.timer-header{display:flex;align-items:center;gap:10px;width:100%;justify-content:space-between;}
-.timer-title{font-size:0.7em;font-family:'JetBrains Mono',monospace;letter-spacing:2px;text-transform:uppercase;}
-body.dark .timer-title{color:#a78bfa;}
-body.light .timer-title{color:#7c3aed;}
-.timer-mode-btns{display:flex;gap:6px;}
-.timer-mode-btn{
-  font-size:0.58em;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;
-  padding:4px 10px;border-radius:20px;border:1px solid;cursor:pointer;
-  transition:all 0.15s;background:none;
-}
-body.dark .timer-mode-btn{border-color:rgba(167,139,250,0.2);color:#5a4a80;}
-body.light .timer-mode-btn{border-color:rgba(167,139,250,0.2);color:#9070c0;}
-.timer-mode-btn.active{background:rgba(167,139,250,0.15);border-color:rgba(167,139,250,0.5);}
-body.dark .timer-mode-btn.active{color:#c4b5fd;}
-body.light .timer-mode-btn.active{color:#6d28d9;}
- 
-.timer-ring-wrap{position:relative;width:130px;height:130px;}
-.timer-ring-bg{fill:none;stroke-width:8;}
-body.dark .timer-ring-bg{stroke:rgba(167,139,250,0.1);}
-body.light .timer-ring-bg{stroke:rgba(167,139,250,0.15);}
-.timer-ring-fg{fill:none;stroke-width:8;stroke-linecap:round;
-  stroke:url(#timerGrad);
-  transform:rotate(-90deg);transform-origin:center;
-  transition:stroke-dashoffset 0.5s ease;}
-.timer-display{
-  position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-}
-.timer-time{font-size:1.5em;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:1px;}
-body.dark .timer-time{color:#eae8ff;}
-body.light .timer-time{color:#1a1a2e;}
-.timer-phase{font-size:0.55em;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
-body.dark .timer-phase{color:#a78bfa;}
-body.light .timer-phase{color:#7c3aed;}
- 
-.timer-btns{display:flex;gap:10px;}
-.timer-btn{
-  width:40px;height:40px;border-radius:12px;border:1px solid;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:0.95em;transition:all 0.15s;background:none;
-}
-body.dark .timer-btn{border-color:rgba(167,139,250,0.2);color:#a78bfa;}
-body.light .timer-btn{border-color:rgba(167,139,250,0.25);color:#7c3aed;}
-.timer-btn:hover{background:rgba(167,139,250,0.12);transform:scale(1.05);}
-.timer-btn.start{
-  width:auto;padding:0 20px;font-family:'JetBrains Mono',monospace;
-  font-size:0.68em;letter-spacing:1px;font-weight:700;
-  background:rgba(167,139,250,0.15);
-}
-body.dark .timer-btn.start{color:#c4b5fd;border-color:rgba(167,139,250,0.4);}
-body.light .timer-btn.start{color:#6d28d9;border-color:rgba(167,139,250,0.4);}
-.timer-sessions{font-size:0.6em;font-family:'JetBrains Mono',monospace;letter-spacing:1px;}
-body.dark .timer-sessions{color:#44426a;}
-body.light .timer-sessions{color:#9090b0;}
- 
-/* two-col layout for notice + timer */
-.notice-timer-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:14px;
-  margin-bottom:0;
-}
-@media(max-width:700px){
-  .notice-timer-row{grid-template-columns:1fr;}
-}
+/* NEW: Links card (teal) */
+.card.links{border-color:rgba(45,212,191,0.35);}
+body.dark .card.links{background:#031412;}
+body.light .card.links{background:#effffb;}
+body.dark .card.links:hover{box-shadow:0 16px 40px rgba(45,212,191,0.15);}
+body.light .card.links:hover{box-shadow:0 16px 40px rgba(45,212,191,0.2);}
+.card.links .ic{background:rgba(45,212,191,0.1);color:#2dd4bf;}
+body.dark .card.links .name{color:#5eead4;}
+body.light .card.links .name{color:#0f766e;}
+body.dark .card.links .code{color:#20a090;background:rgba(45,212,191,0.08);border-color:rgba(45,212,191,0.18);}
+body.light .card.links .code{color:#0f766e;background:rgba(45,212,191,0.09);border-color:rgba(45,212,191,0.22);}
+/* NEW: Upcoming Courses card (rose) */
+.card.courses{border-color:rgba(251,113,133,0.35);}
+body.dark .card.courses{background:#150409;}
+body.light .card.courses{background:#fff0f3;}
+body.dark .card.courses:hover{box-shadow:0 16px 40px rgba(251,113,133,0.15);}
+body.light .card.courses:hover{box-shadow:0 16px 40px rgba(251,113,133,0.2);}
+.card.courses .ic{background:rgba(251,113,133,0.1);color:#fb7185;}
+body.dark .card.courses .name{color:#fda4af;}
+body.light .card.courses .name{color:#9f1239;}
+body.dark .card.courses .code{color:#c04060;background:rgba(251,113,133,0.08);border-color:rgba(251,113,133,0.18);}
+body.light .card.courses .code{color:#9f1239;background:rgba(251,113,133,0.09);border-color:rgba(251,113,133,0.22);}
+/* NEW: Books card (indigo) */
+.card.books{border-color:rgba(99,102,241,0.35);}
+body.dark .card.books{background:#0a0a1c;}
+body.light .card.books{background:#f2f2ff;}
+body.dark .card.books:hover{box-shadow:0 16px 40px rgba(99,102,241,0.15);}
+body.light .card.books:hover{box-shadow:0 16px 40px rgba(99,102,241,0.2);}
+.card.books .ic{background:rgba(99,102,241,0.1);color:#818cf8;}
+body.dark .card.books .name{color:#a5b4fc;}
+body.light .card.books .name{color:#3730a3;}
+body.dark .card.books .code{color:#6366f1;background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.18);}
+body.light .card.books .code{color:#3730a3;background:rgba(99,102,241,0.09);border-color:rgba(99,102,241,0.22);}
  
 /* MODAL */
 .overlay{display:none;position:fixed;inset:0;background:rgba(5,5,18,0.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:999;align-items:center;justify-content:center;padding:16px;}
@@ -344,7 +249,13 @@ body.light .pdf-item:hover{background:#eeeaff;border-color:rgba(226,185,111,0.4)
 .pdf-item.pdf-type .fi{background:rgba(226,185,111,0.12);color:var(--gold);}
 .pdf-item.img-type .fi{background:rgba(167,139,250,0.12);color:#a78bfa;}
 .pdf-item.gh-type .fi{background:rgba(52,211,153,0.12);color:#34d399;}
+.pdf-item.link-type .fi{background:rgba(45,212,191,0.12);color:#2dd4bf;}
+.pdf-item.faculty-type .fi{background:rgba(244,114,182,0.12);color:#f472b6;}
+.pdf-item.code-type .fi{background:rgba(251,191,36,0.14);color:#fbbf24;}
+.pdf-item.hack-type .fi{background:rgba(248,113,113,0.12);color:#f87171;}
+.pdf-item.cp-type .fi{background:rgba(14,165,233,0.12);color:#0ea5e9;}
 .pdf-label{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pdf-label small{display:block;font-size:0.78em;font-weight:400;opacity:0.65;margin-top:2px;white-space:normal;}
 .pdf-num{margin-left:auto;flex-shrink:0;font-size:0.63em;font-family:'JetBrains Mono',monospace;padding:3px 8px;border-radius:20px;}
 body.dark .pdf-num{background:#0d0d1a;color:#44426a;}
 body.light .pdf-num{background:#e8e4ff;color:#8070c0;}
@@ -362,6 +273,69 @@ body.light .empty-state{color:#9090b0;}
 body.dark .info-box{background:#1a1408;border:1px solid rgba(226,185,111,0.18);color:#a07a30;}
 body.light .info-box{background:#fffbf0;border:1px solid rgba(226,185,111,0.3);color:#7a5010;}
 .info-box i{margin-top:2px;font-size:0.9em;flex-shrink:0;}
+.code-chip{font-family:'JetBrains Mono',monospace;font-size:0.72em;padding:3px 9px;border-radius:8px;letter-spacing:0.5px;flex-shrink:0;cursor:pointer;}
+body.dark .code-chip{background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);}
+body.light .code-chip{background:rgba(251,191,36,0.14);color:#92660a;border:1px solid rgba(251,191,36,0.3);}
+ 
+/* NEW: Faculty List card (pink) */
+.card.faculty{border-color:rgba(244,114,182,0.35);}
+body.dark .card.faculty{background:#150610;}
+body.light .card.faculty{background:#fff0f8;}
+body.dark .card.faculty:hover{box-shadow:0 16px 40px rgba(244,114,182,0.15);}
+body.light .card.faculty:hover{box-shadow:0 16px 40px rgba(244,114,182,0.2);}
+.card.faculty .ic{background:rgba(244,114,182,0.1);color:#f472b6;}
+body.dark .card.faculty .name{color:#f9a8d4;}
+body.light .card.faculty .name{color:#9d174d;}
+body.dark .card.faculty .code{color:#e04090;background:rgba(244,114,182,0.08);border-color:rgba(244,114,182,0.18);}
+body.light .card.faculty .code{color:#9d174d;background:rgba(244,114,182,0.09);border-color:rgba(244,114,182,0.22);}
+ 
+/* NEW: Classroom Code card (amber) */
+.card.classroom{border-color:rgba(251,191,36,0.35);}
+body.dark .card.classroom{background:#150f02;}
+body.light .card.classroom{background:#fffaf0;}
+body.dark .card.classroom:hover{box-shadow:0 16px 40px rgba(251,191,36,0.15);}
+body.light .card.classroom:hover{box-shadow:0 16px 40px rgba(251,191,36,0.2);}
+.card.classroom .ic{background:rgba(251,191,36,0.12);color:#fbbf24;}
+body.dark .card.classroom .name{color:#fde68a;}
+body.light .card.classroom .name{color:#92660a;}
+body.dark .card.classroom .code{color:#c89020;background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.18);}
+body.light .card.classroom .code{color:#92660a;background:rgba(251,191,36,0.09);border-color:rgba(251,191,36,0.22);}
+ 
+/* NEW: Class Routine card (lime) */
+.card.clsroutine{border-color:rgba(163,230,53,0.35);}
+body.dark .card.clsroutine{background:#0d1502;}
+body.light .card.clsroutine{background:#f8fff0;}
+body.dark .card.clsroutine:hover{box-shadow:0 16px 40px rgba(163,230,53,0.15);}
+body.light .card.clsroutine:hover{box-shadow:0 16px 40px rgba(163,230,53,0.2);}
+.card.clsroutine .ic{background:rgba(163,230,53,0.12);color:#a3e635;}
+body.dark .card.clsroutine .name{color:#d9f99d;}
+body.light .card.clsroutine .name{color:#3f6212;}
+body.dark .card.clsroutine .code{color:#84a828;background:rgba(163,230,53,0.08);border-color:rgba(163,230,53,0.18);}
+body.light .card.clsroutine .code{color:#3f6212;background:rgba(163,230,53,0.09);border-color:rgba(163,230,53,0.22);}
+ 
+/* NEW: Upcoming Hackathon card (red) */
+.card.hackathon{border-color:rgba(248,113,113,0.35);}
+body.dark .card.hackathon{background:#150505;}
+body.light .card.hackathon{background:#fff3f0;}
+body.dark .card.hackathon:hover{box-shadow:0 16px 40px rgba(248,113,113,0.15);}
+body.light .card.hackathon:hover{box-shadow:0 16px 40px rgba(248,113,113,0.2);}
+.card.hackathon .ic{background:rgba(248,113,113,0.1);color:#f87171;}
+body.dark .card.hackathon .name{color:#fca5a5;}
+body.light .card.hackathon .name{color:#991b1b;}
+body.dark .card.hackathon .code{color:#e05050;background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.18);}
+body.light .card.hackathon .code{color:#991b1b;background:rgba(248,113,113,0.09);border-color:rgba(248,113,113,0.22);}
+ 
+/* NEW: Upcoming CP card (sky blue) */
+.card.cp{border-color:rgba(14,165,233,0.35);}
+body.dark .card.cp{background:#02121a;}
+body.light .card.cp{background:#f0f9ff;}
+body.dark .card.cp:hover{box-shadow:0 16px 40px rgba(14,165,233,0.15);}
+body.light .card.cp:hover{box-shadow:0 16px 40px rgba(14,165,233,0.2);}
+.card.cp .ic{background:rgba(14,165,233,0.1);color:#0ea5e9;}
+body.dark .card.cp .name{color:#7dd3fc;}
+body.light .card.cp .name{color:#075985;}
+body.dark .card.cp .code{color:#0ea5e9;background:rgba(14,165,233,0.08);border-color:rgba(14,165,233,0.18);}
+body.light .card.cp .code{color:#075985;background:rgba(14,165,233,0.09);border-color:rgba(14,165,233,0.22);}
  
 /* FOOTER */
 footer{text-align:center;padding:24px 20px;font-size:0.63em;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;}
@@ -395,26 +369,66 @@ body.light footer{color:#b0aed0;border-top:1px solid rgba(0,0,0,0.06);}
  
   <div class="section-label"><span><i class="fa-solid fa-layer-group" style="font-size:.7em"></i></span>Resources<span style="display:none"></span></div>
   <div class="grid">
-    <a class="card sug" href="https://share.note.sx/14r962de#t3T4ucxZrbzqzS+BNdBo81JbW1fG77MDvk6PA8ifN6Q" target="_blank">
-      <div class="ic"><i class="fa-solid fa-lightbulb"></i></div>
-      <div class="name">Suggestions</div>
-      <div class="code">Final Term</div>
-    </a>
-    <div class="card note" onclick="open_modal('Notes','All Subjects','NOTES','fa-book-open')">
-      <div class="ic"><i class="fa-solid fa-book-open"></i></div>
-      <div class="name">Notes</div>
-      <div class="code">All Subjects</div>
+    <div class="card courses" onclick="open_modal('Upcoming Courses','Course List','COURSES','fa-graduation-cap')">
+      <div class="ic"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div class="name">Upcoming Courses</div>
+      <div class="code">Course List</div>
     </div>
-    <div class="card routine" onclick="open_modal('Exam Routine','Current Semester','ROUTINE','fa-calendar-days')">
-      <div class="ic"><i class="fa-solid fa-calendar-days"></i></div>
-      <div class="name">Exam Routine</div>
-      <div class="code">Current Semester</div>
+    <div class="card hackathon" onclick="open_modal('Upcoming Hackathon','Events','HACKATHON','fa-laptop-code')">
+      <div class="ic"><i class="fa-solid fa-laptop-code"></i></div>
+      <div class="name">Upcoming Hackathon</div>
+      <div class="code">Events</div>
+    </div>
+    <div class="card cp" onclick="open_modal('Upcoming CP','Contests','CP','fa-trophy')">
+      <div class="ic"><i class="fa-solid fa-trophy"></i></div>
+      <div class="name">Upcoming CP</div>
+      <div class="code">Contests</div>
     </div>
     <a class="card update" href="upload.html" target="_blank">
       <div class="ic"><i class="fa-solid fa-cloud-arrow-up"></i></div>
       <div class="name">Update Files</div>
       <div class="code">GitHub Upload</div>
     </a>
+    <div class="card links" onclick="open_modal('Reference Links','External Resources','LINKS','fa-link')">
+      <div class="ic"><i class="fa-solid fa-link"></i></div>
+      <div class="name">Reference Links</div>
+      <div class="code">External Resources</div>
+    </div>
+    <div class="card books" onclick="open_modal('Books','Library','BOOKS','fa-book')">
+      <div class="ic"><i class="fa-solid fa-book"></i></div>
+      <div class="name">Books</div>
+      <div class="code">Library</div>
+    </div>
+    <div class="card faculty" onclick="open_modal('Faculty List','Teachers & Advisors','FACULTY','fa-chalkboard-user')">
+      <div class="ic"><i class="fa-solid fa-chalkboard-user"></i></div>
+      <div class="name">Faculty List</div>
+      <div class="code">Teachers & Advisors</div>
+    </div>
+    <div class="card classroom" onclick="open_modal('Classroom Code','Google Classroom','CLASSROOM','fa-hashtag')">
+      <div class="ic"><i class="fa-solid fa-hashtag"></i></div>
+      <div class="name">Classroom Code</div>
+      <div class="code">Google Classroom</div>
+    </div>
+    <div class="card clsroutine" onclick="open_modal('Class Routine','Weekly Schedule','CLSROUTINE','fa-table-list')">
+      <div class="ic"><i class="fa-solid fa-table-list"></i></div>
+      <div class="name">Class Routine</div>
+      <div class="code">Weekly Schedule</div>
+    </div>
+    <div class="card sug" onclick="open_modal('Suggestions','All Subjects','SUG','fa-lightbulb')">
+      <div class="ic"><i class="fa-solid fa-lightbulb"></i></div>
+      <div class="name">Suggestions</div>
+      <div class="code">All Subjects</div>
+    </div>
+    <div class="card note" onclick="open_modal('Notes','All Subjects','NOTES','fa-book-open')">
+      <div class="ic"><i class="fa-solid fa-book-open"></i></div>
+      <div class="name">Notes</div>
+      <div class="code">All Subjects</div>
+    </div>
+    <div class="card routine" onclick="open_modal('Exam Routine','No Exam Currently','ROUTINE','fa-calendar-days')">
+      <div class="ic"><i class="fa-solid fa-calendar-days"></i></div>
+      <div class="name">Exam Routine</div>
+      <div class="code">No Exam Currently</div>
+    </div>
     <div class="card pqs" onclick="open_modal('PQ Solutions','Previous Questions','PQS','fa-scroll')">
       <div class="ic"><i class="fa-solid fa-scroll"></i></div>
       <div class="name">PQ Solutions</div>
@@ -424,84 +438,39 @@ body.light footer{color:#b0aed0;border-top:1px solid rgba(0,0,0,0.06);}
  
   <div class="section-label"><span><i class="fa-solid fa-book" style="font-size:.7em"></i></span>Subjects</div>
   <div class="grid">
-    <div class="card sub" onclick="open_modal('DSA 1','CSE0613211/212','DSA','fa-sitemap')">
+    <div class="card sub" onclick="open_modal('DSA 2','CSE0613221/222','DSA2','fa-sitemap')">
       <div class="ic"><i class="fa-solid fa-sitemap"></i></div>
-      <div class="name">DSA 1</div>
-      <div class="code">CSE0613211/212</div>
+      <div class="name">DSA 2</div>
+      <div class="code">CSE0613221/222</div>
     </div>
-    <div class="card sub" onclick="open_modal('DLD','CSE0611215/216','DLD','fa-microchip')">
-      <div class="ic"><i class="fa-solid fa-microchip"></i></div>
-      <div class="name">DLD</div>
-      <div class="code">CSE0611215/216</div>
+    <div class="card sub" onclick="open_modal('Software Engg','CSE0613225/226','SE','fa-diagram-project')">
+      <div class="ic"><i class="fa-solid fa-diagram-project"></i></div>
+      <div class="name">Software Engg</div>
+      <div class="code">CSE0613225/226</div>
     </div>
-    <div class="card sub" onclick="open_modal('DBMS','CSE0612215/216','DBMS','fa-database')">
-      <div class="ic"><i class="fa-solid fa-database"></i></div>
-      <div class="name">DBMS</div>
-      <div class="code">CSE0612215/216</div>
-    </div>
-    <div class="card sub" onclick="open_modal('CGLAVA','MATH0541211','CGLAMATH','fa-square-root-variable')">
+    <div class="card sub" onclick="open_modal('Complex Variables','MATH0541221','MATH','fa-square-root-variable')">
       <div class="ic"><i class="fa-solid fa-square-root-variable"></i></div>
-      <div class="name">CGLAVA</div>
-      <div class="code">MATH0541211</div>
+      <div class="name">Complex Variables</div>
+      <div class="code">MATH0541221</div>
     </div>
-    <div class="card sub" onclick="open_modal('Electronics','EEE0714211/212','EDC','fa-plug')">
-      <div class="ic"><i class="fa-solid fa-plug"></i></div>
-      <div class="name">Electronics</div>
-      <div class="code">EEE0714211/212</div>
+    <div class="card sub" onclick="open_modal('Numerical Methods','CSE0541227','NUM','fa-calculator')">
+      <div class="ic"><i class="fa-solid fa-calculator"></i></div>
+      <div class="name">Numerical Methods</div>
+      <div class="code">CSE0541227</div>
+    </div>
+    <div class="card sub" onclick="open_modal('Data Communication','CSE0612223','DCOM','fa-network-wired')">
+      <div class="ic"><i class="fa-solid fa-network-wired"></i></div>
+      <div class="name">Data Comm.</div>
+      <div class="code">CSE0612223</div>
+    </div>
+    <div class="card sub" onclick="open_modal('Internet Prog. Lab','CSE0613208','IPLAB','fa-globe')">
+      <div class="ic"><i class="fa-solid fa-globe"></i></div>
+      <div class="name">Internet Prog. Lab</div>
+      <div class="code">CSE0613208</div>
     </div>
   </div>
  
 </div>
-  <!-- NOTICE BOARD + STUDY TIMER -->
-  <div class="section-label" style="margin-top:20px"><span><i class="fa-solid fa-bell" style="font-size:.7em"></i></span>Notice Board & Study Timer</div>
-  <div class="notice-timer-row">
- 
-    <!-- NOTICE BOARD -->
-    <div class="notice-board">
-      <div class="notice-header">
-        <div class="notice-dot"></div>
-        <div class="notice-title">Upcoming Exams</div>
-      </div>
-      <div class="notice-list" id="notice-list"></div>
-    </div>
- 
-    <!-- STUDY TIMER -->
-    <div class="timer-card">
-      <div class="timer-header">
-        <div class="timer-title"><i class="fa-solid fa-timer" style="margin-right:6px"></i>Study Timer</div>
-        <div class="timer-mode-btns">
-          <button class="timer-mode-btn active" onclick="set_mode('pomodoro',this)">25m</button>
-          <button class="timer-mode-btn" onclick="set_mode('short',this)">5m</button>
-          <button class="timer-mode-btn" onclick="set_mode('long',this)">15m</button>
-        </div>
-      </div>
-      <div class="timer-ring-wrap">
-        <svg width="130" height="130" viewBox="0 0 130 130">
-          <defs>
-            <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#a78bfa"/>
-              <stop offset="100%" style="stop-color:#e2b96f"/>
-            </linearGradient>
-          </defs>
-          <circle class="timer-ring-bg" cx="65" cy="65" r="56"/>
-          <circle class="timer-ring-fg" id="timer-ring" cx="65" cy="65" r="56"
-            stroke-dasharray="351.86" stroke-dashoffset="0"/>
-        </svg>
-        <div class="timer-display">
-          <div class="timer-time" id="timer-display">25:00</div>
-          <div class="timer-phase" id="timer-phase">Focus</div>
-        </div>
-      </div>
-      <div class="timer-btns">
-        <button class="timer-btn start" onclick="toggle_timer()" id="timer-start-btn"><i class="fa-solid fa-play"></i> START</button>
-        <button class="timer-btn" onclick="reset_timer()" title="Reset"><i class="fa-solid fa-rotate-left"></i></button>
-      </div>
-      <div class="timer-sessions" id="timer-sessions">Sessions today: 0</div>
-    </div>
- 
-  </div>
- 
- 
  
 <!-- MODAL -->
 <div class="overlay" id="overlay" onclick="close_outside(event)">
@@ -538,38 +507,107 @@ function toggle_theme(){
   DATA OBJECT — sob file path ekhane manage koro
   ════════════════════════════════════════════════════
   Subject PDF:
-    DSA: ['DSA1.pdf', ...],
+    DSA2: ['DSA2/DSA2_1.pdf', ...],
     GitHub raw link: 'https://raw.githubusercontent.com/username/repo/main/FILE.pdf'
  
   Notes & PQS format:
     {file:'FILE.pdf', label:'Label Name'}
+ 
+  Reference Links format (LINKS key) — url + label, notun link add korte ekhane push koro:
+    {file:'https://example.com', label:'Link Name'}
+ 
+  Upcoming Courses (COURSES key) — image path, ROUTINE er moto:
+    COURSES:['courses.png']
+ 
+  Books (BOOKS key) — file + label, NOTES/PQS er moto:
+    {file:'book.pdf', label:'Book Name'}
+ 
+  Faculty List (FACULTY key) — name + designation + subject, notun teacher add korte:
+    {name:'Teacher Name', designation:'Lecturer', subject:'DSA 2'}
+ 
+  Classroom Code (CLASSROOM key) — subject + code, Google Classroom code add korte:
+    {subject:'DSA 2', code:'ab12cd3'}
+ 
+  Class Routine (CLSROUTINE key) — image path, ROUTINE er moto:
+    CLSROUTINE:['class_routine.png']
+ 
+  Upcoming Hackathon (HACKATHON key) — title + date + link (link optional):
+    {title:'Hackathon Name', date:'12 Aug 2026', link:'https://example.com'}
+ 
+  Upcoming CP (CP key) — title + date + link (link optional):
+    {title:'Contest Name', date:'12 Aug 2026', link:'https://codeforces.com/...'}
   ════════════════════════════════════════════════════
 */
 const data={
-   DSA:['DSA/DSA1.pdf','DSA/DSA2.pdf','DSA/DSA3.pdf','DSA/DSA4.pdf'],
-  DLD:['DLD/DLD1.pdf','DLD/DLD2.pdf','DLD/DLD3.pdf','DLD/DLD4.pdf'],
-  DBMS:['DBMS/DBMS1.pdf','DBMS/DBMS2.pdf','DBMS/DBMS3.pdf','DBMS/DBMS4.pdf'],
-  CGLAMATH:['CGLAMATH/CGLAMATH1.pdf','CGLAMATH/CGLAMATH2.pdf','CGLAMATH/CGLAMATH3.pdf','CGLAMATH/CGLAMATH4.pdf'],
-  EDC:['EDC/EDC1.pdf','EDC/EDC2.pdf','EDC/EDC3.pdf','EDC/EDC4.pdf'],
+  DSA2:['DSA2/DSA2_1.pdf','DSA2/DSA2_2.pdf','DSA2/DSA2_3.pdf','DSA2/DSA2_4.pdf'],
+  SE:['SE/SE1.pdf','SE/SE2.pdf','SE/SE3.pdf','SE/SE4.pdf'],
+  MATH:['MATH/MATH1.pdf','MATH/MATH2.pdf','MATH/MATH3.pdf','MATH/MATH4.pdf'],
+  NUM:['NUM/NUM1.pdf','NUM/NUM2.pdf','NUM/NUM3.pdf','NUM/NUM4.pdf'],
+  DCOM:['DCOM/DCOM1.pdf','DCOM/DCOM2.pdf','DCOM/DCOM3.pdf','DCOM/DCOM4.pdf'],
+  IPLAB:['IPLAB/IPLAB1.pdf','IPLAB/IPLAB2.pdf','IPLAB/IPLAB3.pdf','IPLAB/IPLAB4.pdf'],
+  /* Suggestions — currently not available, add {file:'FILE.pdf', label:'Label'} here later */
+  SUG:[
+    // {file:'suggestion.pdf', label:'Suggestion'},
+  ],
+  /* Notes — currently not available, add {file:'FILE.pdf', label:'Label'} here later */
   NOTES:[
-    {file:'EDC/EDC.pdf',label:'EDC Note'},
-    {file:'EDC/EDC NOTE.pdf',label:'EDC Note 2'},
-    {file:'Math/math.pdf',label:'Math Note'},
-    {file:'Math/math2.pdf',label:'Math Note 2'}
+    // {file:'EDC/EDC.pdf',label:'EDC Note'},
+    // {file:'Math/math.pdf',label:'Math Note'},
   ],
   ROUTINE:['rr.png'],
   /* PQ Solutions — notun add korte:
      {file:'FILE.pdf', label:'SUBJECT PQ Solution YEAR'} */
   PQS:[
-    // {file:'DSA_solution.pdf', label:'DSA PQ Solution'},
-    // {file:'DLD_solution.pdf', label:'DLD PQ Solution'},
-    // {file:'DBMS_solution.pdf', label:'DBMS PQ Solution'},
-    // {file:'CGLAMATH_solution.pdf', label:'CGLAVA PQ Solution'},
-    // {file:'EDC_solution.pdf', label:'Electronics PQ Solution'},
+    // {file:'DSA2_solution.pdf', label:'DSA 2 PQ Solution'},
+    // {file:'SE_solution.pdf', label:'Software Engg PQ Solution'},
+    // {file:'MATH_solution.pdf', label:'Complex Variables PQ Solution'},
+    // {file:'NUM_solution.pdf', label:'Numerical Methods PQ Solution'},
+    // {file:'DCOM_solution.pdf', label:'Data Communication PQ Solution'},
+    // {file:'IPLAB_solution.pdf', label:'Internet Prog. Lab PQ Solution'},
+  ],
+  /* Reference Links — notun link add korte:
+     {file:'https://example.com', label:'Link Name'} */
+  LINKS:[
+    {file:'https://ouits-res.netlify.app/', label:'CENTRAL PORTAL UITS STUDENT'},
+    // {file:'https://example.com', label:'Department Website'},
+  ],
+  /* Upcoming Courses — picture add korte file name ekhane dao (ROUTINE er moto): */
+  COURSES:[
+    'course.png',
+  ],
+  /* Books — notun boi add korte:
+     {file:'book.pdf', label:'Book Name'} */
+  BOOKS:[
+    // {file:'DataStructures.pdf', label:'Data Structures & Algorithms'},
+  ],
+  /* Faculty List — notun teacher add korte:
+     {name:'Teacher Name', designation:'Lecturer, CSE', subject:'DSA 2'} */
+  FACULTY:[
+    // {name:'Dr. Example Rahman', designation:'Associate Professor, CSE', subject:'DSA 2'},
+    {name:'Dr. Example Rahman', designation:'Associate Professor, CSE', subject:'DSA 2'}
+  ],
+  /* Classroom Code — Google Classroom code add korte:
+     {subject:'DSA 2', code:'ab12cd3'} */
+  CLASSROOM:[
+    // {subject:'DSA 2', code:'ab12cd3'},
+  ],
+  /* Class Routine — picture add korte file name ekhane dao (ROUTINE er moto): */
+  CLSROUTINE:[
+    // 'class_routine.png',
+  ],
+  /* Upcoming Hackathon — notun event add korte:
+     {title:'Hackathon Name', date:'12 Aug 2026', link:'https://example.com'} */
+  HACKATHON:[
+    // {title:'UITS CodeStorm Hackathon', date:'12 Aug 2026', link:'https://example.com'},
+  ],
+  /* Upcoming CP — notun contest add korte:
+     {title:'Contest Name', date:'12 Aug 2026', link:'https://codeforces.com/...'} */
+  CP:[
+    // {title:'Codeforces Round 999', date:'12 Aug 2026', link:'https://codeforces.com/'},
   ],
 };
  
-const labels={DSA:'DSA 1',DLD:'DLD',DBMS:'DBMS',CGLAMATH:'CGLAVA',EDC:'Electronics',NOTES:'Notes',ROUTINE:'Exam Routine',PQS:'PQ Solution'};
+const labels={DSA2:'DSA 2',SE:'Software Engg',MATH:'Complex Variables',NUM:'Numerical Methods',DCOM:'Data Communication',IPLAB:'Internet Prog. Lab',SUG:'Suggestions',NOTES:'Notes',ROUTINE:'Exam Routine',PQS:'PQ Solution',LINKS:'Reference Links',COURSES:'Upcoming Courses',BOOKS:'Books',FACULTY:'Faculty List',CLASSROOM:'Classroom Code',CLSROUTINE:'Class Routine',HACKATHON:'Upcoming Hackathon',CP:'Upcoming CP'};
  
 function open_modal(name,code,key,icon){
   document.getElementById('m-title').textContent=name;
@@ -580,15 +618,15 @@ function open_modal(name,code,key,icon){
   list.innerHTML='';
   const files=data[key]||[];
   if(!files.length){
-    list.innerHTML='<div class="empty-state"><i class="fa-regular fa-folder-open"></i>Kono file nai ekhono.<br>Shighroi add hobe!</div>';
-  } else if(key==='ROUTINE'){
+    list.innerHTML='<div class="empty-state"><i class="fa-regular fa-folder-open"></i>Not available yet.<br>Shighroi add hobe!</div>';
+  } else if(key==='ROUTINE'||key==='COURSES'||key==='CLSROUTINE'){
     files.forEach((f,i)=>{
       const isImg=/\.(jpg|jpeg|png|gif|webp)$/i.test(f);
       if(isImg){
         const wrap=document.createElement('div');
         wrap.className='routine-img-wrap';
         const img=document.createElement('img');
-        img.src=f;img.alt='Exam Routine';
+        img.src=f;img.alt=labels[key];
         img.onerror=()=>{wrap.innerHTML='<div class="empty-state" style="padding:16px"><i class="fa-solid fa-image"></i>"'+f+'" — same folder e rakho.</div>';};
         wrap.appendChild(img);
         list.appendChild(wrap);
@@ -603,12 +641,44 @@ function open_modal(name,code,key,icon){
         list.appendChild(a);
       }
     });
-  } else if(key==='NOTES'||key==='PQS'){
+  } else if(key==='NOTES'||key==='PQS'||key==='SUG'||key==='BOOKS'){
     files.forEach((item,i)=>{
       const a=document.createElement('a');
       a.href=item.file;a.target='_blank';a.className='pdf-item pdf-type';
       a.innerHTML='<div class="fi"><i class="fa-solid fa-file-pdf"></i></div><span class="pdf-label">'+item.label+'</span><span class="pdf-num">0'+(i+1)+'</span><i class="fa-solid fa-arrow-right pdf-arrow"></i>';
       list.appendChild(a);
+    });
+  } else if(key==='LINKS'){
+    files.forEach((item,i)=>{
+      const a=document.createElement('a');
+      a.href=item.file;a.target='_blank';a.className='pdf-item link-type';
+      a.innerHTML='<div class="fi"><i class="fa-solid fa-link"></i></div><span class="pdf-label">'+item.label+'</span><span class="pdf-num">0'+(i+1)+'</span><i class="fa-solid fa-arrow-right pdf-arrow"></i>';
+      list.appendChild(a);
+    });
+  } else if(key==='FACULTY'){
+    files.forEach((item,i)=>{
+      const div=document.createElement('div');
+      div.className='pdf-item faculty-type';
+      div.innerHTML='<div class="fi"><i class="fa-solid fa-user-tie"></i></div><span class="pdf-label">'+item.name+'<small>'+(item.designation||'')+(item.subject?' • '+item.subject:'')+'</small></span><span class="pdf-num">0'+(i+1)+'</span>';
+      list.appendChild(div);
+    });
+  } else if(key==='CLASSROOM'){
+    files.forEach((item,i)=>{
+      const div=document.createElement('div');
+      div.className='pdf-item code-type';
+      div.innerHTML='<div class="fi"><i class="fa-solid fa-hashtag"></i></div><span class="pdf-label">'+item.subject+'</span><span class="code-chip" title="Tap to copy" onclick="copy_code(this,\''+item.code+'\')">'+item.code+'</span>';
+      list.appendChild(div);
+    });
+  } else if(key==='HACKATHON'||key==='CP'){
+    const typeClass=key==='HACKATHON'?'hack-type':'cp-type';
+    const typeIcon=key==='HACKATHON'?'fa-laptop-code':'fa-trophy';
+    files.forEach((item,i)=>{
+      const hasLink=!!item.link;
+      const el=document.createElement(hasLink?'a':'div');
+      el.className='pdf-item '+typeClass;
+      if(hasLink){el.href=item.link;el.target='_blank';}
+      el.innerHTML='<div class="fi"><i class="fa-solid '+typeIcon+'"></i></div><span class="pdf-label">'+item.title+(item.date?'<small>'+item.date+'</small>':'')+'</span><span class="pdf-num">0'+(i+1)+'</span>'+(hasLink?'<i class="fa-solid fa-arrow-right pdf-arrow"></i>':'');
+      list.appendChild(el);
     });
   } else {
     files.forEach((pdf,i)=>{
@@ -622,6 +692,14 @@ function open_modal(name,code,key,icon){
   document.body.style.overflow='hidden';
 }
  
+function copy_code(el,code){
+  navigator.clipboard.writeText(code).then(()=>{
+    const old=el.textContent;
+    el.textContent='Copied!';
+    setTimeout(()=>{el.textContent=old;},1200);
+  });
+}
+ 
 function close_modal(){
   document.getElementById('overlay').classList.remove('on');
   document.body.style.overflow='';
@@ -633,16 +711,25 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')close_modal();});
    Notun message add korte ei array te add koro:
    {ic:'fa-solid fa-ICONNAME', text:'message'} */
 const ticker_items=[
-  {ic:'fa-solid fa-lightbulb',text:'Suggestions: Final term suggestions are available — click the Suggestions card!'},
-  {ic:'fa-solid fa-book-open',text:'Notes: EDC Note, EDC Note 2 and Math notes are available in the Notes section.'},
-  {ic:'fa-solid fa-calendar-days',text:'Routine: Check the Exam Routine card for current semester schedule.'},
+  {ic:'fa-solid fa-graduation-cap',text:'Upcoming Courses: A new Upcoming Courses card is here — course list coming soon!'},
+  {ic:'fa-solid fa-laptop-code',text:'Upcoming Hackathon: A new Upcoming Hackathon card is here — event info coming soon!'},
+  {ic:'fa-solid fa-trophy',text:'Upcoming CP: A new Upcoming CP card is here — contest info coming soon!'},
   {ic:'fa-solid fa-cloud-arrow-up',text:'Upload: Submit your PDFs and photos via the Update Files card.'},
+  {ic:'fa-solid fa-link',text:'Reference Links: A curated set of external resources — coming soon!'},
+  {ic:'fa-solid fa-book',text:'Books: A new Books card is here — reading materials coming soon!'},
+  {ic:'fa-solid fa-chalkboard-user',text:'Faculty List: A new Faculty List card is here — teacher info coming soon!'},
+  {ic:'fa-solid fa-hashtag',text:'Classroom Code: A new Classroom Code card is here — Google Classroom codes coming soon!'},
+  {ic:'fa-solid fa-table-list',text:'Class Routine: A new Class Routine card is here — weekly schedule coming soon!'},
+  {ic:'fa-solid fa-lightbulb',text:'Suggestions: Not available yet — will be added soon.'},
+  {ic:'fa-solid fa-book-open',text:'Notes: Not available yet — will be added soon.'},
+  {ic:'fa-solid fa-calendar-days',text:'Exam Routine: No exam scheduled right now — check back later for updates.'},
   {ic:'fa-solid fa-scroll',text:'PQ Solutions: Previous question solutions available in the PQ Solutions section.'},
-  {ic:'fa-solid fa-sitemap',text:'DSA 1: Previous question info available — click the DSA 1 card under Subjects.'},
-  {ic:'fa-solid fa-microchip',text:'DLD: Previous question info available — click the DLD card under Subjects.'},
-  {ic:'fa-solid fa-database',text:'DBMS: Previous question info available — click the DBMS card under Subjects.'},
-  {ic:'fa-solid fa-square-root-variable',text:'CGLAVA: Previous question info available — click the CGLAVA card under Subjects.'},
-  {ic:'fa-solid fa-plug',text:'Electronics: Previous question info available — click the Electronics card under Subjects.'},
+  {ic:'fa-solid fa-sitemap',text:'DSA 2: Previous question info available — click the DSA 2 card under Subjects.'},
+  {ic:'fa-solid fa-diagram-project',text:'Software Engg: Previous question info available — click the Software Engg card under Subjects.'},
+  {ic:'fa-solid fa-square-root-variable',text:'Complex Variables: Previous question info available — click the Complex Variables card under Subjects.'},
+  {ic:'fa-solid fa-calculator',text:'Numerical Methods: Previous question info available — click the Numerical Methods card under Subjects.'},
+  {ic:'fa-solid fa-network-wired',text:'Data Communication: Previous question info available — click the Data Comm. card under Subjects.'},
+  {ic:'fa-solid fa-globe',text:'Internet Prog. Lab: Previous question info available — click the Internet Prog. Lab card under Subjects.'},
 ];
 function build_ticker(){
   const track=document.getElementById('ticker-track');
@@ -650,131 +737,6 @@ function build_ticker(){
   track.innerHTML=doubled.map(t=>'<span class="ticker-item"><i class="'+t.ic+'"></i>'+t.text+'</span><span style="color:var(--gold);opacity:0.35;padding:0 4px">&#9670;</span>').join('');
 }
 build_ticker();
- 
-/* ══ EXAM SCHEDULE ══
-   Date format: YYYY, Month(0-indexed), Day
-   June = 5, July = 6 etc.
-   After exam date passes, next exam auto-shows as active */
-const exams = [
-  {name:'DLD Exam',    subject:'DLD',     date: new Date(2026,5,9,1,0,0)},
-  {name:'EDC Exam',    subject:'EDC',     date: new Date(2026,5,15,1,0,0)},
-  {name:'DBMS Exam',   subject:'DBMS',    date: new Date(2026,5,17,1,0,0)},
-  {name:'Math Exam',   subject:'CGLAMATH',date: new Date(2026,5,21,1,0,0)},
-  {name:'DSA Exam',    subject:'DSA',     date: new Date(2026,5,23,1,0,0)},
-];
- 
-function render_notices(){
-  const list = document.getElementById('notice-list');
-  const now  = new Date();
-  // find next upcoming exam index
-  // Each exam's date is set to 1:00 AM — after 1AM exam is done
-  let active_idx = exams.findIndex(e => e.date >= now);
-  if(active_idx === -1) active_idx = exams.length; // all done
- 
-  list.innerHTML = exams.map((e,i) => {
-    const done = i < active_idx;
-    const active = i === active_idx;
-    const diff = e.date - now;
-    const days = Math.floor(diff / 86400000);
-    const hrs  = Math.floor((diff % 86400000) / 3600000);
- 
-    let countdown = '';
-    if(done){
-      countdown = '<span class="notice-done">Done ✓</span>';
-    } else if(active){
-      if(days > 1) countdown = `<div class="notice-countdown">${days}d ${hrs}h left</div>`;
-      else if(days === 1) countdown = `<div class="notice-countdown">Tomorrow!</div>`;
-      else if(diff > 0) countdown = `<div class="notice-countdown">TODAY!</div>`;
-      else countdown = '<span class="notice-done">Done ✓</span>';
-    } else {
-      const d = new Date(e.date);
-      countdown = `<div class="notice-countdown">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>`;
-    }
- 
-    return `<div class="notice-item${active?' active':''}">
-      <span class="notice-exam-badge">${e.subject}</span>
-      <span class="notice-exam-name">${e.name}</span>
-      ${countdown}
-    </div>`;
-  }).join('');
-}
-render_notices();
-setInterval(render_notices, 60000);
- 
-/* ══ STUDY TIMER ══ */
-const modes = {pomodoro:25*60, short:5*60, long:15*60};
-let timer_mode = 'pomodoro';
-let timer_total = modes.pomodoro;
-let timer_left  = timer_total;
-let timer_running = false;
-let timer_interval = null;
-let sessions_today = parseInt(localStorage.getItem('timer_sessions_'+new Date().toDateString())||'0');
- 
-const CIRCUMFERENCE = 2 * Math.PI * 56; // 351.86
- 
-function set_mode(mode, el){
-  if(timer_running) return;
-  timer_mode  = mode;
-  timer_total = modes[mode];
-  timer_left  = timer_total;
-  document.querySelectorAll('.timer-mode-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  const phase = mode==='pomodoro'?'Focus':mode==='short'?'Short Break':'Long Break';
-  document.getElementById('timer-phase').textContent = phase;
-  update_timer_display();
-}
- 
-function update_timer_display(){
-  const m = Math.floor(timer_left/60).toString().padStart(2,'0');
-  const s = (timer_left%60).toString().padStart(2,'0');
-  document.getElementById('timer-display').textContent = m+':'+s;
-  const progress = 1 - (timer_left / timer_total);
-  document.getElementById('timer-ring').style.strokeDashoffset = CIRCUMFERENCE * (1 - progress) * -1 + CIRCUMFERENCE;
-  document.getElementById('timer-sessions').textContent = 'Sessions today: ' + sessions_today;
-}
- 
-function toggle_timer(){
-  const btn = document.getElementById('timer-start-btn');
-  if(!timer_running){
-    timer_running = true;
-    btn.innerHTML = '<i class="fa-solid fa-pause"></i> PAUSE';
-    timer_interval = setInterval(()=>{
-      timer_left--;
-      update_timer_display();
-      if(timer_left <= 0){
-        clearInterval(timer_interval);
-        timer_running = false;
-        btn.innerHTML = '<i class="fa-solid fa-play"></i> START';
-        if(timer_mode==='pomodoro'){
-          sessions_today++;
-          localStorage.setItem('timer_sessions_'+new Date().toDateString(), sessions_today);
-        }
-        timer_left = timer_total;
-        update_timer_display();
-        // browser notification
-        if(Notification.permission==='granted'){
-          new Notification('CSE-57 Timer', {body: timer_mode==='pomodoro'?'Focus session done! Take a break.':'Break over! Back to study.'});
-        }
-      }
-    }, 1000);
-    if(Notification.permission==='default') Notification.requestPermission();
-  } else {
-    clearInterval(timer_interval);
-    timer_running = false;
-    btn.innerHTML = '<i class="fa-solid fa-play"></i> START';
-  }
-}
- 
-function reset_timer(){
-  clearInterval(timer_interval);
-  timer_running = false;
-  timer_left = timer_total;
-  document.getElementById('timer-start-btn').innerHTML = '<i class="fa-solid fa-play"></i> START';
-  update_timer_display();
-}
-update_timer_display();
- 
- 
 </script>
 </body>
 </html>
