@@ -355,10 +355,6 @@ body.light footer{color:#b0aed0;border-top:1px solid rgba(0,0,0,0.06);}
 </header>
  
 <!-- TICKER -->
-<!--
-  Notun message add korte ticker_items array te JS section e add koro:
-  {ic:'fa-solid fa-icon', text:'message'}
--->
 <div class="ticker-wrap">
   <div class="ticker-label"><i class="fa-solid fa-bolt" style="margin-right:6px"></i>INFO</div>
   <div class="ticker-track" id="ticker-track"></div>
@@ -502,42 +498,6 @@ function toggle_theme(){
   document.getElementById('theme-btn').textContent=isDark?'☀':'🌙';
 }
  
-/*
-  ════════════════════════════════════════════════════
-  DATA OBJECT — sob file path ekhane manage koro
-  ════════════════════════════════════════════════════
-  Subject PDF:
-    DSA2: ['DSA2/DSA2_1.pdf', ...],
-    GitHub raw link: 'https://raw.githubusercontent.com/username/repo/main/FILE.pdf'
- 
-  Notes & PQS format:
-    {file:'FILE.pdf', label:'Label Name'}
- 
-  Reference Links format (LINKS key) — url + label, notun link add korte ekhane push koro:
-    {file:'https://example.com', label:'Link Name'}
- 
-  Upcoming Courses (COURSES key) — image path, ROUTINE er moto:
-    COURSES:['courses.png']
- 
-  Books (BOOKS key) — file + label, NOTES/PQS er moto:
-    {file:'book.pdf', label:'Book Name'}
- 
-  Faculty List (FACULTY key) — name + designation + subject, notun teacher add korte:
-    {name:'Teacher Name', designation:'Lecturer', subject:'DSA 2'}
- 
-  Classroom Code (CLASSROOM key) — subject + code, Google Classroom code add korte:
-    {subject:'DSA 2', code:'ab12cd3'}
- 
-  Class Routine (CLSROUTINE key) — image path, ROUTINE er moto:
-    CLSROUTINE:['class_routine.png']
- 
-  Upcoming Hackathon (HACKATHON key) — title + date + link (link optional):
-    {title:'Hackathon Name', date:'12 Aug 2026', link:'https://example.com'}
- 
-  Upcoming CP (CP key) — title + date + link (link optional):
-    {title:'Contest Name', date:'12 Aug 2026', link:'https://codeforces.com/...'}
-  ════════════════════════════════════════════════════
-*/
 const data={
   DSA2:['DSA2/DSA2_1.pdf','DSA2/DSA2_2.pdf','DSA2/DSA2_3.pdf','DSA2/DSA2_4.pdf'],
   SE:['SE/SE1.pdf','SE/SE2.pdf','SE/SE3.pdf','SE/SE4.pdf'],
@@ -545,65 +505,35 @@ const data={
   NUM:['NUM/NUM1.pdf','NUM/NUM2.pdf','NUM/NUM3.pdf','NUM/NUM4.pdf'],
   DCOM:['DCOM/DCOM1.pdf','DCOM/DCOM2.pdf','DCOM/DCOM3.pdf','DCOM/DCOM4.pdf'],
   IPLAB:['IPLAB/IPLAB1.pdf','IPLAB/IPLAB2.pdf','IPLAB/IPLAB3.pdf','IPLAB/IPLAB4.pdf'],
-  /* Suggestions — currently not available, add {file:'FILE.pdf', label:'Label'} here later */
   SUG:[
-    // {file:'suggestion.pdf', label:'Suggestion'},
   ],
-  /* Notes — currently not available, add {file:'FILE.pdf', label:'Label'} here later */
   NOTES:[
-    // {file:'EDC/EDC.pdf',label:'EDC Note'},
-    // {file:'Math/math.pdf',label:'Math Note'},
   ],
   ROUTINE:['rr.png'],
-  /* PQ Solutions — notun add korte:
-     {file:'FILE.pdf', label:'SUBJECT PQ Solution YEAR'} */
   PQS:[
-    // {file:'DSA2_solution.pdf', label:'DSA 2 PQ Solution'},
-    // {file:'SE_solution.pdf', label:'Software Engg PQ Solution'},
-    // {file:'MATH_solution.pdf', label:'Complex Variables PQ Solution'},
-    // {file:'NUM_solution.pdf', label:'Numerical Methods PQ Solution'},
-    // {file:'DCOM_solution.pdf', label:'Data Communication PQ Solution'},
-    // {file:'IPLAB_solution.pdf', label:'Internet Prog. Lab PQ Solution'},
   ],
-  /* Reference Links — notun link add korte:
-     {file:'https://example.com', label:'Link Name'} */
   LINKS:[
     {file:'https://ouits-res.netlify.app/', label:'CENTRAL PORTAL UITS STUDENT'},
-    // {file:'https://example.com', label:'Department Website'},
   ],
-  /* Upcoming Courses — picture add korte file name ekhane dao (ROUTINE er moto): */
   COURSES:[
     'course.png',
   ],
-  /* Books — notun boi add korte:
-     {file:'book.pdf', label:'Book Name'} */
   BOOKS:[
-    // {file:'DataStructures.pdf', label:'Data Structures & Algorithms'},
   ],
-  /* Faculty List — notun teacher add korte:
-     {name:'Teacher Name', designation:'Lecturer, CSE', subject:'DSA 2'} */
-  FACULTY:[
-    
-    {file:'Faculty.pdf', label:'CSE Faculty Member'},
-  ],
-  /* Classroom Code — Google Classroom code add korte:
-     {subject:'DSA 2', code:'ab12cd3'} */
+ FACULTY:[
+    {
+        name:'CSE Faculty Member',
+        file:'Faculty.pdf',
+        label:'CSE Faculty Member'
+    }
+],
   CLASSROOM:[
-    // {subject:'DSA 2', code:'ab12cd3'},
   ],
-  /* Class Routine — picture add korte file name ekhane dao (ROUTINE er moto): */
   CLSROUTINE:[
-    // 'class_routine.png',
   ],
-  /* Upcoming Hackathon — notun event add korte:
-     {title:'Hackathon Name', date:'12 Aug 2026', link:'https://example.com'} */
   HACKATHON:[
-    // {title:'UITS CodeStorm Hackathon', date:'12 Aug 2026', link:'https://example.com'},
   ],
-  /* Upcoming CP — notun contest add korte:
-     {title:'Contest Name', date:'12 Aug 2026', link:'https://codeforces.com/...'} */
   CP:[
-    // {title:'Codeforces Round 999', date:'12 Aug 2026', link:'https://codeforces.com/'},
   ],
 };
  
@@ -657,10 +587,12 @@ function open_modal(name,code,key,icon){
     });
   } else if(key==='FACULTY'){
     files.forEach((item,i)=>{
-      const div=document.createElement('div');
-      div.className='pdf-item faculty-type';
-      div.innerHTML='<div class="fi"><i class="fa-solid fa-user-tie"></i></div><span class="pdf-label">'+item.name+'<small>'+(item.designation||'')+(item.subject?' • '+item.subject:'')+'</small></span><span class="pdf-num">0'+(i+1)+'</span>';
-      list.appendChild(div);
+      const hasFile=!!item.file;
+      const el=document.createElement(hasFile?'a':'div');
+      el.className='pdf-item faculty-type';
+      if(hasFile){el.href=item.file;el.target='_blank';}
+      el.innerHTML='<div class="fi"><i class="fa-solid fa-user-tie"></i></div><span class="pdf-label">'+(item.label||item.name)+'<small>'+(item.designation||'')+(item.subject?' • '+item.subject:'')+'</small></span><span class="pdf-num">0'+(i+1)+'</span>'+(hasFile?'<i class="fa-solid fa-arrow-right pdf-arrow"></i>':'');
+      list.appendChild(el);
     });
   } else if(key==='CLASSROOM'){
     files.forEach((item,i)=>{
@@ -707,9 +639,6 @@ function close_modal(){
 function close_outside(e){if(e.target.id==='overlay')close_modal();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close_modal();});
  
-/* TICKER
-   Notun message add korte ei array te add koro:
-   {ic:'fa-solid fa-ICONNAME', text:'message'} */
 const ticker_items=[
   {ic:'fa-solid fa-graduation-cap',text:'Upcoming Courses: A new Upcoming Courses card is here — course list coming soon!'},
   {ic:'fa-solid fa-laptop-code',text:'Upcoming Hackathon: A new Upcoming Hackathon card is here — event info coming soon!'},
