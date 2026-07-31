@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | CSE-57 Section C</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="container" id="loginScreen">
+  <h2 style="color: var(--gold);"><i class="fa-solid fa-lock"></i> Admin Login</h2>
+  <div class="form-group">
+    <input type="password" id="password" placeholder="Enter Admin Password">
+  </div>
+  <button class="btn" onclick="login()">Login</button>
+  <div id="loading"><i class="fa-solid fa-spinner fa-spin"></i> Connecting to Database...</div>
+</div>
+
+<!-- Admin Dashboard -->
+<div class="container" id="adminScreen">
+  <div class="header">
+    <h1><i class="fa-solid fa-gear"></i> Admin Dashboard</h1>
+    <a href="index.html" target="_blank" class="btn"><i class="fa-solid fa-eye"></i> View Portal</a>
+  </div>
+
+  <div class="form-group">
+    <label for="categorySelect">Select Category to Manage</label>
+    <select id="categorySelect" onchange="renderItems()">
+      <option value="DSA2">DSA 2</option>
+      <option value="SE">Software Engg</option>
+      <option value="MATH">Complex Variables</option>
+      <option value="NUM">Numerical Methods</option>
+      <option value="DCOM">Data Communication</option>
+      <option value="IPLAB">Internet Prog. Lab</option>
+      <option value="LINKS">Reference Links</option>
+      <option value="COURSES">Upcoming Courses</option>
+      <option value="FACULTY">Faculty List</option>
+      <option value="CLASSROOM">Classroom Code</option>
+      <option value="CLSROUTINE">Class Routine</option>
+      <option value="HACKATHON">Upcoming Hackathon</option>
+      <option value="CP">Upcoming CP</option>
+      <option value="PQS">PQ Solutions</option>
+      <option value="ROUTINE">Exam Routine</option>
+      <option value="NOTES">Notes</option>
+      <option value="SUG">Suggestions</option>
+      <option value="BOOKS">Books</option>
+    </select>
+  </div>
+
+  <div style="background: rgba(226,185,111,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+    <h3 style="margin-top:0; color: var(--gold);">Add New Item</h3>
+    <div class="form-group">
+      <label>Data Format (JSON or plain text/URL)</label>
+      <textarea id="newItemData" rows="4" placeholder="Enter file URL (e.g. 'https://drive.google.com/...') OR JSON for complex items like Links, Faculty, etc."></textarea>
+      <small style="color:#888;">* For normal files, paste the URL. For objects, use JSON format like: {"file": "url", "label": "name"}</small>
+    </div>
+    <button class="btn" onclick="addItem()">Add to Category</button>
+  </div>
+
+  <h3>Current Items</h3>
+  <div class="item-list" id="itemList">
+    <!-- Items will be injected here -->
+  </div>
+</div>
+
+<!-- Firebase SDK (Modular) -->
+<script type="module" src="admin.js"></script>
+
+</body>
+</html>
+
