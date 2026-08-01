@@ -64,8 +64,8 @@
     <div class="card cp" onclick="open_modal('Upcoming CP','Contests','CP','fa-trophy')">
       <div class="ic"><i class="fa-solid fa-trophy"></i></div><div class="name">Upcoming CP</div><div class="code">Contests</div>
     </div>
-    <a class="card update" href="upload.html" target="_blank">
-      <div class="ic"><i class="fa-solid fa-cloud-arrow-up"></i></div><div class="name">Update Files</div><div class="code">GitHub Upload</div>
+    <a class="card update" href="https://docs.google.com/forms/d/e/1FAIpQLSe-2_STuSi_r8w7z5zHcmCyaEonfVUlkwM5NPWI6WKWA51oFQ/viewform?usp=sharing&ouid=103587266722819910531" target="_blank">
+      <div class="ic"><i class="fa-solid fa-cloud-arrow-up"></i></div><div class="name">Update Files</div><div class="code">Google Form</div>
     </a>
     <div class="card links" onclick="open_modal('Reference Links','External Resources','LINKS','fa-link')">
       <div class="ic"><i class="fa-solid fa-link"></i></div><div class="name">Reference Links</div><div class="code">External Resources</div>
@@ -134,38 +134,82 @@
  
 <!-- About Portal Modal (GitHub Style README) -->
 <div class="overlay" id="aboutOverlay" onclick="close_about(event)">
-  <div class="modal about-modal" style="max-width: 540px;">
-    <div class="modal-top" style="background: var(--card-bg);">
-      <div class="modal-title-group">
-        <div class="modal-icon" style="background: rgba(163, 113, 247, 0.1); color: var(--accent-purple); border: 1px solid rgba(163, 113, 247, 0.2);"><i class="fa-brands fa-github"></i></div>
-        <div><h3 style="font-size:1.15em;">About Repository</h3><div class="sub">CSE-57 / Section-C</div></div>
+  <div class="modal about-modal" style="max-width: 760px; background: #0d1117; border: 1px solid #30363d;">
+    
+    <!-- GitHub Repo Header style -->
+    <div class="modal-top" style="background: #010409; border-bottom: 1px solid #30363d; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 12px; font-size: 1.1em;">
+        <i class="fa-brands fa-github" style="font-size: 1.4em; color: var(--text-main);"></i>
+        <span style="color: var(--accent-blue); font-weight: 600;">CSE-57</span>
+        <span style="color: var(--text-muted);">/</span>
+        <span style="color: var(--accent-blue); font-weight: 600;">Academic-Portal</span>
+        <span style="border: 1px solid #30363d; border-radius: 20px; padding: 2px 8px; font-size: 0.65em; color: var(--text-muted); font-weight: 500;">Public</span>
       </div>
-      <button class="modal-close" onclick="document.getElementById('aboutOverlay').classList.remove('on')"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-body about-body" style="padding: 24px; background: var(--bg-color);">
       
-      <div style="border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
-        <div style="background: var(--card-bg); padding: 12px 16px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px; font-size: 0.8em; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--text-title);">
-          <i class="fa-solid fa-list-ul"></i> README.md
+      <div style="display: flex; gap: 8px;">
+        <button class="nav-btn" style="border: 1px solid #30363d; background: #21262d; color: #c9d1d9; font-size: 0.8em; font-weight: 500;">
+          <i class="fa-regular fa-star"></i> Star <span style="background: #30363d; padding: 2px 6px; border-radius: 20px; margin-left: 4px;">57</span>
+        </button>
+        <button class="modal-close" style="background: transparent; border: none; font-size: 1.2em; color: var(--text-muted);" onclick="document.getElementById('aboutOverlay').classList.remove('on')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    
+    <!-- GitHub File Browser Header -->
+    <div style="background: #0d1117; padding: 16px 24px; border-bottom: 1px solid #30363d; display: flex; gap: 16px; font-size: 0.85em; color: var(--text-main);">
+      <span style="font-weight: 500; border-bottom: 2px solid #f78166; padding-bottom: 6px;"><i class="fa-solid fa-code"></i> Code</span>
+      <span style="color: var(--text-muted); cursor: not-allowed;"><i class="fa-regular fa-circle-dot"></i> Issues</span>
+      <span style="color: var(--text-muted); cursor: not-allowed;"><i class="fa-solid fa-code-pull-request"></i> Pull requests</span>
+    </div>
+
+    <!-- GitHub README Box -->
+    <div class="modal-body about-body" style="padding: 24px; background: #0d1117;">
+      <div style="border: 1px solid #30363d; border-radius: 6px; overflow: hidden; background: #0d1117;">
+        
+        <!-- README Header -->
+        <div style="background: #161b22; padding: 12px 16px; border-bottom: 1px solid #30363d; display: flex; align-items: center; justify-content: space-between; font-size: 0.85em; font-weight: 600; color: var(--text-main);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-list-ul"></i> README.md
+          </div>
+          <i class="fa-solid fa-pen" style="color: var(--text-muted);"></i>
         </div>
-        <div style="padding: 24px; font-size: 0.9em; line-height: 1.7; color: var(--text-main);">
-          <h2 style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 16px; color: var(--text-title);"><i class="fa-solid fa-graduation-cap"></i> CSE-57 Academic Portal</h2>
-          <p style="margin-bottom: 16px;">Welcome to the central academic repository for <strong>Batch 57, Section C</strong>.</p>
-          <p style="margin-bottom: 16px;">This portal acts as a central hub designed to streamline the sharing of resources, class routines, announcements, and important links in a secure, dynamic, and developer-friendly environment.</p>
+        
+        <!-- Markdown Content Render -->
+        <div style="padding: 32px; font-size: 0.95em; line-height: 1.6; color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;">
           
-          <h3 style="margin-top: 24px; margin-bottom: 12px; color: var(--text-title);">✨ Key Features</h3>
-          <ul style="padding-left: 20px; margin-bottom: 16px; color: var(--text-muted);">
-            <li><strong style="color: var(--text-main);">Firebase RTDB Integration:</strong> Real-time syncing.</li>
-            <li><strong style="color: var(--text-main);">Octoverse Dark Theme:</strong> Modern aesthetics.</li>
-            <li><strong style="color: var(--text-main);">Secure Admin Panel:</strong> Protected by Firebase Auth.</li>
+          <h1 style="border-bottom: 1px solid #21262d; padding-bottom: 8px; margin-bottom: 16px; font-size: 2em; font-weight: 600; color: #f0f6fc;">
+            🎓 CSE-57 Academic Portal
+          </h1>
+          
+          <p style="margin-bottom: 16px; font-size: 16px;">
+            Welcome to the central academic repository for <strong>Batch 57, Section C</strong>. 
+            This portal is designed to streamline the sharing of resources, class routines, announcements, and important links in a secure and dynamic environment.
+          </p>
+          
+          <h2 style="border-bottom: 1px solid #21262d; padding-bottom: 8px; margin-top: 24px; margin-bottom: 16px; font-size: 1.5em; font-weight: 600; color: #f0f6fc;">
+            ✨ Features
+          </h2>
+          <ul style="padding-left: 20px; margin-bottom: 16px; font-size: 16px;">
+            <li style="margin-bottom: 4px;"><strong>Firebase RTDB:</strong> Real-time syncing for notes and announcements.</li>
+            <li style="margin-bottom: 4px;"><strong>Octoverse Theme:</strong> Deep dark UI matching GitHub's premium aesthetic.</li>
+            <li style="margin-bottom: 4px;"><strong>Secure Admin:</strong> Protected dashboard to manage all portal data.</li>
           </ul>
 
-          <div style="margin-top: 24px; padding: 16px; background: rgba(88, 166, 255, 0.05); border: 1px solid rgba(88, 166, 255, 0.2); border-radius: 8px; color: var(--accent-blue); font-size: 0.85em;">
-            <i class="fa-solid fa-circle-info"></i> Built and maintained for Section C students.
+          <h2 style="border-bottom: 1px solid #21262d; padding-bottom: 8px; margin-top: 24px; margin-bottom: 16px; font-size: 1.5em; font-weight: 600; color: #f0f6fc;">
+            🚀 Tech Stack
+          </h2>
+          <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+            <span style="background: rgba(88, 166, 255, 0.1); color: var(--accent-blue); padding: 4px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; border: 1px solid rgba(88,166,255,0.2);">HTML5</span>
+            <span style="background: rgba(163, 113, 247, 0.1); color: var(--accent-purple); padding: 4px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; border: 1px solid rgba(163,113,247,0.2);">CSS3</span>
+            <span style="background: rgba(226, 185, 111, 0.1); color: var(--gold); padding: 4px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; border: 1px solid rgba(226,185,111,0.2);">Vanilla JS</span>
+            <span style="background: rgba(251, 146, 60, 0.1); color: #fb923c; padding: 4px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; border: 1px solid rgba(251,146,60,0.2);">Firebase</span>
           </div>
+          
+          <blockquote style="border-left: 4px solid #30363d; padding: 0 16px; color: var(--text-muted); margin: 24px 0 0 0;">
+            Developed and maintained for the students of Section C, Dept of CSE.
+          </blockquote>
+          
         </div>
       </div>
-      
     </div>
   </div>
 </div>
