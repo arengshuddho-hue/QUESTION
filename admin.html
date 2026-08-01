@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard | CSE-57 Section C</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="admin.css">
 </head>
 <body>
@@ -28,8 +27,9 @@
   </div>
 
   <div class="form-group">
-    <label for="categorySelect">Select Category to Manage</label>
-    <select id="categorySelect" onchange="renderItems()">
+    <label for="categorySelect" style="color: var(--gold); font-size: 16px;">📂 1. Select Category to Manage</label>
+    <select id="categorySelect" onchange="renderItems()" style="border: 2px solid var(--gold);">
+      <option value="TICKER">⭐ Scrolling Ticker (INFO)</option>
       <option value="DSA2">DSA 2</option>
       <option value="SE">Software Engg</option>
       <option value="MATH">Complex Variables</option>
@@ -51,24 +51,36 @@
     </select>
   </div>
 
-  <div style="background: rgba(226,185,111,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-    <h3 style="margin-top:0; color: var(--gold);">Add New Item</h3>
+  <div style="background: rgba(226,185,111,0.08); padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid rgba(226,185,111,0.3);">
+    <h3 style="margin-top:0; color: var(--gold);"><i class="fa-solid fa-square-plus"></i> 2. Add New Item</h3>
+    
     <div class="form-group">
-      <label>Data Format (JSON or plain text/URL)</label>
-      <textarea id="newItemData" rows="4" placeholder="Enter file URL (e.g. 'https://drive.google.com/...') OR JSON for complex items like Links, Faculty, etc."></textarea>
-      <small style="color:#888;">* For normal files, paste the URL. For objects, use JSON format like: {"file": "url", "label": "name"}</small>
+      <label>Item Type</label>
+      <select id="itemType">
+        <option value="link">🔗 Link (PDF, YouTube, Drive, Website)</option>
+        <option value="image">🖼️ Image (Direct Display)</option>
+        <option value="text">📝 Plain Text (Notice / Info)</option>
+        <option value="code">🔢 Passcode (Copyable Code)</option>
+      </select>
     </div>
-    <button class="btn" onclick="addItem()">Add to Category</button>
+
+    <div class="form-group">
+      <label>Title / Name (e.g. "Software PDF", "Notice for Sunday")</label>
+      <input type="text" id="itemTitle" placeholder="Enter title to display">
+    </div>
+
+    <div class="form-group">
+      <label>Content (Link URL OR Plain Text)</label>
+      <textarea id="itemContent" rows="3" placeholder="Paste your link here, or write your text..."></textarea>
+    </div>
+    
+    <button class="btn" onclick="addItem()" style="width: 100%;"><i class="fa-solid fa-cloud-arrow-up"></i> Save to Database</button>
   </div>
 
-  <h3>Current Items</h3>
-  <div class="item-list" id="itemList">
-    <!-- Items will be injected here -->
-  </div>
+  <h3><i class="fa-solid fa-list"></i> Current Items in Category</h3>
+  <div class="item-list" id="itemList"></div>
 </div>
 
-<!-- Firebase SDK (Modular) -->
 <script type="module" src="admin.js"></script>
-
 </body>
 </html>
