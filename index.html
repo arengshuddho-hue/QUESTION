@@ -10,13 +10,41 @@
 </head>
 <body class="dark">
  
-<header>
-  <div class="header-noise"></div>
-  <div class="header-inner">
-    <h1> CSE-57 | Section C Academic Portal</h1>
-    <button class="theme-btn" onclick="toggle_theme()" id="theme-btn" title="Toggle theme">☀</button>
-
-</div>
+<header class="navbar">
+  <div class="navbar-left">
+    <div class="nav-logo">
+      <i class="fa-solid fa-book-journal-whills"></i>
+    </div>
+    <div class="nav-title">
+      <span class="repo-owner">CSE-57</span>
+      <span class="repo-slash">/</span>
+      <span class="repo-name">Section-C</span>
+      <span class="repo-badge">Public</span>
+    </div>
+  </div>
+  
+  <div class="navbar-right">
+    <!-- Admin Link -->
+    <a href="admin.html" class="nav-btn admin-btn" title="Admin Login">
+      <i class="fa-solid fa-shield-halved"></i> <span>Admin</span>
+    </a>
+    
+    <!-- Three Dots Menu -->
+    <div class="dropdown">
+      <button class="nav-btn" onclick="toggleMenu()" title="More Options">
+        <i class="fa-solid fa-ellipsis"></i>
+      </button>
+      <div class="dropdown-menu" id="navDropdown">
+        <a href="#" onclick="openAboutModal(); toggleMenu(); return false;">
+          <i class="fa-solid fa-circle-info"></i> About Portal
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="#" onclick="toggle_theme(); toggleMenu(); return false;">
+          <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
+        </a>
+      </div>
+    </div>
+  </div>
 </header>
  
 <div class="ticker-wrap">
@@ -36,12 +64,9 @@
     <div class="card cp" onclick="open_modal('Upcoming CP','Contests','CP','fa-trophy')">
       <div class="ic"><i class="fa-solid fa-trophy"></i></div><div class="name">Upcoming CP</div><div class="code">Contests</div>
     </div>
-    
-    <!-- Updated Google Form Link Card -->
-    <a class="card update" href="https://docs.google.com/forms/d/e/1FAIpQLSe-2_STuSi_r8w7z5zHcmCyaEonfVUlkwM5NPWI6WKWA51oFQ/viewform" target="_blank">
-      <div class="ic" style="color: #34d399;"><i class="fa-solid fa-cloud-arrow-up"></i></div><div class="name">Submit Notes</div><div class="code">Share with everyone</div>
+    <a class="card update" href="upload.html" target="_blank">
+      <div class="ic"><i class="fa-solid fa-cloud-arrow-up"></i></div><div class="name">Update Files</div><div class="code">GitHub Upload</div>
     </a>
-    
     <div class="card links" onclick="open_modal('Reference Links','External Resources','LINKS','fa-link')">
       <div class="ic"><i class="fa-solid fa-link"></i></div><div class="name">Reference Links</div><div class="code">External Resources</div>
     </div>
@@ -107,8 +132,62 @@
   </div>
 </div>
  
+<!-- About Portal Modal (GitHub Style README) -->
+<div class="overlay" id="aboutOverlay" onclick="close_about(event)">
+  <div class="modal about-modal" style="max-width: 540px;">
+    <div class="modal-top" style="background: var(--card-bg);">
+      <div class="modal-title-group">
+        <div class="modal-icon" style="background: rgba(163, 113, 247, 0.1); color: var(--accent-purple); border: 1px solid rgba(163, 113, 247, 0.2);"><i class="fa-brands fa-github"></i></div>
+        <div><h3 style="font-size:1.15em;">About Repository</h3><div class="sub">CSE-57 / Section-C</div></div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('aboutOverlay').classList.remove('on')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body about-body" style="padding: 24px; background: var(--bg-color);">
+      
+      <div style="border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+        <div style="background: var(--card-bg); padding: 12px 16px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px; font-size: 0.8em; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--text-title);">
+          <i class="fa-solid fa-list-ul"></i> README.md
+        </div>
+        <div style="padding: 24px; font-size: 0.9em; line-height: 1.7; color: var(--text-main);">
+          <h2 style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 16px; color: var(--text-title);"><i class="fa-solid fa-graduation-cap"></i> CSE-57 Academic Portal</h2>
+          <p style="margin-bottom: 16px;">Welcome to the central academic repository for <strong>Batch 57, Section C</strong>.</p>
+          <p style="margin-bottom: 16px;">This portal acts as a central hub designed to streamline the sharing of resources, class routines, announcements, and important links in a secure, dynamic, and developer-friendly environment.</p>
+          
+          <h3 style="margin-top: 24px; margin-bottom: 12px; color: var(--text-title);">✨ Key Features</h3>
+          <ul style="padding-left: 20px; margin-bottom: 16px; color: var(--text-muted);">
+            <li><strong style="color: var(--text-main);">Firebase RTDB Integration:</strong> Real-time syncing.</li>
+            <li><strong style="color: var(--text-main);">Octoverse Dark Theme:</strong> Modern aesthetics.</li>
+            <li><strong style="color: var(--text-main);">Secure Admin Panel:</strong> Protected by Firebase Auth.</li>
+          </ul>
+
+          <div style="margin-top: 24px; padding: 16px; background: rgba(88, 166, 255, 0.05); border: 1px solid rgba(88, 166, 255, 0.2); border-radius: 8px; color: var(--accent-blue); font-size: 0.85em;">
+            <i class="fa-solid fa-circle-info"></i> Built and maintained for Section C students.
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+ 
 <footer>&copy; 2025 CSE-57 Section C Academic Portal</footer>
  
+<script>
+  function toggleMenu() { document.getElementById('navDropdown').classList.toggle('show'); }
+  function openAbout() { document.getElementById('aboutOverlay').classList.add('on'); }
+  function close_about(e) { if(e.target.id === 'aboutOverlay') document.getElementById('aboutOverlay').classList.remove('on'); }
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    if(!e.target.closest('.dropdown')) {
+      const d = document.getElementById('navDropdown');
+      if(d && d.classList.contains('show')) d.classList.remove('show');
+    }
+  });
+</script>
+ 
+<!-- Firebase integration for the main portal -->
 <script type="module" src="main.js"></script>
 </body>
 </html>
+
