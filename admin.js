@@ -18,33 +18,19 @@ const db = getDatabase(app);
 const auth = getAuth(app);
 
 let dbData = {};
-let firstLoad = true;
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
     document.getElementById('loginScreen').style.display = 'none';
-
-    if (firstLoad) {
-      firstLoad = false;
-      // Show transition screen for 3 seconds
-      document.getElementById('transitionScreen').style.display = 'flex';
-      document.getElementById('adminScreen').style.display = 'none';
-
-      setTimeout(() => {
-        document.getElementById('transitionScreen').style.display = 'none';
-        document.getElementById('adminScreen').style.display = 'block';
-      }, 3000);
-    }
-
+    document.getElementById('adminScreen').style.display = 'block';
+    
     onValue(ref(db, 'portalData'), (snapshot) => {
       if (snapshot.val()) dbData = snapshot.val();
       window.renderItems();
     });
   } else {
-    firstLoad = true;
     document.getElementById('loginScreen').style.display = 'block';
     document.getElementById('adminScreen').style.display = 'none';
-    document.getElementById('transitionScreen').style.display = 'none';
   }
 });
 
@@ -57,7 +43,7 @@ window.login = function() {
   document.getElementById('loading').style.display = 'block';
   
   signInWithEmailAndPassword(auth, email, pass)
-    .then(() => {
+    .then((userCredential) => {
       document.getElementById('loading').style.display = 'none';
       document.getElementById('password').value = ''; 
     })
