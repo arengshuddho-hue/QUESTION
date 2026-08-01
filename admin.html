@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard | CSE-57 Section C</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="admin.css?v=2.0">
 </head>
 <body>
 
@@ -71,9 +71,9 @@
   </div>
 
   <div class="form-group">
-    <label for="categorySelect" style="color: var(--gold); font-size: 16px;">📂 1. Select Category to Manage</label>
+    <label for="categorySelect" style="color: var(--gold); font-size: 16px;">📂 Select Category to Manage</label>
     <select id="categorySelect" onchange="renderItems()" style="border: 2px solid var(--gold);">
-      <option value="TICKER">⭐ Scrolling Ticker (INFO)</option>
+      <option value="TICKER"> Scrolling Ticker (INFO)</option>
       <option value="DSA2">DSA 2</option>
       <option value="SE">Software Engg</option>
       <option value="MATH">Complex Variables</option>
@@ -125,6 +125,6 @@
   <div class="item-list" id="itemList"></div>
 </div>
 
-<script type="module" src="admin.js"></script>
+<script type="module" src="admin.js?v=2.0"></script>
 </body>
 </html>
