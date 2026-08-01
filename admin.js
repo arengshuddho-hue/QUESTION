@@ -1,5 +1,6 @@
 ﻿﻿import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD0WsZH_YyuPADXO525pOkCjaXwDCGCxpc",
@@ -14,27 +15,48 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
 
 let dbData = {};
 
-window.login = function() {
-  const pass = document.getElementById('password').value;
-  if (pass === "admin123") { 
-    document.getElementById('loading').style.display = 'block';
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminScreen').style.display = 'block';
     
     onValue(ref(db, 'portalData'), (snapshot) => {
       if (snapshot.val()) dbData = snapshot.val();
-      
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('adminScreen').style.display = 'block';
       window.renderItems();
-    }, (error) => {
-      alert("Error: " + error.message);
-      document.getElementById('loading').style.display = 'none';
     });
   } else {
-    alert("Wrong Password!");
+    document.getElementById('loginScreen').style.display = 'block';
+    document.getElementById('adminScreen').style.display = 'none';
   }
+});
+
+window.login = function() {
+  const email = document.getElementById('adminEmail').value.trim();
+  const pass = document.getElementById('password').value;
+  
+  if(!email || !pass) return alert("Please enter both Email and Password!");
+  
+  document.getElementById('loading').style.display = 'block';
+  
+  signInWithEmailAndPassword(auth, email, pass)
+    .then((userCredential) => {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('password').value = ''; 
+    })
+    .catch((error) => {
+      document.getElementById('loading').style.display = 'none';
+      alert("Login Failed: " + error.message);
+    });
+};
+
+window.logout = function() {
+  signOut(auth).then(() => {
+    alert("Logged out successfully!");
+  });
 };
 
 window.renderItems = function() {
@@ -42,7 +64,6 @@ window.renderItems = function() {
   const items = dbData[category] || [];
   const listEl = document.getElementById('itemList');
   
-  // Update form placeholders based on category
   if(category === 'TICKER') {
     document.getElementById('itemType').disabled = true;
     document.getElementById('itemTitle').placeholder = "(Not needed for Ticker)";

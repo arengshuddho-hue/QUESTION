@@ -11,19 +11,23 @@
 
 <!-- Login Screen -->
 <div class="container" id="loginScreen">
-  <h2 style="color: var(--gold);"><i class="fa-solid fa-lock"></i> Admin Login</h2>
+  <h2 style="color: var(--gold);"><i class="fa-solid fa-shield-halved"></i> Secure Admin Login</h2>
   <div class="form-group">
+    <input type="email" id="adminEmail" placeholder="Enter Admin Email" style="margin-bottom: 15px;">
     <input type="password" id="password" placeholder="Enter Admin Password">
   </div>
-  <button class="btn" onclick="login()">Login</button>
-  <div id="loading"><i class="fa-solid fa-spinner fa-spin"></i> Connecting to Database...</div>
+  <button class="btn" onclick="login()" style="width: 100%;">Secure Login</button>
+  <div id="loading"><i class="fa-solid fa-spinner fa-spin"></i> Authenticating...</div>
 </div>
 
 <!-- Admin Dashboard -->
-<div class="container" id="adminScreen">
+<div class="container" id="adminScreen" style="display:none;">
   <div class="header">
     <h1><i class="fa-solid fa-gear"></i> Admin Dashboard</h1>
-    <a href="index.html" target="_blank" class="btn"><i class="fa-solid fa-eye"></i> View Portal</a>
+    <div>
+      <a href="index.html" target="_blank" class="btn" style="margin-right: 10px;"><i class="fa-solid fa-eye"></i> View Portal</a>
+      <button class="btn" style="background: #e74c3c;" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </div>
   </div>
 
   <div class="form-group">
