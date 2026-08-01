@@ -1,17 +1,19 @@
 ﻿﻿import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
   // ==========================================
   // REPLACE THIS WITH YOUR FIREBASE CONFIG
   // ==========================================
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com", // Important for Realtime Database
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyD0WsZH_YyuPADXO525pOkCjaXwDCGCxpc",
+    authDomain: "cse-57-portal.firebaseapp.com",
+    databaseURL: "https://cse-57-portal-default-rtdb.firebaseio.com",
+    projectId: "cse-57-portal",
+    storageBucket: "cse-57-portal.firebasestorage.app",
+    messagingSenderId: "316724142018",
+    appId: "1:316724142018:web:384027899f55a50f88805b",
+    measurementId: "G-MY3ZVBD1SZ"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -33,38 +35,67 @@
 
   let dbData = {};
 
-  // Attach functions to window object so HTML buttons can use them
-  window.login = function() {
-    const pass = document.getElementById('password').value;
-    
-    // CHANGE THIS PASSWORD TO YOUR OWN SECURE PASSWORD
-    if (pass === "admin123") { 
-      document.getElementById('loading').style.display = 'block';
+  const auth = getAuth(app);
+
+  // Authentication State Observer
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, show dashboard
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminScreen').style.display = 'block';
       
+      // Load Database Data
       const dataRef = ref(db, 'portalData');
-      
       onValue(dataRef, (snapshot) => {
         const data = snapshot.val();
         if (data) {
           dbData = data;
         } else {
-          // If database is completely empty, set it to default data
           dbData = defaultData;
           set(dataRef, defaultData);
         }
-        
-        // Show admin screen
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('adminScreen').style.display = 'block';
-        
         window.renderItems();
       }, (error) => {
-        alert("Error connecting to Firebase! Did you configure the API keys properly? Error: " + error.message);
-        document.getElementById('loading').style.display = 'none';
+        alert("Database connection error: " + error.message);
       });
     } else {
-      alert("Wrong Password!");
+      // User is signed out, show login
+      document.getElementById('loginScreen').style.display = 'block';
+      document.getElementById('adminScreen').style.display = 'none';
+      document.getElementById('loading').style.display = 'none';
     }
+  });
+
+  // Attach functions to window object so HTML buttons can use them
+  window.login = function() {
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('password').value;
+    
+    if (!email || !pass) {
+      alert("Please enter both email and password.");
+      return;
+    }
+    
+    document.getElementById('loading').style.display = 'block';
+    
+    signInWithEmailAndPassword(auth, email, pass)
+      .then((userCredential) => {
+        // Signed in successfully, onAuthStateChanged will trigger
+      })
+      .catch((error) => {
+        document.getElementById('loading').style.display = 'none';
+        alert("Login Failed: " + error.message);
+      });
+  };
+
+  window.logout = function() {
+    signOut(auth).then(() => {
+      alert("Logged out successfully.");
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
+    }).catch((error) => {
+      alert("Logout error: " + error.message);
+    });
   };
 
   window.renderItems = function() {
