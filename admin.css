@@ -1,8 +1,8 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg-color: #010409; /* GitHub ultra dark bg */
-  --card-bg: #0d1117;  /* GitHub component bg */
+  --bg-color: #010409;
+  --card-bg: #0d1117;
   --border-color: #30363d;
   --text-main: #f0f6fc;
   --text-muted: #8b949e;
@@ -25,7 +25,6 @@ body {
                     radial-gradient(circle at bottom left, rgba(88, 166, 255, 0.05), transparent 40%);
 }
 
-/* Typography & Header */
 h1, h2, h3 { margin: 0; color: var(--text-main); }
 .header {
   display: flex;
@@ -34,6 +33,7 @@ h1, h2, h3 { margin: 0; color: var(--text-main); }
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 24px;
   margin-bottom: 30px;
+  position: relative;
 }
 .header h1 {
   font-weight: 700;
@@ -48,7 +48,6 @@ h1, h2, h3 { margin: 0; color: var(--text-main); }
   -webkit-text-fill-color: initial;
 }
 
-/* Main Container - The GitHub Card Look */
 .container {
   max-width: 900px;
   margin: 0 auto;
@@ -56,7 +55,6 @@ h1, h2, h3 { margin: 0; color: var(--text-main); }
   padding: 40px;
   border-radius: 16px;
   border: 1px solid var(--border-color);
-  /* Massive glowing aura behind the container */
   box-shadow: 0 0 160px 20px rgba(163, 113, 247, 0.18), 
               0 0 80px 10px rgba(88, 166, 255, 0.12),
               0 24px 60px rgba(0,0,0,0.8);
@@ -64,7 +62,6 @@ h1, h2, h3 { margin: 0; color: var(--text-main); }
   overflow: hidden;
 }
 
-/* The glowing bottom bar (Signature Octoverse style) */
 .container::after {
   content: '';
   position: absolute;
@@ -77,7 +74,6 @@ h1, h2, h3 { margin: 0; color: var(--text-main); }
   box-shadow: 0 -4px 25px var(--accent-purple);
 }
 
-/* Forms & Inputs */
 .form-group { margin-bottom: 24px; }
 label {
   display: flex;
@@ -114,7 +110,6 @@ select:focus, input:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
 }
 
-/* Gradient Glowing Button */
 .btn {
   background: var(--gradient);
   color: #fff !important;
@@ -146,7 +141,6 @@ select:focus, input:focus, textarea:focus {
 .btn:hover::before { opacity: 1; }
 .btn:active { transform: translateY(1px); box-shadow: 0 2px 10px rgba(163, 113, 247, 0.2); }
 
-/* Standard secondary buttons */
 .header .btn {
   background: #21262d;
   border: 1px solid #30363d;
@@ -160,7 +154,6 @@ select:focus, input:focus, textarea:focus {
   box-shadow: none;
 }
 
-/* Logout Button */
 .btn[onclick="logout()"] {
   background: transparent !important;
   border: 1px solid #f85149 !important;
@@ -173,7 +166,6 @@ select:focus, input:focus, textarea:focus {
   box-shadow: 0 4px 15px rgba(248, 81, 73, 0.2) !important;
 }
 
-/* Add Item Box */
 div[style*="background: rgba(226,185,111,0.08)"] {
   background: rgba(163, 113, 247, 0.05) !important;
   border: 1px solid rgba(163, 113, 247, 0.15) !important;
@@ -182,7 +174,6 @@ h3[style*="color: var(--gold)"] {
   color: var(--accent-purple) !important;
 }
 
-/* Item List Styles - Octoverse Timeline Look */
 .item-list { 
   margin-top: 30px; 
   display: flex; 
@@ -247,7 +238,6 @@ h3[style*="color: var(--gold)"] {
   line-height: 1.6;
 }
 
-/* Danger Button inside Items */
 .btn-danger {
   background: transparent !important;
   color: #f85149 !important;
@@ -264,7 +254,6 @@ h3[style*="color: var(--gold)"] {
   box-shadow: 0 4px 12px rgba(248, 81, 73, 0.2) !important;
 }
 
-/* Screens & Loading */
 #loginScreen {
   max-width: 420px;
   text-align: center;
@@ -275,15 +264,81 @@ h3[style*="color: var(--gold)"] {
 #loginScreen h2 i { color: var(--accent-purple); }
 #loading { display: none; margin-top: 20px; color: var(--accent-purple); font-weight: 500; font-size: 14px; }
 
-/* Scrollbar styling */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-color); }
 ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #484f58; }
 
+/* ===== Hamburger Menu ===== */
+.menu-wrapper {
+  display: none;
+  position: relative;
+}
+.hamburger-btn {
+  background: #21262d;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.hamburger-btn:hover {
+  background: #30363d;
+  border-color: var(--accent-purple);
+}
+.dropdown-menu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  min-width: 180px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+  overflow: hidden;
+  z-index: 100;
+}
+.dropdown-menu.open { display: flex; }
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  color: var(--text-main) !important;
+  background: transparent;
+  border: none;
+  text-decoration: none;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+.dropdown-item:hover {
+  background: rgba(163, 113, 247, 0.1);
+}
+.dropdown-item-danger {
+  color: #f85149 !important;
+  border-top: 1px solid var(--border-color);
+}
+.dropdown-item-danger:hover {
+  background: rgba(248, 81, 73, 0.1);
+}
+
 @media (max-width: 600px) {
   .container { padding: 24px 16px; }
-  .header { flex-direction: column; gap: 16px; text-align: center; }
+  .header { flex-direction: row; gap: 16px; text-align: left; }
+  .header-actions { display: none; }
+  .menu-wrapper { display: block; }
   .item { flex-direction: column; align-items: stretch; gap: 16px; }
   .item-content { margin-right: 0; }
   .btn-danger { text-align: center; }

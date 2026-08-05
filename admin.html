@@ -24,11 +24,40 @@
 <div class="container" id="adminScreen" style="display:none;">
   <div class="header">
     <h1><i class="fa-solid fa-gear"></i> Admin Dashboard</h1>
-    <div>
+
+    <!-- Desktop buttons -->
+    <div class="header-actions">
       <a href="index.html" target="_blank" class="btn" style="margin-right: 10px;"><i class="fa-solid fa-eye"></i> View Portal</a>
       <button class="btn" style="background: #e74c3c;" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
     </div>
+
+    <!-- Mobile hamburger -->
+    <div class="menu-wrapper">
+      <button class="hamburger-btn" onclick="toggleMenu()" id="hamburgerBtn">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="index.html" target="_blank" class="dropdown-item">
+          <i class="fa-solid fa-eye"></i> View Portal
+        </a>
+        <button class="dropdown-item dropdown-item-danger" onclick="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
+      </div>
+    </div>
   </div>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('dropdownMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      const wrapper = document.querySelector('.menu-wrapper');
+      if (wrapper && !wrapper.contains(e.target)) {
+        document.getElementById('dropdownMenu').classList.remove('open');
+      }
+    });
+  </script>
 
   <div class="form-group">
     <label for="categorySelect" style="color: var(--gold); font-size: 16px;">📂 Select Category to Manage</label>
