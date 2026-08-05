@@ -809,6 +809,7 @@ body.light .quickbar-body a:hover { background: #f3f4f6; color: #0969da; }
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
+  margin-left: auto;
 }
 .search-palette-close:hover { color: #f85149; border-color: rgba(248,81,73,0.3); }
 
@@ -885,7 +886,7 @@ body.light .palette-row-name { color: #24292f; }
 body.light .palette-row.active, body.light .palette-row:hover { background: rgba(9,105,218,0.06); }
 @media(max-width:480px){
   .search-instant-badge {
-    display: none;
+    display: none !important;
   }
   .search-palette-top {
     padding: 14px 16px;
