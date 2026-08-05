@@ -783,6 +783,7 @@ body.light .quickbar-body a:hover { background: #f3f4f6; color: #0969da; }
 .search-palette-icon { color: var(--text-muted); font-size: 1em; }
 .search-palette-input {
   flex: 1;
+  min-width: 0;
   background: transparent;
   border: none; outline: none;
   color: var(--text-title);
@@ -882,3 +883,12 @@ body.light .search-palette-top { border-color: #d0d7de; }
 body.light .search-palette-input { color: #24292f; }
 body.light .palette-row-name { color: #24292f; }
 body.light .palette-row.active, body.light .palette-row:hover { background: rgba(9,105,218,0.06); }
+@media(max-width:480px){
+  .search-instant-badge {
+    display: none;
+  }
+  .search-palette-top {
+    padding: 14px 16px;
+    gap: 8px;
+  }
+}
