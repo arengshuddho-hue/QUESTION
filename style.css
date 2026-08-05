@@ -311,7 +311,7 @@ body.light footer {
 
 .section-label {
   display: flex; align-items: center; gap: 12px;
-  margin: 40px 0 20px;
+  margin: 20px 0 20px;
   font-size: 0.7em;
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: 3px;
