@@ -19,17 +19,21 @@
       <span class="repo-owner">CSE-57</span>
       <span class="repo-slash">/</span>
       <span class="repo-name">Section-C</span>
-      <span class="repo-badge">Public</span>
+      <span class="repo-badge"><i class="fa-solid fa-earth-americas" style="margin-right:4px"></i>Public</span>
     </div>
   </div>
-  
+
   <div class="navbar-right">
-    <!-- Admin Link -->
-    <a href="admin.html" class="nav-btn admin-btn" title="Admin Login">
-      <i class="fa-solid fa-shield-halved"></i> <span>Admin</span>
-    </a>
-    
-    <!-- Three Dots Menu -->
+    <button class="search-trigger" onclick="openSearchPalette()">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <span class="search-trigger-text">Search</span>
+      <span class="search-kbd">⌘K</span>
+    </button>
+
+    <button class="nav-btn" onclick="toggleQuickBar()" title="Quick Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
     <div class="dropdown">
       <button class="nav-btn" onclick="toggleMenu()" title="More Options">
         <i class="fa-solid fa-ellipsis"></i>
@@ -51,9 +55,9 @@
   <div class="ticker-label"><i class="fa-solid fa-bolt" style="margin-right:6px"></i>INFO</div>
   <div class="ticker-track" id="ticker-track"></div>
 </div>
- 
+
 <div class="body">
-  <div class="section-label"><span><i class="fa-solid fa-layer-group" style="font-size:.7em"></i></span>Resources<span style="display:none"></span></div>
+ <div class="section-label"><span><i class="fa-solid fa-layer-group" style="font-size:.7em"></i></span>Resources<span style="display:none"></span></div>
   <div class="grid">
     <div class="card courses" onclick="open_modal('Upcoming Courses','Course List','COURSES','fa-graduation-cap')">
       <div class="ic"><i class="fa-solid fa-graduation-cap"></i></div><div class="name">Upcoming Courses</div><div class="code">Course List</div>
@@ -139,7 +143,7 @@
     <!-- GitHub Repo Header style -->
     <div class="modal-top" style="background: #010409; border-bottom: 1px solid #30363d; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;">
       <div style="display: flex; align-items: center; gap: 12px; font-size: 1.1em;">
-        <i class="fa-brands fa-github" style="font-size: 1.4em; color: var(--text-main);"></i>
+     
         <span style="color: var(--accent-blue); font-weight: 600;">CSE-57</span>
         <span style="color: var(--text-muted);">/</span>
         <span style="color: var(--accent-blue); font-weight: 600;">Academic-Portal</span>
@@ -215,21 +219,104 @@
 </div>
  
 <footer>&copy; 2025 CSE-57 Section C Academic Portal</footer>
+<!-- Quick Bar (Sidebar) -->
+<div class="quickbar-overlay" id="quickbarOverlay" onclick="closeQuickBarOutside(event)">
+  <div class="quickbar-panel" id="quickbarPanel">
+    <div class="quickbar-header">
+      <h3><i class="fa-solid fa-bars"></i> Quick Menu</h3>
+      <button class="modal-close" onclick="closeQuickBar()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="quickbar-body">
+
+      <div class="quickbar-section-title">Resources</div>
+      <a href="#" onclick="quickOpen('Upcoming Courses','Course List','COURSES','fa-graduation-cap'); return false;"><i class="fa-solid fa-graduation-cap"></i> Upcoming Courses</a>
+      <a href="#" onclick="quickOpen('Upcoming Hackathon','Events','HACKATHON','fa-laptop-code'); return false;"><i class="fa-solid fa-laptop-code"></i> Upcoming Hackathon</a>
+      <a href="#" onclick="quickOpen('Upcoming CP','Contests','CP','fa-trophy'); return false;"><i class="fa-solid fa-trophy"></i> Upcoming CP</a>
+      <a href="#" onclick="quickOpen('Reference Links','External Resources','LINKS','fa-link'); return false;"><i class="fa-solid fa-link"></i> Reference Links</a>
+      <a href="#" onclick="quickOpen('Books','Library','BOOKS','fa-book'); return false;"><i class="fa-solid fa-book"></i> Books</a>
+      <a href="#" onclick="quickOpen('Faculty List','Teachers & Advisors','FACULTY','fa-chalkboard-user'); return false;"><i class="fa-solid fa-chalkboard-user"></i> Faculty List</a>
+      <a href="#" onclick="quickOpen('Classroom Code','Google Classroom','CLASSROOM','fa-hashtag'); return false;"><i class="fa-solid fa-hashtag"></i> Classroom Code</a>
+      <a href="#" onclick="quickOpen('Class Routine','Weekly Schedule','CLSROUTINE','fa-table-list'); return false;"><i class="fa-solid fa-table-list"></i> Class Routine</a>
+      <a href="#" onclick="quickOpen('Suggestions','All Subjects','SUG','fa-lightbulb'); return false;"><i class="fa-solid fa-lightbulb"></i> Suggestions</a>
+      <a href="#" onclick="quickOpen('Notes','All Subjects','NOTES','fa-book-open'); return false;"><i class="fa-solid fa-book-open"></i> Notes</a>
+      <a href="#" onclick="quickOpen('Exam Routine','No Exam Currently','ROUTINE','fa-calendar-days'); return false;"><i class="fa-solid fa-calendar-days"></i> Exam Routine</a>
+      <a href="#" onclick="quickOpen('PQ Solutions','Previous Questions','PQS','fa-scroll'); return false;"><i class="fa-solid fa-scroll"></i> PQ Solutions</a>
+
+      <div class="quickbar-section-title">Subjects</div>
+      <a href="#" onclick="quickOpen('DSA 2','CSE0613221/222','DSA2','fa-sitemap'); return false;"><i class="fa-solid fa-sitemap"></i> DSA 2</a>
+      <a href="#" onclick="quickOpen('Software Engg','CSE0613225/226','SE','fa-diagram-project'); return false;"><i class="fa-solid fa-diagram-project"></i> Software Engg</a>
+      <a href="#" onclick="quickOpen('Complex Variables','MATH0541221','MATH','fa-square-root-variable'); return false;"><i class="fa-solid fa-square-root-variable"></i> Complex Variables</a>
+      <a href="#" onclick="quickOpen('Numerical Methods','CSE0541227','NUM','fa-calculator'); return false;"><i class="fa-solid fa-calculator"></i> Numerical Methods</a>
+      <a href="#" onclick="quickOpen('Data Communication','CSE0612223','DCOM','fa-network-wired'); return false;"><i class="fa-solid fa-network-wired"></i> Data Comm.</a>
+      <a href="#" onclick="quickOpen('Internet Prog. Lab','CSE0613208','IPLAB','fa-globe'); return false;"><i class="fa-solid fa-globe"></i> Internet Prog. Lab</a>
+
+    </div>
+  </div>
+</div>
+
+<!-- Search Palette (Cmd+K) -->
+<div class="search-overlay" id="searchOverlay" onclick="closeSearchOutside(event)">
+  <div class="search-palette">
+    <div class="search-palette-top">
+      <i class="fa-solid fa-magnifying-glass search-palette-icon"></i>
+      <input type="text" id="paletteInput" class="search-palette-input"
+             placeholder="Search the portal…" autocomplete="off"
+             oninput="paletteSearch(this.value)">
+      <span class="search-instant-badge"><i class="fa-solid fa-bolt"></i> instant</span>
+      <button class="search-palette-close" onclick="closeSearchPalette()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="search-palette-body" id="paletteBody">
+      <div class="palette-empty" id="paletteEmptyState">
+        <h4>Start typing to search</h4>
+        <p>Instant search across resources and subjects.</p>
+        <div class="palette-hints">
+          <span><i class="fa-solid fa-arrow-up-long"></i><i class="fa-solid fa-arrow-down-long"></i> navigate</span>
+          <span><i class="fa-solid fa-turn-up fa-rotate-90"></i> open</span>
+          <span>esc close</span>
+        </div>
+      </div>
+
+      <div class="palette-results" id="paletteResults"></div>
+
+      <div class="palette-noresult" id="paletteNoResult" style="display:none;">
+        <i class="fa-regular fa-face-frown"></i>
+        <span>No matching results found.</span>
+      </div>
+    </div>
+  </div>
+</div>
  
 <script>
   function toggleMenu() { document.getElementById('navDropdown').classList.toggle('show'); }
-  function openAbout() { document.getElementById('aboutOverlay').classList.add('on'); }
+  function openAboutModal() { document.getElementById('aboutOverlay').classList.add('on'); }
   function close_about(e) { if(e.target.id === 'aboutOverlay') document.getElementById('aboutOverlay').classList.remove('on'); }
-  
-  // Close dropdown when clicking outside
+
+  function toggleQuickBar() { document.getElementById('quickbarOverlay').classList.add('on'); document.body.style.overflow = 'hidden'; }
+  function closeQuickBar() { document.getElementById('quickbarOverlay').classList.remove('on'); document.body.style.overflow = ''; }
+  function closeQuickBarOutside(e) { if(e.target.id === 'quickbarOverlay') closeQuickBar(); }
+  function quickOpen(name, code, key, icon) { closeQuickBar(); window.open_modal(name, code, key, icon); }
+
   document.addEventListener('click', function(e) {
     if(!e.target.closest('.dropdown')) {
       const d = document.getElementById('navDropdown');
       if(d && d.classList.contains('show')) d.classList.remove('show');
     }
   });
+
+  // Auto-show About Portal for first-time visitors
+window.addEventListener('DOMContentLoaded', function() {
+  const hasVisited = localStorage.getItem('cse57_visited');
+  if (!hasVisited) {
+    setTimeout(function() {
+      openAboutModal();
+    }, 2000);
+    localStorage.setItem('cse57_visited', 'true');
+  }
+});
 </script>
- 
 <!-- Firebase integration for the main portal -->
 <script type="module" src="main.js"></script>
 </body>

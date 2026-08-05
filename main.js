@@ -48,7 +48,6 @@ window.toggle_theme = function(){
   window.isDark = !window.isDark;
   document.body.classList.toggle('dark', window.isDark);
   document.body.classList.toggle('light', !window.isDark);
-  document.getElementById('theme-btn').textContent = window.isDark ? '☀' : '🌙';
 }
 
 // Modal Logic (Completely Upgraded)
@@ -156,4 +155,139 @@ window.close_outside = function(e){
 }
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape') window.close_modal();
+});
+
+// ===== Search Palette (Cmd+K) =====
+let paletteActiveIndex = -1;
+let paletteMatches = [];
+
+function normalize(str){
+  return (str || '').trim().toLocaleLowerCase().replace(/\s+/g, ' ');
+}
+
+// Card data collected from existing onclick attributes, no HTML change needed
+function getSearchIndex(){
+  const cards = document.querySelectorAll('.grid .card[onclick]');
+  const index = [];
+  cards.forEach(card => {
+    const onclickStr = card.getAttribute('onclick') || '';
+    const m = onclickStr.match(/open_modal\('([^']*)','([^']*)','([^']*)','([^']*)'\)/);
+    if(m){
+      index.push({ name: m[1], code: m[2], key: m[3], icon: m[4] });
+    }
+  });
+  return index;
+}
+
+window.openSearchPalette = function(){
+  document.getElementById('searchOverlay').classList.add('on');
+  document.body.style.overflow = 'hidden';
+  const input = document.getElementById('paletteInput');
+  input.value = '';
+  paletteSearch('');
+  setTimeout(() => input.focus(), 50);
+}
+
+window.closeSearchPalette = function(){
+  document.getElementById('searchOverlay').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+window.closeSearchOutside = function(e){
+  if(e.target.id === 'searchOverlay') closeSearchPalette();
+}
+
+window.paletteSearch = function(query){
+  const q = normalize(query);
+  const emptyState = document.getElementById('paletteEmptyState');
+  const resultsBox = document.getElementById('paletteResults');
+  const noResult = document.getElementById('paletteNoResult');
+
+  if(!q){
+    emptyState.style.display = 'block';
+    resultsBox.style.display = 'none';
+    resultsBox.innerHTML = '';
+    noResult.style.display = 'none';
+    paletteMatches = [];
+    paletteActiveIndex = -1;
+    return;
+  }
+
+  const all = getSearchIndex();
+  paletteMatches = all.filter(item =>
+    normalize(item.name).includes(q) || normalize(item.code).includes(q)
+  ).slice(0, 8);
+
+  emptyState.style.display = 'none';
+
+  if(paletteMatches.length === 0){
+    resultsBox.style.display = 'none';
+    resultsBox.innerHTML = '';
+    noResult.style.display = 'flex';
+    paletteActiveIndex = -1;
+    return;
+  }
+
+  noResult.style.display = 'none';
+  resultsBox.style.display = 'flex';
+  paletteActiveIndex = 0;
+
+  resultsBox.innerHTML = paletteMatches.map((item, i) => `
+    <div class="palette-row ${i === 0 ? 'active' : ''}" data-index="${i}"
+         onmouseenter="setPaletteActive(${i})"
+         onclick="chooseMatch(${i})">
+      <div class="fi"><i class="fa-solid ${item.icon}"></i></div>
+      <div class="palette-row-text">
+        <div class="palette-row-name">${item.name}</div>
+        <div class="palette-row-code">${item.code}</div>
+      </div>
+      <i class="fa-solid fa-arrow-right palette-row-arrow"></i>
+    </div>
+  `).join('');
+}
+
+window.setPaletteActive = function(i){
+  paletteActiveIndex = i;
+  document.querySelectorAll('.palette-row').forEach(r => r.classList.remove('active'));
+  const row = document.querySelector(`.palette-row[data-index="${i}"]`);
+  if(row) row.classList.add('active');
+}
+
+window.chooseMatch = function(i){
+  const item = paletteMatches[i];
+  if(!item) return;
+  closeSearchPalette();
+  window.open_modal(item.name, item.code, item.key, item.icon);
+}
+
+// Keyboard: Cmd/Ctrl+K to open, Esc to close, Arrow keys + Enter inside palette
+document.addEventListener('keydown', function(e){
+  const isOpen = document.getElementById('searchOverlay').classList.contains('on');
+
+  if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){
+    e.preventDefault();
+    isOpen ? closeSearchPalette() : window.openSearchPalette();
+    return;
+  }
+
+  if(!isOpen) return;
+
+  if(e.key === 'Escape'){
+    closeSearchPalette();
+  } else if(e.key === 'ArrowDown'){
+    e.preventDefault();
+    if(paletteMatches.length){
+      paletteActiveIndex = (paletteActiveIndex + 1) % paletteMatches.length;
+      setPaletteActive(paletteActiveIndex);
+    }
+  } else if(e.key === 'ArrowUp'){
+    e.preventDefault();
+    if(paletteMatches.length){
+      paletteActiveIndex = (paletteActiveIndex - 1 + paletteMatches.length) % paletteMatches.length;
+      setPaletteActive(paletteActiveIndex);
+    }
+  } else if(e.key === 'Enter'){
+    e.preventDefault();
+    if(paletteActiveIndex >= 0) chooseMatch(paletteActiveIndex);
+  }
 });
