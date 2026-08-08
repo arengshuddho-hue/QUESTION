@@ -219,7 +219,41 @@
   </div>
 </div>
  
-<footer>&copy; 2025 CSE-57 Section C Academic Portal</footer>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="#" onclick="quickOpen('Class Routine','Weekly Schedule','CLSROUTINE','fa-table-list'); return false;">
+        <i class="fa-solid fa-table-list"></i> routine
+      </a>
+      <a href="#" onclick="quickOpen('Notes','All Subjects','NOTES','fa-book-open'); return false;">
+        <i class="fa-solid fa-book-open"></i> notes
+      </a>
+      <a href="#" onclick="quickOpen('PQ Solutions','Previous Questions','PQS','fa-scroll'); return false;">
+        <i class="fa-solid fa-scroll"></i> pq solutions
+      </a>
+      <a href="#" onclick="quickOpen('Faculty List','Teachers & Advisors','FACULTY','fa-chalkboard-user'); return false;">
+        <i class="fa-solid fa-chalkboard-user"></i> faculty
+      </a>
+      <a href="#" onclick="openAboutModal(); return false;">
+        <i class="fa-solid fa-circle-info"></i> about
+      </a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe-2_STuSi_r8w7z5zHcmCyaEonfVUlkwM5NPWI6WKWA51oFQ/viewform" target="_blank">
+        <i class="fa-solid fa-cloud-arrow-up"></i> submit files
+      </a>
+      <a href="https://github.com/arengshuddho-hue" target="_blank">
+        <i class="fa-brands fa-github"></i> source
+      </a>
+    </div>
+
+    <div class="footer-copy">
+      <span id="footer-year"></span> CSE-57 Section C · Built by Shuddha
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('footer-year').textContent = '©' + new Date().getFullYear();
+</script>
 <!-- Quick Bar (Sidebar) -->
 <div class="quickbar-overlay" id="quickbarOverlay" onclick="closeQuickBarOutside(event)">
   <div class="quickbar-panel" id="quickbarPanel">
