@@ -965,3 +965,324 @@ body.light .palette-row.active, body.light .palette-row:hover { background: rgba
     font-size: 0.95em;
   }
 }
+
+/* ============================================================
+   NOTE VAULT — personal notes accessed by a code, no login
+   ============================================================ */
+.card.vault .ic {
+  background: rgba(226, 185, 111, 0.08);
+  color: var(--gold);
+  border-color: rgba(226, 185, 111, 0.25);
+}
+.card.vault:hover .ic {
+  background: rgba(226, 185, 111, 0.15);
+  color: var(--gold);
+  border-color: rgba(226, 185, 111, 0.35);
+}
+.card.vault:hover .code {
+  background: var(--gold-dim);
+  color: var(--gold);
+  border-color: var(--gold-border);
+}
+
+.vault-modal { max-width: 520px; }
+
+.vault-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 4px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+}
+.vault-tab {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.vault-tab:hover { color: var(--text-main); }
+.vault-tab.active {
+  background: var(--card-hover);
+  color: var(--accent-purple);
+  box-shadow: 0 0 0 1px rgba(163,113,247,0.25);
+}
+
+.vault-pane { display: flex; flex-direction: column; }
+
+.vault-label {
+  font-size: 0.7em;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.vault-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-title);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9em;
+  outline: none;
+  transition: all 0.2s;
+}
+.vault-input:focus {
+  border-color: rgba(163,113,247,0.5);
+  box-shadow: 0 0 0 3px rgba(163,113,247,0.12);
+}
+
+.vault-code-row { display: flex; gap: 8px; }
+.vault-code-row .vault-input { flex: 1; }
+
+.vault-mini-btn {
+  width: 44px; flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--accent-purple);
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.2s;
+}
+.vault-mini-btn:hover {
+  background: rgba(163,113,247,0.1);
+  border-color: rgba(163,113,247,0.35);
+}
+
+.vault-type-toggle {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.vault-type-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 10px 6px;
+  border-radius: 9px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.vault-type-btn i { font-size: 1.05em; }
+.vault-type-btn:hover { color: var(--text-main); border-color: rgba(255,255,255,0.15); }
+.vault-type-btn.active {
+  background: rgba(163,113,247,0.1);
+  color: var(--accent-purple);
+  border-color: rgba(163,113,247,0.35);
+}
+
+.vault-textarea {
+  width: 100%;
+  min-height: 160px;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-title);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9em;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: all 0.2s;
+}
+/* When type = code, switch the textarea to a code-editor look */
+.vault-textarea.as-code {
+  font-family: 'JetBrains Mono', monospace;
+  background: #0a0d12;
+  color: #a5d6ff;
+  tab-size: 2;
+  white-space: pre;
+}
+.vault-textarea:focus {
+  border-color: rgba(163,113,247,0.5);
+  box-shadow: 0 0 0 3px rgba(163,113,247,0.12);
+}
+
+.vault-file-drop {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 32px 16px;
+  border-radius: 12px;
+  border: 1.5px dashed var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.85em;
+  transition: all 0.2s;
+}
+.vault-file-drop:hover {
+  border-color: rgba(163,113,247,0.4);
+  color: var(--text-main);
+  background: var(--card-hover);
+}
+.vault-file-drop i { font-size: 1.6em; color: var(--accent-purple); }
+
+.vault-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
+  margin-top: 16px;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  background: var(--gradient);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.vault-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.vault-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.vault-link-btn {
+  background: none; border: none;
+  color: var(--accent-blue);
+  font-size: 0.78em;
+  cursor: pointer;
+  margin-top: 8px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Status / result messages */
+.vault-msg {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  display: flex; gap: 10px; align-items: flex-start;
+  line-height: 1.5;
+}
+.vault-msg.ok {
+  background: rgba(63, 185, 80, 0.08);
+  border: 1px solid rgba(63, 185, 80, 0.25);
+  color: #56d364;
+}
+.vault-msg.err {
+  background: rgba(248, 81, 73, 0.08);
+  border: 1px solid rgba(248, 81, 73, 0.25);
+  color: #f85149;
+}
+.vault-msg.loading {
+  background: rgba(88, 166, 255, 0.08);
+  border: 1px solid rgba(88, 166, 255, 0.25);
+  color: var(--accent-blue);
+}
+
+/* Note viewer inside "Open Note" result */
+.vault-note-view { margin-top: 16px; }
+.vault-note-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.vault-note-badge {
+  font-size: 0.65em;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(163,113,247,0.1);
+  color: var(--accent-purple);
+  border: 1px solid rgba(163,113,247,0.2);
+}
+.vault-copy-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.75em;
+  padding: 5px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.2s;
+}
+.vault-copy-btn:hover { color: var(--accent-blue); border-color: rgba(88,166,255,0.3); }
+
+/* Plain text note = normal readable prose */
+.vault-note-text {
+  padding: 16px;
+  border-radius: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9em;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Code note = editor-style block */
+.vault-note-code {
+  padding: 16px;
+  border-radius: 10px;
+  background: #0a0d12;
+  border: 1px solid var(--border-color);
+  color: #a5d6ff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  line-height: 1.65;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.vault-note-image img {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  display: block;
+}
+
+.vault-note-pdf-link {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.vault-note-pdf-link:hover {
+  border-color: rgba(88,166,255,0.35);
+  color: var(--accent-blue);
+}
+
+/* Light theme adjustments */
+body.light .vault-tabs { background: #f6f8fa; border-color: #d0d7de; }
+body.light .vault-tab.active { background: #ffffff; color: #8250df; }
+body.light .vault-input,
+body.light .vault-textarea,
+body.light .vault-type-btn,
+body.light .vault-file-drop,
+body.light .vault-mini-btn,
+body.light .vault-note-text,
+body.light .vault-note-pdf-link { background: #f6f8fa; border-color: #d0d7de; color: #24292f; }
+body.light .vault-type-btn.active { background: rgba(130,80,223,0.08); color: #8250df; border-color: rgba(130,80,223,0.25); }
+body.light .vault-textarea.as-code,
+body.light .vault-note-code { background: #0d1117; color: #a5d6ff; border-color: #30363d; }

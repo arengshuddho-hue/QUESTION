@@ -1,5 +1,5 @@
 ﻿import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { getDatabase, ref, onValue, set, get, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD0WsZH_YyuPADXO525pOkCjaXwDCGCxpc",
@@ -291,3 +291,268 @@ document.addEventListener('keydown', function(e){
     if(paletteActiveIndex >= 0) chooseMatch(paletteActiveIndex);
   }
 });
+
+// ============================================================
+// NOTE VAULT — personal notes accessed by a private code
+// Separate Firebase project (RTDB only) + Cloudinary for files.
+// No login/email involved: the code IS the key.
+// ============================================================
+
+const vaultFirebaseConfig = {
+  apiKey: "AIzaSyDtECNnScV_uie6qvmb-HAxQ6dKDglxOfA",
+  authDomain: "c-uits.firebaseapp.com",
+  databaseURL: "https://c-uits-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "c-uits",
+  storageBucket: "c-uits.firebasestorage.app",
+  messagingSenderId: "1048855243261",
+  appId: "1:1048855243261:web:57835bd57476d65c181194"
+};
+
+const CLOUDINARY_CLOUD_NAME = "dwvomd7wd";
+const CLOUDINARY_UPLOAD_PRESET = "CSE57C";
+
+// Give this app instance its own name so it doesn't clash with the main portal app
+const vaultApp = initializeApp(vaultFirebaseConfig, "vaultApp");
+const vaultDb = getDatabase(vaultApp);
+
+let vaultContentType = 'text'; // text | code | image | pdf
+let vaultChosenFile = null;
+
+function sanitizeVaultCode(raw){
+  // Keep codes URL/DB-key safe: letters, numbers, dash, underscore only
+  return (raw || '').trim().replace(/[.#$\[\]\/\s]/g, '-').slice(0, 60);
+}
+
+window.openVaultModal = function(){
+  document.getElementById('vaultOverlay').classList.add('on');
+  document.body.style.overflow = 'hidden';
+  switchVaultTab('access');
+}
+
+window.closeVaultModal = function(){
+  document.getElementById('vaultOverlay').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+window.closeVaultOutside = function(e){
+  if(e.target.id === 'vaultOverlay') window.closeVaultModal();
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    const v = document.getElementById('vaultOverlay');
+    if(v && v.classList.contains('on')) window.closeVaultModal();
+  }
+});
+
+window.switchVaultTab = function(tab){
+  const accessBtn = document.getElementById('vaultTabAccessBtn');
+  const createBtn = document.getElementById('vaultTabCreateBtn');
+  const accessPane = document.getElementById('vaultAccessPane');
+  const createPane = document.getElementById('vaultCreatePane');
+
+  if(tab === 'access'){
+    accessBtn.classList.add('active'); createBtn.classList.remove('active');
+    accessPane.style.display = 'flex'; createPane.style.display = 'none';
+  } else {
+    createBtn.classList.add('active'); accessBtn.classList.remove('active');
+    createPane.style.display = 'flex'; accessPane.style.display = 'none';
+  }
+}
+
+window.generateVaultCode = function(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for(let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  document.getElementById('vaultCreateCode').value = code;
+}
+
+window.setVaultContentType = function(type){
+  vaultContentType = type;
+  vaultChosenFile = null;
+
+  document.querySelectorAll('#vaultTypeToggle .vault-type-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.type === type);
+  });
+
+  const textWrap = document.getElementById('vaultTextWrap');
+  const fileWrap = document.getElementById('vaultFileWrap');
+  const textarea = document.getElementById('vaultTextInput');
+  const dropText = document.getElementById('vaultFileDropText');
+  const fileInput = document.getElementById('vaultFileInput');
+
+  if(type === 'text' || type === 'code'){
+    textWrap.style.display = 'block';
+    fileWrap.style.display = 'none';
+    textarea.classList.toggle('as-code', type === 'code');
+    textarea.placeholder = type === 'code'
+      ? 'Paste or write your code here...'
+      : 'Write your note here...';
+  } else {
+    textWrap.style.display = 'none';
+    fileWrap.style.display = 'block';
+    fileInput.accept = type === 'image' ? 'image/*' : 'application/pdf';
+    dropText.textContent = type === 'image' ? 'Click to choose an image' : 'Click to choose a PDF';
+  }
+}
+
+window.onVaultFileChosen = function(input){
+  const f = input.files && input.files[0];
+  vaultChosenFile = f || null;
+  const dropText = document.getElementById('vaultFileDropText');
+  dropText.textContent = f ? f.name : 'Click to choose a file';
+}
+
+function vaultShowMsg(containerId, kind, html){
+  document.getElementById(containerId).innerHTML =
+    `<div class="vault-msg ${kind}"><i class="fa-solid ${kind === 'ok' ? 'fa-circle-check' : kind === 'err' ? 'fa-circle-exclamation' : 'fa-spinner fa-spin'}"></i><div>${html}</div></div>`;
+}
+
+async function uploadToCloudinary(file){
+  const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+  const res = await fetch(url, { method: 'POST', body: formData });
+  if(!res.ok) throw new Error('Upload failed (' + res.status + ')');
+  const result = await res.json();
+  if(!result.secure_url) throw new Error('No URL returned from upload');
+  return result.secure_url;
+}
+
+window.saveVaultNote = async function(){
+  const rawCode = document.getElementById('vaultCreateCode').value;
+  const code = sanitizeVaultCode(rawCode);
+  const saveBtn = document.getElementById('vaultSaveBtn');
+
+  if(!code){
+    vaultShowMsg('vaultCreateResult', 'err', 'Please set a code before saving.');
+    return;
+  }
+
+  let payload = null;
+
+  if(vaultContentType === 'text' || vaultContentType === 'code'){
+    const text = document.getElementById('vaultTextInput').value;
+    if(!text.trim()){
+      vaultShowMsg('vaultCreateResult', 'err', 'Note is empty — write something first.');
+      return;
+    }
+    payload = { mode: vaultContentType, content: text, createdAt: Date.now() };
+  } else {
+    if(!vaultChosenFile){
+      vaultShowMsg('vaultCreateResult', 'err', 'Please choose a file first.');
+      return;
+    }
+  }
+
+  saveBtn.disabled = true;
+  vaultShowMsg('vaultCreateResult', 'loading', 'Checking code availability...');
+
+  try {
+    // Don't silently overwrite an existing note
+    const existing = await get(child(ref(vaultDb), 'notes/' + code));
+    if(existing.exists()){
+      vaultShowMsg('vaultCreateResult', 'err', 'This code is already taken. Please choose another one.');
+      saveBtn.disabled = false;
+      return;
+    }
+
+    if(vaultContentType === 'image' || vaultContentType === 'pdf'){
+      vaultShowMsg('vaultCreateResult', 'loading', 'Uploading file...');
+      const url = await uploadToCloudinary(vaultChosenFile);
+      payload = { mode: vaultContentType, content: url, createdAt: Date.now() };
+    }
+
+    vaultShowMsg('vaultCreateResult', 'loading', 'Saving your note...');
+    await set(ref(vaultDb, 'notes/' + code), payload);
+
+    vaultShowMsg('vaultCreateResult', 'ok',
+      `Saved! Your code is <strong>${code}</strong> — write it down, this is the only way back in.`);
+
+    // reset form
+    document.getElementById('vaultCreateCode').value = '';
+    document.getElementById('vaultTextInput').value = '';
+    vaultChosenFile = null;
+    document.getElementById('vaultFileInput').value = '';
+    const dropText = document.getElementById('vaultFileDropText');
+    if(dropText) dropText.textContent = 'Click to choose a file';
+
+  } catch(err){
+    console.error(err);
+    vaultShowMsg('vaultCreateResult', 'err', 'Something went wrong saving your note. Please try again.');
+  } finally {
+    saveBtn.disabled = false;
+  }
+}
+
+window.fetchVaultNote = async function(){
+  const rawCode = document.getElementById('vaultAccessCode').value;
+  const code = sanitizeVaultCode(rawCode);
+
+  if(!code){
+    vaultShowMsg('vaultAccessResult', 'err', 'Please enter a code.');
+    return;
+  }
+
+  vaultShowMsg('vaultAccessResult', 'loading', 'Looking up your note...');
+
+  try {
+    const snap = await get(child(ref(vaultDb), 'notes/' + code));
+    if(!snap.exists()){
+      vaultShowMsg('vaultAccessResult', 'err', 'No note found for this code. Double-check and try again.');
+      return;
+    }
+
+    const note = snap.val();
+    renderVaultNote(note);
+
+  } catch(err){
+    console.error(err);
+    vaultShowMsg('vaultAccessResult', 'err', 'Something went wrong fetching your note. Please try again.');
+  }
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderVaultNote(note){
+  const box = document.getElementById('vaultAccessResult');
+  const badgeLabel = { text: 'TEXT NOTE', code: 'CODE SNIPPET', image: 'IMAGE', pdf: 'PDF' }[note.mode] || 'NOTE';
+  let bodyHtml = '';
+
+  if(note.mode === 'text'){
+    bodyHtml = `<div class="vault-note-text">${escapeHtml(note.content)}</div>`;
+  } else if(note.mode === 'code'){
+    bodyHtml = `<pre class="vault-note-code"><code>${escapeHtml(note.content)}</code></pre>`;
+  } else if(note.mode === 'image'){
+    bodyHtml = `<div class="vault-note-image"><img src="${note.content}" alt="Saved note image"></div>`;
+  } else if(note.mode === 'pdf'){
+    bodyHtml = `<a class="vault-note-pdf-link" href="${note.content}" target="_blank"><i class="fa-solid fa-file-pdf"></i> Open PDF <i class="fa-solid fa-arrow-up-right-from-square" style="margin-left:auto"></i></a>`;
+  }
+
+  box.innerHTML = `
+    <div class="vault-note-view">
+      <div class="vault-note-meta">
+        <span class="vault-note-badge">${badgeLabel}</span>
+        ${(note.mode === 'text' || note.mode === 'code') ? `<button class="vault-copy-btn" id="vaultCopyBtn"><i class="fa-solid fa-copy"></i> Copy</button>` : ''}
+      </div>
+      ${bodyHtml}
+    </div>
+  `;
+
+  if(note.mode === 'text' || note.mode === 'code'){
+    document.getElementById('vaultCopyBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(note.content).then(() => {
+        const btn = document.getElementById('vaultCopyBtn');
+        const old = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+        setTimeout(() => { btn.innerHTML = old; }, 1200);
+      });
+    });
+  }
+}

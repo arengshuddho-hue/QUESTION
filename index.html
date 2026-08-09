@@ -60,6 +60,9 @@
 <div class="body">
  <div class="section-label"><span><i class="fa-solid fa-layer-group" style="font-size:.7em"></i></span>Resources<span style="display:none"></span></div>
   <div class="grid">
+    <div class="card vault" onclick="openVaultModal()">
+      <div class="ic"><i class="fa-solid fa-key"></i></div><div class="name">Note Vault</div><div class="code">Personal · Code Access</div>
+    </div>
     <div class="card courses" onclick="open_modal('Upcoming Courses','Course List','COURSES','fa-graduation-cap')">
       <div class="ic"><i class="fa-solid fa-graduation-cap"></i></div><div class="name">Upcoming Courses</div><div class="code">Course List</div>
     </div>
@@ -134,6 +137,76 @@
       <button class="modal-close" onclick="close_modal()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body"><div class="pdf-list" id="m-pdfs"></div></div>
+  </div>
+</div>
+
+<!-- Note Vault Modal -->
+<div class="overlay" id="vaultOverlay" onclick="closeVaultOutside(event)">
+  <div class="modal vault-modal">
+    <div class="modal-top">
+      <div class="modal-title-group">
+        <div class="modal-icon"><i class="fa-solid fa-key"></i></div>
+        <div><h3>Note Vault</h3><div class="sub">No login — just your code</div></div>
+      </div>
+      <button class="modal-close" onclick="closeVaultModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+
+      <div class="vault-tabs">
+        <button class="vault-tab active" id="vaultTabAccessBtn" onclick="switchVaultTab('access')">
+          <i class="fa-solid fa-unlock"></i> Open Note
+        </button>
+        <button class="vault-tab" id="vaultTabCreateBtn" onclick="switchVaultTab('create')">
+          <i class="fa-solid fa-plus"></i> Save New Note
+        </button>
+      </div>
+
+      <!-- ACCESS PANE -->
+      <div class="vault-pane" id="vaultAccessPane">
+        <label class="vault-label">Enter your code</label>
+        <input type="text" id="vaultAccessCode" class="vault-input" placeholder="e.g. RIFAT-42X" autocomplete="off">
+        <button class="vault-btn" onclick="fetchVaultNote()">
+          <i class="fa-solid fa-magnifying-glass"></i> Open Note
+        </button>
+        <div id="vaultAccessResult"></div>
+      </div>
+
+      <!-- CREATE PANE -->
+      <div class="vault-pane" id="vaultCreatePane" style="display:none;">
+        <label class="vault-label">Set your unique code (remember this!)</label>
+        <div class="vault-code-row">
+          <input type="text" id="vaultCreateCode" class="vault-input" placeholder="Choose a code" autocomplete="off">
+          <button class="vault-mini-btn" onclick="generateVaultCode()" title="Generate random code">
+            <i class="fa-solid fa-dice"></i>
+          </button>
+        </div>
+
+        <label class="vault-label" style="margin-top:18px;">Note type</label>
+        <div class="vault-type-toggle" id="vaultTypeToggle">
+          <button class="vault-type-btn active" data-type="text" onclick="setVaultContentType('text')"><i class="fa-solid fa-align-left"></i> Text</button>
+          <button class="vault-type-btn" data-type="code" onclick="setVaultContentType('code')"><i class="fa-solid fa-code"></i> Code</button>
+          <button class="vault-type-btn" data-type="image" onclick="setVaultContentType('image')"><i class="fa-solid fa-image"></i> Image</button>
+          <button class="vault-type-btn" data-type="pdf" onclick="setVaultContentType('pdf')"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+        </div>
+
+        <div id="vaultTextWrap">
+          <textarea id="vaultTextInput" class="vault-textarea" placeholder="Write your note here..."></textarea>
+        </div>
+        <div id="vaultFileWrap" style="display:none;">
+          <label class="vault-file-drop" id="vaultFileDropLabel">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span id="vaultFileDropText">Click to choose a file</span>
+            <input type="file" id="vaultFileInput" style="display:none;" onchange="onVaultFileChosen(this)">
+          </label>
+        </div>
+
+        <button class="vault-btn" id="vaultSaveBtn" onclick="saveVaultNote()">
+          <i class="fa-solid fa-floppy-disk"></i> Save Note
+        </button>
+        <div id="vaultCreateResult"></div>
+      </div>
+
+    </div>
   </div>
 </div>
  
@@ -264,6 +337,7 @@
     <div class="quickbar-body">
 
       <div class="quickbar-section-title">Resources</div>
+      <a href="#" onclick="closeQuickBar(); openVaultModal(); return false;"><i class="fa-solid fa-key"></i> Note Vault</a>
       <a href="#" onclick="quickOpen('Upcoming Courses','Course List','COURSES','fa-graduation-cap'); return false;"><i class="fa-solid fa-graduation-cap"></i> Upcoming Courses</a>
       <a href="#" onclick="quickOpen('Upcoming Hackathon','Events','HACKATHON','fa-laptop-code'); return false;"><i class="fa-solid fa-laptop-code"></i> Upcoming Hackathon</a>
       <a href="#" onclick="quickOpen('Upcoming CP','Contests','CP','fa-trophy'); return false;"><i class="fa-solid fa-trophy"></i> Upcoming CP</a>
@@ -356,4 +430,3 @@ window.addEventListener('DOMContentLoaded', function() {
 <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
-
