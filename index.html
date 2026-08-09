@@ -190,6 +190,11 @@
         </div>
 
         <div id="vaultTextWrap">
+          <div class="vault-textarea-header">
+            <button type="button" class="vault-mini-expand-btn" onclick="openVaultEditorFullscreen()">
+              <i class="fa-solid fa-expand"></i> Full Screen
+            </button>
+          </div>
           <textarea id="vaultTextInput" class="vault-textarea" placeholder="Write your note here..."></textarea>
         </div>
         <div id="vaultFileWrap" style="display:none;">
@@ -204,9 +209,24 @@
           <i class="fa-solid fa-floppy-disk"></i> Save Note
         </button>
         <div id="vaultCreateResult"></div>
+        <div class="vault-ttl-hint"><i class="fa-regular fa-clock"></i> Notes are automatically deleted 30 days after saving.</div>
       </div>
 
     </div>
+  </div>
+</div>
+
+<!-- Note Vault Full Screen Viewer (text / code) -->
+<div class="overlay vault-fs-overlay" id="vaultFullscreenOverlay" onclick="closeVaultFullscreenOutside(event)">
+  <div class="vault-fs-modal">
+    <div class="vault-fs-top">
+      <span class="vault-fs-label" id="vaultFullscreenLabel">NOTE</span>
+      <div class="vault-fs-actions">
+        <button class="vault-copy-btn" id="vaultFullscreenCopyBtn"><i class="fa-solid fa-copy"></i> Copy</button>
+        <button class="modal-close" onclick="closeVaultFullscreen()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="vault-fs-body" id="vaultFullscreenBody"></div>
   </div>
 </div>
  
@@ -267,20 +287,10 @@
             ✨ Features
           </h2>
           <ul style="padding-left: 20px; margin-bottom: 16px; font-size: 16px;">
-            <li style="margin-bottom: 4px;"><strong>Firebase RTDB:</strong> Real-time syncing for notes and announcements.</li>
-            <li style="margin-bottom: 4px;"><strong>Octoverse Theme:</strong> Deep dark UI matching GitHub's premium aesthetic.</li>
-            <li style="margin-bottom: 4px;"><strong>Secure Admin:</strong> Protected dashboard to manage all portal data.</li>
+            <li style="margin-bottom: 4px;"><strong>Live Updates:</strong> Announcements and notes sync instantly for everyone.</li>
+            <li style="margin-bottom: 4px;"><strong>Clean Interface:</strong> A fast, distraction-free layout inspired by developer tools.</li>
+            <li style="margin-bottom: 4px;"><strong>Private by Default:</strong> Personal notes are only accessible with your own code.</li>
           </ul>
-
-          <h2 style="border-bottom: 1px solid #21262d; padding-bottom: 8px; margin-top: 24px; margin-bottom: 16px; font-size: 1.5em; font-weight: 600; color: #f0f6fc;">
-            🚀 Tech Stack
-          </h2>
-          <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-            <span style="background: rgba(88, 166, 255, 0.1); color: var(--accent-blue); padding: 4px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; border: 1px solid rgba(88,166,255,0.2);">HTML5</span>
-            <span style="background: rgba(163, 113, 247, 0.1); color: var(--accent-purple); padding: 4px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; border: 1px solid rgba(163,113,247,0.2);">CSS3</span>
-            <span style="background: rgba(226, 185, 111, 0.1); color: var(--gold); padding: 4px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; border: 1px solid rgba(226,185,111,0.2);">Vanilla JS</span>
-            <span style="background: rgba(251, 146, 60, 0.1); color: #fb923c; padding: 4px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; border: 1px solid rgba(251,146,60,0.2);">Firebase</span>
-          </div>
           
           <blockquote style="border-left: 4px solid #30363d; padding: 0 16px; color: var(--text-muted); margin: 24px 0 0 0;">
             Developed and maintained for the students of Section C, Dept of CSE.

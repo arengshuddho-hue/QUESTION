@@ -296,6 +296,7 @@ document.addEventListener('keydown', function(e){
 // NOTE VAULT — personal notes accessed by a private code
 // Separate Firebase project (RTDB only) + Cloudinary for files.
 // No login/email involved: the code IS the key.
+// Notes auto-expire and are deleted 30 days after creation.
 // ============================================================
 
 const vaultFirebaseConfig = {
@@ -311,12 +312,16 @@ const vaultFirebaseConfig = {
 const CLOUDINARY_CLOUD_NAME = "dwvomd7wd";
 const CLOUDINARY_UPLOAD_PRESET = "CSE57C";
 
+// Notes older than this are auto-deleted on next access
+const VAULT_NOTE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
 // Give this app instance its own name so it doesn't clash with the main portal app
 const vaultApp = initializeApp(vaultFirebaseConfig, "vaultApp");
 const vaultDb = getDatabase(vaultApp);
 
 let vaultContentType = 'text'; // text | code | image | pdf
 let vaultChosenFile = null;
+let currentVaultCode = null; // code of the note currently shown in the "Open Note" pane
 
 function sanitizeVaultCode(raw){
   // Keep codes URL/DB-key safe: letters, numbers, dash, underscore only
@@ -469,7 +474,7 @@ window.saveVaultNote = async function(){
     await set(ref(vaultDb, 'notes/' + code), payload);
 
     vaultShowMsg('vaultCreateResult', 'ok',
-      `Saved! Your code is <strong>${code}</strong> — write it down, this is the only way back in.`);
+      `Saved! Your code is <strong>${code}</strong> — write it down, this is the only way back in. Notes are automatically deleted after 30 days.`);
 
     // reset form
     document.getElementById('vaultCreateCode').value = '';
@@ -506,7 +511,16 @@ window.fetchVaultNote = async function(){
     }
 
     const note = snap.val();
-    renderVaultNote(note);
+
+    // Auto-expire: notes older than 30 days are deleted on access
+    if(note.createdAt && (Date.now() - note.createdAt > VAULT_NOTE_TTL_MS)){
+      await set(ref(vaultDb, 'notes/' + code), null);
+      vaultShowMsg('vaultAccessResult', 'err', 'This note has expired and was automatically deleted. Notes are kept for 30 days only.');
+      return;
+    }
+
+    currentVaultCode = code;
+    renderVaultNote(note, code);
 
   } catch(err){
     console.error(err);
@@ -520,7 +534,16 @@ function escapeHtml(str){
   return div.innerHTML;
 }
 
-function renderVaultNote(note){
+function getExpiryLabel(createdAt){
+  if(!createdAt) return '';
+  const msLeft = createdAt + VAULT_NOTE_TTL_MS - Date.now();
+  if(msLeft <= 0) return 'Expiring soon.';
+  const daysLeft = Math.ceil(msLeft / (24 * 60 * 60 * 1000));
+  if(daysLeft <= 1) return 'Expires in less than a day (notes auto-delete after 30 days).';
+  return `Expires in ${daysLeft} days (notes auto-delete after 30 days).`;
+}
+
+function renderVaultNote(note, code){
   const box = document.getElementById('vaultAccessResult');
   const badgeLabel = { text: 'TEXT NOTE', code: 'CODE SNIPPET', image: 'IMAGE', pdf: 'PDF' }[note.mode] || 'NOTE';
   let bodyHtml = '';
@@ -535,17 +558,25 @@ function renderVaultNote(note){
     bodyHtml = `<a class="vault-note-pdf-link" href="${note.content}" target="_blank"><i class="fa-solid fa-file-pdf"></i> Open PDF <i class="fa-solid fa-arrow-up-right-from-square" style="margin-left:auto"></i></a>`;
   }
 
+  const canExpand = (note.mode === 'text' || note.mode === 'code');
+  const expiryLabel = getExpiryLabel(note.createdAt);
+
   box.innerHTML = `
     <div class="vault-note-view">
       <div class="vault-note-meta">
         <span class="vault-note-badge">${badgeLabel}</span>
-        ${(note.mode === 'text' || note.mode === 'code') ? `<button class="vault-copy-btn" id="vaultCopyBtn"><i class="fa-solid fa-copy"></i> Copy</button>` : ''}
+        <div class="vault-note-actions">
+          ${canExpand ? `<button class="vault-copy-btn" id="vaultExpandBtn"><i class="fa-solid fa-expand"></i> Full Screen</button>` : ''}
+          ${canExpand ? `<button class="vault-copy-btn" id="vaultCopyBtn"><i class="fa-solid fa-copy"></i> Copy</button>` : ''}
+          <button class="vault-copy-btn vault-delete-btn" id="vaultDeleteBtn"><i class="fa-solid fa-trash"></i> Delete</button>
+        </div>
       </div>
       ${bodyHtml}
+      ${expiryLabel ? `<div class="vault-expiry-note"><i class="fa-regular fa-clock"></i> ${expiryLabel}</div>` : ''}
     </div>
   `;
 
-  if(note.mode === 'text' || note.mode === 'code'){
+  if(canExpand){
     document.getElementById('vaultCopyBtn').addEventListener('click', () => {
       navigator.clipboard.writeText(note.content).then(() => {
         const btn = document.getElementById('vaultCopyBtn');
@@ -554,5 +585,136 @@ function renderVaultNote(note){
         setTimeout(() => { btn.innerHTML = old; }, 1200);
       });
     });
+
+    document.getElementById('vaultExpandBtn').addEventListener('click', () => {
+      window.openVaultFullscreen(note);
+    });
+  }
+
+  document.getElementById('vaultDeleteBtn').addEventListener('click', () => {
+    confirmDeleteVaultNote(code);
+  });
+}
+
+// ----- Delete note (protects against accidental wrong uploads) -----
+// Click once to arm, click again within a few seconds to actually delete.
+function confirmDeleteVaultNote(code){
+  const btn = document.getElementById('vaultDeleteBtn');
+  if(!btn) return;
+
+  if(btn.dataset.confirming === 'true'){
+    deleteVaultNoteNow(code);
+    return;
+  }
+
+  btn.dataset.confirming = 'true';
+  btn.classList.add('confirming');
+  const old = btn.innerHTML;
+  btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Click again to confirm';
+
+  setTimeout(() => {
+    if(btn && btn.dataset && btn.dataset.confirming === 'true'){
+      btn.dataset.confirming = 'false';
+      btn.classList.remove('confirming');
+      btn.innerHTML = old;
+    }
+  }, 3000);
+}
+
+async function deleteVaultNoteNow(code){
+  const btn = document.getElementById('vaultDeleteBtn');
+  if(btn) btn.disabled = true;
+  try {
+    await set(ref(vaultDb, 'notes/' + code), null);
+    vaultShowMsg('vaultAccessResult', 'ok', 'Note deleted successfully.');
+    document.getElementById('vaultAccessCode').value = '';
+    currentVaultCode = null;
+  } catch(err){
+    console.error(err);
+    vaultShowMsg('vaultAccessResult', 'err', 'Could not delete the note. Please try again.');
   }
 }
+
+// ----- Full-screen viewer for ALREADY SAVED text/code notes (read-only, VS Code style) -----
+window.openVaultFullscreen = function(note){
+  const overlay = document.getElementById('vaultFullscreenOverlay');
+  const body = document.getElementById('vaultFullscreenBody');
+  const label = document.getElementById('vaultFullscreenLabel');
+
+  label.textContent = note.mode === 'code' ? 'CODE SNIPPET' : 'TEXT NOTE';
+
+  if(note.mode === 'code'){
+    body.innerHTML = `<pre class="vault-fs-code"><code>${escapeHtml(note.content)}</code></pre>`;
+  } else {
+    body.innerHTML = `<div class="vault-fs-text">${escapeHtml(note.content)}</div>`;
+  }
+
+  const copyBtn = document.getElementById('vaultFullscreenCopyBtn');
+  if(copyBtn){
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(note.content).then(() => {
+        const oldHtml = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+        setTimeout(() => { copyBtn.innerHTML = oldHtml; }, 1200);
+      });
+    };
+  }
+
+  overlay.classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+// ----- Full-screen EDITOR for the note being composed, BEFORE saving -----
+// Lets the user paste/write in a large VS Code-style view; syncs live back
+// into the actual textarea in the "Save New Note" form.
+window.openVaultEditorFullscreen = function(){
+  const overlay = document.getElementById('vaultFullscreenOverlay');
+  const body = document.getElementById('vaultFullscreenBody');
+  const label = document.getElementById('vaultFullscreenLabel');
+  const copyBtn = document.getElementById('vaultFullscreenCopyBtn');
+
+  const textarea = document.getElementById('vaultTextInput');
+  const isCode = vaultContentType === 'code';
+
+  label.textContent = isCode ? 'CODE SNIPPET · EDITING' : 'TEXT NOTE · EDITING';
+
+  body.innerHTML = `<textarea id="vaultFsEditTextarea" class="vault-fs-edit-textarea ${isCode ? 'as-code' : ''}" placeholder="${isCode ? 'Paste or write your code here...' : 'Write your note here...'}" spellcheck="false"></textarea>`;
+
+  const fsTextarea = document.getElementById('vaultFsEditTextarea');
+  fsTextarea.value = textarea.value;
+
+  // Live two-way sync so nothing is lost whether you type here or in the small box
+  fsTextarea.addEventListener('input', () => {
+    textarea.value = fsTextarea.value;
+  });
+
+  if(copyBtn){
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(fsTextarea.value).then(() => {
+        const oldHtml = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+        setTimeout(() => { copyBtn.innerHTML = oldHtml; }, 1200);
+      });
+    };
+  }
+
+  overlay.classList.add('on');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => fsTextarea.focus(), 60);
+}
+
+window.closeVaultFullscreen = function(){
+  document.getElementById('vaultFullscreenOverlay').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+window.closeVaultFullscreenOutside = function(e){
+  if(e.target.id === 'vaultFullscreenOverlay') window.closeVaultFullscreen();
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    const fs = document.getElementById('vaultFullscreenOverlay');
+    if(fs && fs.classList.contains('on')) window.closeVaultFullscreen();
+  }
+});
