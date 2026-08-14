@@ -13,6 +13,11 @@ const firebaseConfig = {
   measurementId: "G-MY3ZVBD1SZ"
 };
 
+// ---- Cloudinary Config ----
+// এখানে তোমার Card Vault-এ যে Cloud Name আর Upload Preset ব্যবহার করেছ, সেটাই বসাও
+const CLOUDINARY_CLOUD_NAME = "dwvomd7wd";
+const CLOUDINARY_UPLOAD_PRESET = "CSE57C";
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
@@ -59,6 +64,45 @@ window.logout = function() {
   });
 };
 
+// ---- Toggle between Link input and File upload input based on Item Type ----
+window.toggleInputMode = function() {
+  const type = document.getElementById('itemType').value;
+  const linkWrap = document.getElementById('linkInputWrap');
+  const fileWrap = document.getElementById('fileInputWrap');
+
+  if (type === 'upload') {
+    linkWrap.style.display = 'none';
+    fileWrap.style.display = 'block';
+  } else {
+    linkWrap.style.display = 'block';
+    fileWrap.style.display = 'none';
+  }
+};
+
+// ---- Upload selected file to Cloudinary, return secure_url ----
+async function uploadFileToCloudinary(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+  // raw resource_type covers PDFs and other non-image/video files
+  const isPdf = file.type === 'application/pdf';
+  const resourceType = isPdf ? 'raw' : 'auto';
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`, {
+    method: 'POST',
+    body: formData
+  });
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData?.error?.message || 'Upload failed');
+  }
+
+  const data = await res.json();
+  return data.secure_url;
+}
+
 window.renderItems = function() {
   const category = document.getElementById('categorySelect').value;
   const items = dbData[category] || [];
@@ -88,7 +132,7 @@ window.renderItems = function() {
     if (typeof item === 'string') {
       displayStr = `<span style="color:#888;">[Legacy Data]</span> ${item}`;
     } else {
-      const typeIcon = item.type === 'link' ? '🔗' : item.type === 'text' ? '📝' : item.type === 'image' ? '🖼️' : '🔢';
+      const typeIcon = item.type === 'link' ? '🔗' : item.type === 'text' ? '📝' : item.type === 'image' ? '🖼️' : item.type === 'file' ? '📤' : '🔢';
       displayStr = `<strong>${item.title || '(No Title)'}</strong> <span style="color:#888; font-size:12px;">${typeIcon} ${item.type || 'Ticker'}</span><br><small style="color:#aaa;">${item.content}</small>`;
     }
     
@@ -100,20 +144,47 @@ window.renderItems = function() {
   });
 };
 
-window.addItem = function() {
+window.addItem = async function() {
   const category = document.getElementById('categorySelect').value;
   const type = document.getElementById('itemType').value;
   const title = document.getElementById('itemTitle').value.trim();
-  const content = document.getElementById('itemContent').value.trim();
-  
-  if (!content) return alert('Please provide Content or Link!');
+
   if (category !== 'TICKER' && !title) return alert('Please provide a Title!');
-  
-  let valToSave = { type, title, content };
-  if (category === 'TICKER') {
-    valToSave = { type: 'ticker', title: 'Notice', content: content };
+
+  const saveBtn = document.getElementById('saveBtn');
+  let valToSave;
+
+  if (type === 'upload') {
+    const fileInput = document.getElementById('itemFile');
+    const file = fileInput.files[0];
+    if (!file) return alert('Please choose a file to upload!');
+
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+
+    try {
+      const url = await uploadFileToCloudinary(file);
+      const isPdf = file.type === 'application/pdf';
+      valToSave = { type: isPdf ? 'file' : 'image', title, content: url };
+    } catch (err) {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Save to Database';
+      return alert('Upload Failed: ' + err.message);
+    }
+
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Save to Database';
+    fileInput.value = '';
+  } else {
+    const content = document.getElementById('itemContent').value.trim();
+    if (!content) return alert('Please provide Content or Link!');
+
+    valToSave = { type, title, content };
+    if (category === 'TICKER') {
+      valToSave = { type: 'ticker', title: 'Notice', content: content };
+    }
   }
-  
+
   if (!dbData[category]) dbData[category] = [];
   dbData[category].push(valToSave);
   
