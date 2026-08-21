@@ -8,6 +8,86 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+<style>
+  /* ===== Category Filter Tabs ===== */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 4px 0 28px;
+    padding: 6px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+  }
+  .filter-tab {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .filter-tab i { font-size: 0.9em; opacity: 0.8; }
+  .filter-tab:hover { color: var(--text-main); background: rgba(255,255,255,0.04); }
+  .filter-tab.active {
+    background: var(--gradient);
+    color: #fff;
+  }
+  .filter-tab.active i { opacity: 1; }
+  .filter-count {
+    font-size: 0.75em;
+    padding: 1px 7px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+  }
+  .filter-tab:not(.active) .filter-count {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-muted);
+  }
+
+  /* Category badge on each card */
+  .card-cat-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.55em;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.06);
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+  }
+
+  /* Hide/show + reflow animation for filtering */
+  .grid .card {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .grid .card.hidden {
+    display: none;
+  }
+
+  body.light .filter-bar { background: #f6f8fa; border-color: #d0d7de; }
+  body.light .filter-tab { color: #57606a; }
+  body.light .filter-tab:hover { background: rgba(31,35,40,0.06); color: #24292f; }
+  body.light .card-cat-badge { background: rgba(31,35,40,0.05); border-color: #d0d7de; color: #57606a; }
+
+  @media(max-width:600px){
+    .filter-bar { gap: 6px; padding: 5px; }
+    .filter-tab { padding: 8px 11px; font-size: 0.78em; }
+  }
+</style>
 </head>
 <body class="dark">
  
@@ -58,72 +138,117 @@
 </div>
 
 <div class="body">
- <div class="section-label"><span><i class="fa-solid fa-layer-group" style="font-size:.7em"></i></span>Resources<span style="display:none"></span></div>
-  <div class="grid">
-    <div class="card vault" onclick="openVaultModal()">
+
+  <!-- ===================== CATEGORY FILTER TABS ===================== -->
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-tab active" data-filter="all" onclick="setFilter('all')">
+      <i class="fa-solid fa-grip"></i> All <span class="filter-count" id="count-all"></span>
+    </button>
+    <button class="filter-tab" data-filter="personal" onclick="setFilter('personal')">
+      <i class="fa-solid fa-user"></i> Personal <span class="filter-count" id="count-personal"></span>
+    </button>
+    <button class="filter-tab" data-filter="academic" onclick="setFilter('academic')">
+      <i class="fa-solid fa-graduation-cap"></i> Academic <span class="filter-count" id="count-academic"></span>
+    </button>
+    <button class="filter-tab" data-filter="competitive" onclick="setFilter('competitive')">
+      <i class="fa-solid fa-trophy"></i> Competitive <span class="filter-count" id="count-competitive"></span>
+    </button>
+    <button class="filter-tab" data-filter="study" onclick="setFilter('study')">
+      <i class="fa-solid fa-book-open"></i> Study Material <span class="filter-count" id="count-study"></span>
+    </button>
+    <button class="filter-tab" data-filter="subjects" onclick="setFilter('subjects')">
+      <i class="fa-solid fa-book"></i> Subjects <span class="filter-count" id="count-subjects"></span>
+    </button>
+  </div>
+
+  <!-- ===================== ONE UNIFIED GRID ===================== -->
+  <div class="grid" id="mainGrid">
+
+    <div class="card vault" data-cat="personal" onclick="openVaultModal()">
+   
       <div class="ic"><i class="fa-solid fa-key"></i></div><div class="name">Note Vault</div><div class="code">Personal · Code Access</div>
     </div>
-    <div class="card courses" onclick="open_modal('Upcoming Courses','Course List','COURSES','fa-graduation-cap')">
-      <div class="ic"><i class="fa-solid fa-graduation-cap"></i></div><div class="name">Upcoming Courses</div><div class="code">Course List</div>
-    </div>
-    <div class="card hackathon" onclick="open_modal('Upcoming Hackathon','Events','HACKATHON','fa-laptop-code')">
-      <div class="ic"><i class="fa-solid fa-laptop-code"></i></div><div class="name">Upcoming Hackathon</div><div class="code">Events</div>
-    </div>
-    <div class="card cp" onclick="open_modal('Upcoming CP','Contests','CP','fa-trophy')">
-      <div class="ic"><i class="fa-solid fa-trophy"></i></div><div class="name">Upcoming CP</div><div class="code">Contests</div>
-    </div>
-    <a class="card update" href="https://docs.google.com/forms/d/e/1FAIpQLSe-2_STuSi_r8w7z5zHcmCyaEonfVUlkwM5NPWI6WKWA51oFQ/viewform?usp=sharing&ouid=103587266722819910531" target="_blank">
+    <a class="card update" data-cat="personal" href="https://docs.google.com/forms/d/e/1FAIpQLSe-2_STuSi_r8w7z5zHcmCyaEonfVUlkwM5NPWI6WKWA51oFQ/viewform?usp=sharing&ouid=103587266722819910531" target="_blank">
+    
       <div class="ic"><i class="fa-solid fa-cloud-arrow-up"></i></div><div class="name">Update Files</div><div class="code">Google Form</div>
     </a>
-    <div class="card links" onclick="open_modal('Reference Links','External Resources','LINKS','fa-link')">
-      <div class="ic"><i class="fa-solid fa-link"></i></div><div class="name">Reference Links</div><div class="code">External Resources</div>
+
+    <div class="card courses" data-cat="academic" onclick="open_modal('Upcoming Courses','Course List','COURSES','fa-graduation-cap')">
+     
+      <div class="ic"><i class="fa-solid fa-graduation-cap"></i></div><div class="name">Upcoming Courses</div><div class="code">Course List</div>
     </div>
-    <div class="card books" onclick="open_modal('Books','Library','BOOKS','fa-book')">
-      <div class="ic"><i class="fa-solid fa-book"></i></div><div class="name">Books</div><div class="code">Library</div>
-    </div>
-    <div class="card faculty" onclick="open_modal('Faculty List','Teachers & Advisors','FACULTY','fa-chalkboard-user')">
+    <div class="card faculty" data-cat="academic" onclick="open_modal('Faculty List','Teachers & Advisors','FACULTY','fa-chalkboard-user')">
+     
       <div class="ic"><i class="fa-solid fa-chalkboard-user"></i></div><div class="name">Faculty List</div><div class="code">Teachers & Advisors</div>
     </div>
-    <div class="card classroom" onclick="open_modal('Classroom Code','Google Classroom','CLASSROOM','fa-hashtag')">
+    <div class="card classroom" data-cat="academic" onclick="open_modal('Classroom Code','Google Classroom','CLASSROOM','fa-hashtag')">
+   
       <div class="ic"><i class="fa-solid fa-hashtag"></i></div><div class="name">Classroom Code</div><div class="code">Google Classroom</div>
     </div>
-    <div class="card clsroutine" onclick="open_modal('Class Routine','Weekly Schedule','CLSROUTINE','fa-table-list')">
+    <div class="card clsroutine" data-cat="academic" onclick="open_modal('Class Routine','Weekly Schedule','CLSROUTINE','fa-table-list')">
+    
       <div class="ic"><i class="fa-solid fa-table-list"></i></div><div class="name">Class Routine</div><div class="code">Weekly Schedule</div>
     </div>
-    <div class="card sug" onclick="open_modal('Suggestions','All Subjects','SUG','fa-lightbulb')">
-      <div class="ic"><i class="fa-solid fa-lightbulb"></i></div><div class="name">Suggestions</div><div class="code">All Subjects</div>
-    </div>
-    <div class="card note" onclick="open_modal('Notes','All Subjects','NOTES','fa-book-open')">
-      <div class="ic"><i class="fa-solid fa-book-open"></i></div><div class="name">Notes</div><div class="code">All Subjects</div>
-    </div>
-    <div class="card routine" onclick="open_modal('Exam Routine','No Exam Currently','ROUTINE','fa-calendar-days')">
+    <div class="card routine" data-cat="academic" onclick="open_modal('Exam Routine','No Exam Currently','ROUTINE','fa-calendar-days')">
+  
       <div class="ic"><i class="fa-solid fa-calendar-days"></i></div><div class="name">Exam Routine</div><div class="code">No Exam Currently</div>
     </div>
-    <div class="card pqs" onclick="open_modal('PQ Solutions','Previous Questions','PQS','fa-scroll')">
+
+    <div class="card hackathon" data-cat="competitive" onclick="open_modal('Upcoming Hackathon','Events','HACKATHON','fa-laptop-code')">
+   
+      <div class="ic"><i class="fa-solid fa-laptop-code"></i></div><div class="name">Upcoming Hackathon</div><div class="code">Events</div>
+    </div>
+    <div class="card cp" data-cat="competitive" onclick="open_modal('Upcoming CP','Contests','CP','fa-trophy')">
+   
+      <div class="ic"><i class="fa-solid fa-trophy"></i></div><div class="name">Upcoming CP</div><div class="code">Contests</div>
+    </div>
+
+    <div class="card links" data-cat="study" onclick="open_modal('Reference Links','External Resources','LINKS','fa-link')">
+     
+      <div class="ic"><i class="fa-solid fa-link"></i></div><div class="name">Reference Links</div><div class="code">External Resources</div>
+    </div>
+    <div class="card books" data-cat="study" onclick="open_modal('Books','Library','BOOKS','fa-book')">
+     
+      <div class="ic"><i class="fa-solid fa-book"></i></div><div class="name">Books</div><div class="code">Library</div>
+    </div>
+    <div class="card sug" data-cat="study" onclick="open_modal('Suggestions','All Subjects','SUG','fa-lightbulb')">
+   
+      <div class="ic"><i class="fa-solid fa-lightbulb"></i></div><div class="name">Suggestions</div><div class="code">All Subjects</div>
+    </div>
+    <div class="card note" data-cat="study" onclick="open_modal('Notes','All Subjects','NOTES','fa-book-open')">
+
+      <div class="ic"><i class="fa-solid fa-book-open"></i></div><div class="name">Notes</div><div class="code">All Subjects</div>
+    </div>
+    <div class="card pqs" data-cat="study" onclick="open_modal('PQ Solutions','Previous Questions','PQS','fa-scroll')">
+
       <div class="ic"><i class="fa-solid fa-scroll"></i></div><div class="name">PQ Solutions</div><div class="code">All Subjects</div>
     </div>
-  </div>
- 
-  <div class="section-label"><span><i class="fa-solid fa-book" style="font-size:.7em"></i></span>Subjects</div>
-  <div class="grid">
-    <div class="card sub" onclick="open_modal('DSA 2','CSE0613221/222','DSA2','fa-sitemap')">
+
+    <div class="card sub" data-cat="subjects" onclick="open_modal('DSA 2','CSE0613221/222','DSA2','fa-sitemap')">
+  
       <div class="ic"><i class="fa-solid fa-sitemap"></i></div><div class="name">DSA 2</div><div class="code">CSE0613221/222</div>
     </div>
-    <div class="card sub" onclick="open_modal('Software Engg','CSE0613225/226','SE','fa-diagram-project')">
+    <div class="card sub" data-cat="subjects" onclick="open_modal('Software Engg','CSE0613225/226','SE','fa-diagram-project')">
+      
       <div class="ic"><i class="fa-solid fa-diagram-project"></i></div><div class="name">Software Engg</div><div class="code">CSE0613225/226</div>
     </div>
-    <div class="card sub" onclick="open_modal('Complex Variables','MATH0541221','MATH','fa-square-root-variable')">
+    <div class="card sub" data-cat="subjects" onclick="open_modal('Complex Variables','MATH0541221','MATH','fa-square-root-variable')">
+
       <div class="ic"><i class="fa-solid fa-square-root-variable"></i></div><div class="name">Complex Variables</div><div class="code">MATH0541221</div>
     </div>
-    <div class="card sub" onclick="open_modal('Numerical Methods','CSE0541227','NUM','fa-calculator')">
+    <div class="card sub" data-cat="subjects" onclick="open_modal('Numerical Methods','CSE0541227','NUM','fa-calculator')">
+      
       <div class="ic"><i class="fa-solid fa-calculator"></i></div><div class="name">Numerical Methods</div><div class="code">CSE0541227</div>
     </div>
-    <div class="card sub" onclick="open_modal('Data Communication','CSE0612223','DCOM','fa-network-wired')">
+    <div class="card sub" data-cat="subjects" onclick="open_modal('Data Communication','CSE0612223','DCOM','fa-network-wired')">
+  
       <div class="ic"><i class="fa-solid fa-network-wired"></i></div><div class="name">Data Comm.</div><div class="code">CSE0612223</div>
     </div>
-    <div class="card sub" onclick="open_modal('Internet Prog. Lab','CSE0613208','IPLAB','fa-globe')">
+    <div class="card sub" data-cat="subjects" onclick="open_modal('Internet Prog. Lab','CSE0613208','IPLAB','fa-globe')">
+  
       <div class="ic"><i class="fa-solid fa-globe"></i></div><div class="name">Internet Prog. Lab</div><div class="code">CSE0613208</div>
     </div>
+
   </div>
 </div>
  
@@ -346,19 +471,25 @@
     </div>
     <div class="quickbar-body">
 
-      <div class="quickbar-section-title">Resources</div>
+      <div class="quickbar-section-title">Personal</div>
       <a href="#" onclick="closeQuickBar(); openVaultModal(); return false;"><i class="fa-solid fa-key"></i> Note Vault</a>
+
+      <div class="quickbar-section-title">Academic</div>
       <a href="#" onclick="quickOpen('Upcoming Courses','Course List','COURSES','fa-graduation-cap'); return false;"><i class="fa-solid fa-graduation-cap"></i> Upcoming Courses</a>
-      <a href="#" onclick="quickOpen('Upcoming Hackathon','Events','HACKATHON','fa-laptop-code'); return false;"><i class="fa-solid fa-laptop-code"></i> Upcoming Hackathon</a>
-      <a href="#" onclick="quickOpen('Upcoming CP','Contests','CP','fa-trophy'); return false;"><i class="fa-solid fa-trophy"></i> Upcoming CP</a>
-      <a href="#" onclick="quickOpen('Reference Links','External Resources','LINKS','fa-link'); return false;"><i class="fa-solid fa-link"></i> Reference Links</a>
-      <a href="#" onclick="quickOpen('Books','Library','BOOKS','fa-book'); return false;"><i class="fa-solid fa-book"></i> Books</a>
       <a href="#" onclick="quickOpen('Faculty List','Teachers & Advisors','FACULTY','fa-chalkboard-user'); return false;"><i class="fa-solid fa-chalkboard-user"></i> Faculty List</a>
       <a href="#" onclick="quickOpen('Classroom Code','Google Classroom','CLASSROOM','fa-hashtag'); return false;"><i class="fa-solid fa-hashtag"></i> Classroom Code</a>
       <a href="#" onclick="quickOpen('Class Routine','Weekly Schedule','CLSROUTINE','fa-table-list'); return false;"><i class="fa-solid fa-table-list"></i> Class Routine</a>
+      <a href="#" onclick="quickOpen('Exam Routine','No Exam Currently','ROUTINE','fa-calendar-days'); return false;"><i class="fa-solid fa-calendar-days"></i> Exam Routine</a>
+
+      <div class="quickbar-section-title">Competitive</div>
+      <a href="#" onclick="quickOpen('Upcoming Hackathon','Events','HACKATHON','fa-laptop-code'); return false;"><i class="fa-solid fa-laptop-code"></i> Upcoming Hackathon</a>
+      <a href="#" onclick="quickOpen('Upcoming CP','Contests','CP','fa-trophy'); return false;"><i class="fa-solid fa-trophy"></i> Upcoming CP</a>
+
+      <div class="quickbar-section-title">Study Material</div>
+      <a href="#" onclick="quickOpen('Reference Links','External Resources','LINKS','fa-link'); return false;"><i class="fa-solid fa-link"></i> Reference Links</a>
+      <a href="#" onclick="quickOpen('Books','Library','BOOKS','fa-book'); return false;"><i class="fa-solid fa-book"></i> Books</a>
       <a href="#" onclick="quickOpen('Suggestions','All Subjects','SUG','fa-lightbulb'); return false;"><i class="fa-solid fa-lightbulb"></i> Suggestions</a>
       <a href="#" onclick="quickOpen('Notes','All Subjects','NOTES','fa-book-open'); return false;"><i class="fa-solid fa-book-open"></i> Notes</a>
-      <a href="#" onclick="quickOpen('Exam Routine','No Exam Currently','ROUTINE','fa-calendar-days'); return false;"><i class="fa-solid fa-calendar-days"></i> Exam Routine</a>
       <a href="#" onclick="quickOpen('PQ Solutions','Previous Questions','PQS','fa-scroll'); return false;"><i class="fa-solid fa-scroll"></i> PQ Solutions</a>
 
       <div class="quickbar-section-title">Subjects</div>
@@ -435,6 +566,33 @@ window.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('cse57_visited', 'true');
   }
 });
+
+  // ===== Category Filter Tabs =====
+  function updateFilterCounts(){
+    const cards = document.querySelectorAll('#mainGrid .card');
+    const counts = { all: cards.length, personal: 0, academic: 0, competitive: 0, study: 0, subjects: 0 };
+    cards.forEach(c => {
+      const cat = c.getAttribute('data-cat');
+      if(counts[cat] !== undefined) counts[cat]++;
+    });
+    Object.keys(counts).forEach(key => {
+      const el = document.getElementById('count-' + key);
+      if(el) el.textContent = counts[key];
+    });
+  }
+
+  window.setFilter = function(filter){
+    document.querySelectorAll('.filter-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-filter') === filter);
+    });
+    document.querySelectorAll('#mainGrid .card').forEach(card => {
+      const cat = card.getAttribute('data-cat');
+      const show = (filter === 'all' || cat === filter);
+      card.classList.toggle('hidden', !show);
+    });
+  }
+
+  updateFilterCounts();
 </script>
 <!-- Firebase integration for the main portal -->
 <script type="module" src="assets/js/main.js"></script>
