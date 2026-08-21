@@ -205,6 +205,102 @@ body.light .notif-title { color: #24292f; }
 @media(max-width:480px){
   .notif-dropdown { width: 280px; right: -60px; }
 }
+
+@media(max-width:480px){
+  .notif-dropdown { width: 280px; right: -60px; }
+}
+
+/* ===== Code Runner (Vault) ===== */
+.vault-run-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(63,185,80,0.1);
+  border: 1px solid rgba(63,185,80,0.3);
+  color: #56d364;
+  font-size: 0.75em;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.vault-run-btn:hover { background: rgba(63,185,80,0.18); }
+.vault-run-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.vault-run-output {
+  margin-top: 14px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+.vault-run-output-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px;
+  background: #0a0d12;
+  font-size: 0.7em;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+}
+.vault-run-console {
+  padding: 14px;
+  background: #0a0d12;
+  color: #c9d1d9;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.vault-run-console.err-text { color: #f85149; }
+.vault-run-iframe-wrap { background: #fff; }
+.vault-run-iframe-wrap iframe {
+  width: 100%;
+  height: 360px;
+  border: none;
+  display: block;
+}
+
+body.light .vault-run-output-header { background: #f6f8fa; }
+body.light .vault-run-console { background: #f6f8fa; color: #24292f; }
+
+.vault-textarea-header { gap: 8px; }
+
+.vault-web-tabs, .vault-web-view-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.vault-web-tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 12px;
+  border-radius: 7px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.vault-web-tab:hover { color: var(--text-main); }
+.vault-web-tab.active {
+  background: rgba(163,113,247,0.12);
+  color: var(--accent-purple);
+  border-color: rgba(163,113,247,0.35);
+}
+.vault-web-tabs .vault-run-btn { margin-left: auto; }
+#vaultWebHtml, #vaultWebCss, #vaultWebJs { min-height: 150px; }
+
+body.light .vault-web-tab { background: #f6f8fa; border-color: #d0d7de; color: #57606a; }
+body.light .vault-web-tab.active { background: rgba(130,80,223,0.08); color: #8250df; }
+</style>
 </style>
 </head>
 <body class="dark">
@@ -441,21 +537,51 @@ body.light .notif-title { color: #24292f; }
         </div>
 
         <label class="vault-label" style="margin-top:18px;">Note type</label>
-        <div class="vault-type-toggle" id="vaultTypeToggle">
+                <div class="vault-type-toggle" id="vaultTypeToggle">
           <button class="vault-type-btn active" data-type="text" onclick="setVaultContentType('text')"><i class="fa-solid fa-align-left"></i> Text</button>
           <button class="vault-type-btn" data-type="code" onclick="setVaultContentType('code')"><i class="fa-solid fa-code"></i> Code</button>
           <button class="vault-type-btn" data-type="image" onclick="setVaultContentType('image')"><i class="fa-solid fa-image"></i> Image</button>
           <button class="vault-type-btn" data-type="pdf" onclick="setVaultContentType('pdf')"><i class="fa-solid fa-file-pdf"></i> PDF</button>
         </div>
 
-        <div id="vaultTextWrap">
+        <div id="vaultLangWrap" style="display:none; margin-bottom:16px;">
+          <label class="vault-label">Language</label>
+          <select id="vaultLangSelect" class="vault-input" onchange="onVaultLangChange()">
+            <option value="web">HTML / CSS / JS (3 Panels)</option>
+            <option value="python3">Python</option>
+            <option value="cpp">C++</option>
+            <option value="java">Java</option>
+            <option value="c">C</option>
+            <option value="javascript">JavaScript (Node.js)</option>
+          </select>
+        </div>
+
+                <div id="vaultTextWrap">
           <div class="vault-textarea-header">
+            <button type="button" class="vault-run-btn" id="vaultCreateRunBtn" onclick="runDraftCode()" style="display:none;">
+              <i class="fa-solid fa-play"></i> Run
+            </button>
             <button type="button" class="vault-mini-expand-btn" onclick="openVaultEditorFullscreen()">
               <i class="fa-solid fa-expand"></i> Full Screen
             </button>
           </div>
           <textarea id="vaultTextInput" class="vault-textarea" placeholder="Write your note here..."></textarea>
+          <div id="vaultCreateRunOutput"></div>
         </div>
+
+        <div id="vaultWebWrap" style="display:none;">
+          <div class="vault-web-tabs">
+            <button class="vault-web-tab active" data-panel="html" onclick="switchWebPanel('html')"><i class="fa-brands fa-html5"></i> HTML</button>
+            <button class="vault-web-tab" data-panel="css" onclick="switchWebPanel('css')"><i class="fa-brands fa-css3-alt"></i> CSS</button>
+            <button class="vault-web-tab" data-panel="js" onclick="switchWebPanel('js')"><i class="fa-brands fa-js"></i> JS</button>
+            <button type="button" class="vault-run-btn" onclick="runDraftWebCode()"><i class="fa-solid fa-play"></i> Run</button>
+          </div>
+          <textarea id="vaultWebHtml" class="vault-textarea as-code" placeholder="<h1>Hello World</h1>"></textarea>
+          <textarea id="vaultWebCss" class="vault-textarea as-code" style="display:none;" placeholder="body { background: #222; }"></textarea>
+          <textarea id="vaultWebJs" class="vault-textarea as-code" style="display:none;" placeholder="console.log('Hello');"></textarea>
+          <div id="vaultWebRunOutput"></div>
+        </div>
+
         <div id="vaultFileWrap" style="display:none;">
           <label class="vault-file-drop" id="vaultFileDropLabel">
             <i class="fa-solid fa-cloud-arrow-up"></i>

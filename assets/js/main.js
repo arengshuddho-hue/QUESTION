@@ -381,24 +381,66 @@ window.setVaultContentType = function(type){
   });
 
   const textWrap = document.getElementById('vaultTextWrap');
+  const webWrap = document.getElementById('vaultWebWrap');
   const fileWrap = document.getElementById('vaultFileWrap');
+  const langWrap = document.getElementById('vaultLangWrap');
   const textarea = document.getElementById('vaultTextInput');
   const dropText = document.getElementById('vaultFileDropText');
   const fileInput = document.getElementById('vaultFileInput');
+  const createRunBtn = document.getElementById('vaultCreateRunBtn');
 
-  if(type === 'text' || type === 'code'){
-    textWrap.style.display = 'block';
+  document.getElementById('vaultCreateRunOutput').innerHTML = '';
+  document.getElementById('vaultWebRunOutput').innerHTML = '';
+
+  if(type === 'code'){
+    langWrap.style.display = 'block';
     fileWrap.style.display = 'none';
-    textarea.classList.toggle('as-code', type === 'code');
-    textarea.placeholder = type === 'code'
-      ? 'Paste or write your code here...'
-      : 'Write your note here...';
+    onVaultLangChange();
+  } else if(type === 'text'){
+    langWrap.style.display = 'none';
+    fileWrap.style.display = 'none';
+    webWrap.style.display = 'none';
+    textWrap.style.display = 'block';
+    textarea.classList.remove('as-code');
+    textarea.placeholder = 'Write your note here...';
+    createRunBtn.style.display = 'none';
   } else {
+    langWrap.style.display = 'none';
     textWrap.style.display = 'none';
+    webWrap.style.display = 'none';
     fileWrap.style.display = 'block';
     fileInput.accept = type === 'image' ? 'image/*' : 'application/pdf';
     dropText.textContent = type === 'image' ? 'Click to choose an image' : 'Click to choose a PDF';
   }
+}
+
+window.onVaultLangChange = function(){
+  const lang = document.getElementById('vaultLangSelect').value;
+  const textWrap = document.getElementById('vaultTextWrap');
+  const webWrap = document.getElementById('vaultWebWrap');
+  const textarea = document.getElementById('vaultTextInput');
+  const createRunBtn = document.getElementById('vaultCreateRunBtn');
+
+  document.getElementById('vaultCreateRunOutput').innerHTML = '';
+  document.getElementById('vaultWebRunOutput').innerHTML = '';
+
+  if(lang === 'web'){
+    textWrap.style.display = 'none';
+    webWrap.style.display = 'block';
+  } else {
+    textWrap.style.display = 'block';
+    webWrap.style.display = 'none';
+    textarea.classList.add('as-code');
+    textarea.placeholder = 'Paste or write your code here...';
+    createRunBtn.style.display = 'flex';
+  }
+}
+
+window.switchWebPanel = function(panel){
+  document.querySelectorAll('#vaultWebWrap .vault-web-tab').forEach(t => t.classList.toggle('active', t.dataset.panel === panel));
+  document.getElementById('vaultWebHtml').style.display = panel === 'html' ? 'block' : 'none';
+  document.getElementById('vaultWebCss').style.display = panel === 'css' ? 'block' : 'none';
+  document.getElementById('vaultWebJs').style.display = panel === 'js' ? 'block' : 'none';
 }
 
 window.onVaultFileChosen = function(input){
@@ -438,13 +480,32 @@ window.saveVaultNote = async function(){
 
   let payload = null;
 
-  if(vaultContentType === 'text' || vaultContentType === 'code'){
+    if(vaultContentType === 'text'){
     const text = document.getElementById('vaultTextInput').value;
     if(!text.trim()){
       vaultShowMsg('vaultCreateResult', 'err', 'Note is empty — write something first.');
       return;
     }
-    payload = { mode: vaultContentType, content: text, createdAt: Date.now() };
+    payload = { mode: 'text', content: text, createdAt: Date.now() };
+  } else if(vaultContentType === 'code'){
+    const lang = document.getElementById('vaultLangSelect').value;
+    if(lang === 'web'){
+      const html = document.getElementById('vaultWebHtml').value;
+      const css = document.getElementById('vaultWebCss').value;
+      const js = document.getElementById('vaultWebJs').value;
+      if(!html.trim() && !css.trim() && !js.trim()){
+        vaultShowMsg('vaultCreateResult', 'err', 'Note is empty — write something first.');
+        return;
+      }
+      payload = { mode: 'code', language: 'web', content: JSON.stringify({html, css, js}), createdAt: Date.now() };
+    } else {
+      const text = document.getElementById('vaultTextInput').value;
+      if(!text.trim()){
+        vaultShowMsg('vaultCreateResult', 'err', 'Note is empty — write something first.');
+        return;
+      }
+      payload = { mode: 'code', language: lang, content: text, createdAt: Date.now() };
+    }
   } else {
     if(!vaultChosenFile){
       vaultShowMsg('vaultCreateResult', 'err', 'Please choose a file first.');
@@ -476,9 +537,14 @@ window.saveVaultNote = async function(){
     vaultShowMsg('vaultCreateResult', 'ok',
       `Saved! Your code is <strong>${code}</strong> — write it down, this is the only way back in. Notes are automatically deleted after 30 days.`);
 
-    // reset form
+       // reset form
     document.getElementById('vaultCreateCode').value = '';
     document.getElementById('vaultTextInput').value = '';
+    document.getElementById('vaultWebHtml').value = '';
+    document.getElementById('vaultWebCss').value = '';
+    document.getElementById('vaultWebJs').value = '';
+    document.getElementById('vaultWebRunOutput').innerHTML = '';
+    document.getElementById('vaultCreateRunOutput').innerHTML = '';
     vaultChosenFile = null;
     document.getElementById('vaultFileInput').value = '';
     const dropText = document.getElementById('vaultFileDropText');
@@ -548,24 +614,40 @@ function renderVaultNote(note, code){
   const badgeLabel = { text: 'TEXT NOTE', code: 'CODE SNIPPET', image: 'IMAGE', pdf: 'PDF' }[note.mode] || 'NOTE';
   let bodyHtml = '';
 
-  if(note.mode === 'text'){
+    if(note.mode === 'text'){
     bodyHtml = `<div class="vault-note-text">${escapeHtml(note.content)}</div>`;
   } else if(note.mode === 'code'){
-    bodyHtml = `<pre class="vault-note-code"><code>${escapeHtml(note.content)}</code></pre>`;
+    if(note.language === 'web'){
+      let parts;
+      try { parts = JSON.parse(note.content); } catch(e){ parts = { html: note.content, css: '', js: '' }; }
+      bodyHtml = `
+        <div class="vault-web-view-tabs">
+          <button class="vault-web-tab active" onclick="switchViewWebPanel(this,'html')"><i class="fa-brands fa-html5"></i> HTML</button>
+          <button class="vault-web-tab" onclick="switchViewWebPanel(this,'css')"><i class="fa-brands fa-css3-alt"></i> CSS</button>
+          <button class="vault-web-tab" onclick="switchViewWebPanel(this,'js')"><i class="fa-brands fa-js"></i> JS</button>
+        </div>
+        <pre class="vault-note-code" id="vaultViewHtml"><code>${escapeHtml(parts.html || '')}</code></pre>
+        <pre class="vault-note-code" id="vaultViewCss" style="display:none;"><code>${escapeHtml(parts.css || '')}</code></pre>
+        <pre class="vault-note-code" id="vaultViewJs" style="display:none;"><code>${escapeHtml(parts.js || '')}</code></pre>
+        <div id="vaultRunOutput"></div>`;
+    } else {
+      bodyHtml = `<pre class="vault-note-code"><code>${escapeHtml(note.content)}</code></pre><div id="vaultRunOutput"></div>`;
+    }
   } else if(note.mode === 'image'){
     bodyHtml = `<div class="vault-note-image"><img src="${note.content}" alt="Saved note image"></div>`;
   } else if(note.mode === 'pdf'){
     bodyHtml = `<a class="vault-note-pdf-link" href="${note.content}" target="_blank"><i class="fa-solid fa-file-pdf"></i> Open PDF <i class="fa-solid fa-arrow-up-right-from-square" style="margin-left:auto"></i></a>`;
   }
 
-  const canExpand = (note.mode === 'text' || note.mode === 'code');
+  const canExpand = (note.mode === 'text' || (note.mode === 'code' && note.language !== 'web'));
   const expiryLabel = getExpiryLabel(note.createdAt);
 
   box.innerHTML = `
     <div class="vault-note-view">
       <div class="vault-note-meta">
         <span class="vault-note-badge">${badgeLabel}</span>
-        <div class="vault-note-actions">
+                <div class="vault-note-actions">
+          ${note.mode === 'code' ? `<button class="vault-run-btn" id="vaultRunBtn"><i class="fa-solid fa-play"></i> Run</button>` : ''}
           ${canExpand ? `<button class="vault-copy-btn" id="vaultExpandBtn"><i class="fa-solid fa-expand"></i> Full Screen</button>` : ''}
           ${canExpand ? `<button class="vault-copy-btn" id="vaultCopyBtn"><i class="fa-solid fa-copy"></i> Copy</button>` : ''}
           <button class="vault-copy-btn vault-delete-btn" id="vaultDeleteBtn"><i class="fa-solid fa-trash"></i> Delete</button>
@@ -591,9 +673,16 @@ function renderVaultNote(note, code){
     });
   }
 
-  document.getElementById('vaultDeleteBtn').addEventListener('click', () => {
+   document.getElementById('vaultDeleteBtn').addEventListener('click', () => {
     confirmDeleteVaultNote(code);
   });
+
+  if(note.mode === 'code'){
+    const runBtn = document.getElementById('vaultRunBtn');
+    if(runBtn){
+      runBtn.addEventListener('click', () => runVaultCode(note));
+    }
+  }
 }
 
 // ----- Delete note (protects against accidental wrong uploads) -----
@@ -837,3 +926,155 @@ document.addEventListener('click', function(e){
     wrap.classList.remove('open');
   }
 });
+
+
+// ============================================================
+// CODE RUNNER — HTML/CSS/JS live preview + Paiza.io for others
+// (Piston/emkc.org returned 401 on execute; Judge0 CE demo
+//  blocked cross-origin fetch entirely ("Failed to fetch").
+//  Paiza.io's API is built for exactly this — public, CORS-
+//  enabled, no API key needed with api_key=guest.)
+// ============================================================
+
+const PAIZA_LANG = {
+  python3: 'python3',
+  cpp: 'cpp',
+  java: 'java',
+  c: 'c',
+  javascript: 'javascript'
+};
+
+function paizaSleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+async function executeCode(content, lang, outBox, runBtn){
+  if(!outBox) return;
+
+  if(runBtn){
+    runBtn.disabled = true;
+    runBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Running...';
+  }
+
+  outBox.innerHTML = `
+    <div class="vault-run-output">
+      <div class="vault-run-output-header"><span><i class="fa-solid fa-terminal"></i> Console</span></div>
+      <div class="vault-run-console">Running...</div>
+    </div>`;
+
+  const consoleEl = outBox.querySelector('.vault-run-console');
+
+  try {
+    // Step 1: submit the code, get back a session id
+    const createUrl = 'https://api.paiza.io/runners/create?' + new URLSearchParams({
+      source_code: content,
+      language: PAIZA_LANG[lang] || 'python3',
+      api_key: 'guest'
+    });
+    const createRes = await fetch(createUrl, { method: 'POST' });
+    if(!createRes.ok) throw new Error('Execution service error (' + createRes.status + ')');
+    const createData = await createRes.json();
+    if(!createData.id) throw new Error(createData.error || 'Could not start execution');
+
+    // Step 2: poll until the run finishes (max ~15s)
+    let status = 'running';
+    let attempts = 0;
+    while(status !== 'completed' && attempts < 15){
+      await paizaSleep(1000);
+      const statusUrl = 'https://api.paiza.io/runners/get_status?' + new URLSearchParams({
+        id: createData.id, api_key: 'guest'
+      });
+      const statusRes = await fetch(statusUrl);
+      const statusData = await statusRes.json();
+      status = statusData.status;
+      attempts++;
+    }
+
+    if(status !== 'completed') throw new Error('Execution timed out');
+
+    // Step 3: fetch the actual output
+    const detailsUrl = 'https://api.paiza.io/runners/get_details?' + new URLSearchParams({
+      id: createData.id, api_key: 'guest'
+    });
+    const detailsRes = await fetch(detailsUrl);
+    const details = await detailsRes.json();
+
+    let output = '';
+    if(details.build_stderr) output += details.build_stderr + '\n';
+    if(details.stdout) output += details.stdout;
+    if(details.stderr) output += (output ? '\n' : '') + details.stderr;
+    if(!output.trim()) output = '(No output)';
+
+    const isErr = !!(details.stderr || details.build_stderr) || details.build_result === 'failure';
+    consoleEl.textContent = output;
+    consoleEl.classList.toggle('err-text', isErr);
+
+  } catch(err){
+    console.error(err);
+    if(consoleEl){
+      consoleEl.textContent = 'Failed to run code: ' + err.message;
+      consoleEl.classList.add('err-text');
+    }
+  } finally {
+    if(runBtn){
+      runBtn.disabled = false;
+      runBtn.innerHTML = '<i class="fa-solid fa-play"></i> Run';
+    }
+  }
+}
+
+function buildWebSrcdoc(parts){
+  const html = (parts && parts.html) || '';
+  const css = (parts && parts.css) || '';
+  const js = (parts && parts.js) || '';
+  return `<!DOCTYPE html><html><head><style>${css}</style></head><body>${html}<script>${js}<\/script></body></html>`;
+}
+
+function renderWebPreview(parts, outBox){
+  if(!outBox) return;
+  outBox.innerHTML = `
+    <div class="vault-run-output">
+      <div class="vault-run-output-header"><span><i class="fa-solid fa-eye"></i> Live Preview</span></div>
+      <div class="vault-run-iframe-wrap">
+        <iframe sandbox="allow-scripts allow-modals"></iframe>
+      </div>
+    </div>`;
+  const iframe = outBox.querySelector('iframe');
+  iframe.srcdoc = buildWebSrcdoc(parts);
+}
+
+function runVaultCode(note){
+  const outBox = document.getElementById('vaultRunOutput');
+  const runBtn = document.getElementById('vaultRunBtn');
+
+  if(note.language === 'web'){
+    let parts;
+    try { parts = JSON.parse(note.content); } catch(e){ parts = { html: note.content, css: '', js: '' }; }
+    renderWebPreview(parts, outBox);
+    return;
+  }
+  executeCode(note.content, note.language || 'python3', outBox, runBtn);
+}
+
+window.runDraftCode = function(){
+  const content = document.getElementById('vaultTextInput').value;
+  if(!content.trim()) return;
+  const lang = document.getElementById('vaultLangSelect').value;
+  const outBox = document.getElementById('vaultCreateRunOutput');
+  const runBtn = document.getElementById('vaultCreateRunBtn');
+  executeCode(content, lang, outBox, runBtn);
+}
+
+window.runDraftWebCode = function(){
+  const html = document.getElementById('vaultWebHtml').value;
+  const css = document.getElementById('vaultWebCss').value;
+  const js = document.getElementById('vaultWebJs').value;
+  const outBox = document.getElementById('vaultWebRunOutput');
+  renderWebPreview({ html, css, js }, outBox);
+}
+
+window.switchViewWebPanel = function(btn, panel){
+  btn.parentElement.querySelectorAll('.vault-web-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('vaultViewHtml').style.display = panel === 'html' ? 'block' : 'none';
+  document.getElementById('vaultViewCss').style.display = panel === 'css' ? 'block' : 'none';
+  document.getElementById('vaultViewJs').style.display = panel === 'js' ? 'block' : 'none';
+}
