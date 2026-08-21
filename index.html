@@ -9,52 +9,94 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
-  /* ===== Category Filter Tabs ===== */
-  .filter-bar {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+  /* ===== Category Filter — Single Dropdown Button (GitHub style) ===== */
+  .category-filter {
+    position: relative;
+    display: inline-block;
     margin: 4px 0 28px;
-    padding: 6px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
   }
-  .filter-tab {
+  .category-filter-btn {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 9px;
     padding: 9px 14px;
     border-radius: 8px;
-    border: none;
-    background: transparent;
-    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-main);
     font-family: 'Inter', sans-serif;
-    font-size: 0.82em;
+    font-size: 0.85em;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    white-space: nowrap;
   }
-  .filter-tab i { font-size: 0.9em; opacity: 0.8; }
-  .filter-tab:hover { color: var(--text-main); background: rgba(255,255,255,0.04); }
-  .filter-tab.active {
-    background: var(--gradient);
-    color: #fff;
+  .category-filter-btn:hover {
+    border-color: rgba(163,113,247,0.4);
+    background: var(--card-hover);
   }
-  .filter-tab.active i { opacity: 1; }
-  .filter-count {
-    font-size: 0.75em;
-    padding: 1px 7px;
+  .category-filter-btn i:first-child { color: var(--accent-purple); opacity: 0.9; }
+  .category-caret { font-size: 0.75em; color: var(--text-muted); transition: transform 0.2s; }
+  .category-filter.open .category-caret { transform: rotate(180deg); }
+
+  .category-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 220px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 6px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    z-index: 50;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .category-filter.open .category-dropdown-menu {
+    display: flex;
+    animation: dropIn 0.15s ease-out;
+  }
+
+  .category-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    width: 100%;
+    text-align: left;
+  }
+  .category-option span:first-child { display: flex; align-items: center; gap: 9px; }
+  .category-option i { opacity: 0.8; width: 16px; text-align: center; }
+  .category-option:hover { background: rgba(255,255,255,0.05); }
+  .category-option.active {
+    background: rgba(163,113,247,0.1);
+    color: var(--accent-purple);
+  }
+  .category-option.active i { color: var(--accent-purple); opacity: 1; }
+  .category-option .filter-count {
+    font-size: 0.85em;
+    padding: 1px 8px;
     border-radius: 20px;
-    background: rgba(255,255,255,0.12);
-  }
-  .filter-tab:not(.active) .filter-count {
     background: rgba(255,255,255,0.06);
     color: var(--text-muted);
   }
+  .category-option.active .filter-count {
+    background: rgba(163,113,247,0.18);
+    color: var(--accent-purple);
+  }
 
-  /* Category badge on each card */
+  /* Category badge on each card (unchanged, still used elsewhere) */
   .card-cat-badge {
     position: absolute;
     top: 10px;
@@ -70,7 +112,6 @@
     border: 1px solid var(--border-color);
   }
 
-  /* Hide/show + reflow animation for filtering */
   .grid .card {
     transition: opacity 0.25s ease, transform 0.25s ease;
   }
@@ -78,15 +119,92 @@
     display: none;
   }
 
-  body.light .filter-bar { background: #f6f8fa; border-color: #d0d7de; }
-  body.light .filter-tab { color: #57606a; }
-  body.light .filter-tab:hover { background: rgba(31,35,40,0.06); color: #24292f; }
-  body.light .card-cat-badge { background: rgba(31,35,40,0.05); border-color: #d0d7de; color: #57606a; }
+  body.light .category-filter-btn { background: #f6f8fa; border-color: #d0d7de; color: #24292f; }
+  body.light .category-dropdown-menu { background: #ffffff; border-color: #d0d7de; box-shadow: 0 8px 24px rgba(140,149,159,0.25); }
+  body.light .category-option { color: #24292f; }
+  body.light .category-option:hover { background: rgba(31,35,40,0.06); }
+  body.light .category-option.active { background: rgba(130,80,223,0.08); color: #8250df; }
 
   @media(max-width:600px){
-    .filter-bar { gap: 6px; padding: 5px; }
-    .filter-tab { padding: 8px 11px; font-size: 0.78em; }
+    .category-dropdown-menu { min-width: 200px; }
   }
+
+  .notif-wrapper { position: relative; }
+.notif-btn { position: relative; }
+.notif-badge {
+  position: absolute;
+  top: 2px; right: 2px;
+  min-width: 16px; height: 16px;
+  padding: 0 4px;
+  border-radius: 20px;
+  background: #f85149;
+  color: #fff;
+  font-size: 0.62em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #010409;
+}
+.notif-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 320px;
+  max-height: 420px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+  z-index: 1000;
+  overflow: hidden;
+  flex-direction: column;
+}
+.notif-wrapper.open .notif-dropdown { display: flex; animation: dropIn 0.15s ease-out; }
+.notif-dropdown-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.85em;
+  font-weight: 700;
+  color: var(--text-title);
+  background: #0d1117;
+}
+.notif-list { overflow-y: auto; max-height: 360px; padding: 6px; }
+.notif-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.notif-row:hover { background: rgba(255,255,255,0.05); }
+.notif-row.unread { background: rgba(163,113,247,0.06); }
+.notif-icon {
+  width: 34px; height: 34px; flex-shrink: 0;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(163,113,247,0.1);
+  color: var(--accent-purple);
+  font-size: 0.9em;
+}
+.notif-text { flex: 1; min-width: 0; }
+.notif-title { font-size: 0.85em; color: var(--text-main); font-weight: 600; }
+.notif-meta { font-size: 0.72em; color: var(--text-muted); margin-top: 2px; }
+.notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-blue); margin-top: 6px; flex-shrink: 0; }
+.notif-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.85em; }
+.notif-empty i { font-size: 1.8em; margin-bottom: 10px; display: block; opacity: 0.5; }
+
+body.light .notif-dropdown { background: #ffffff; border-color: #d0d7de; }
+body.light .notif-dropdown-header { background: #f6f8fa; color: #24292f; }
+body.light .notif-row:hover { background: rgba(31,35,40,0.06); }
+body.light .notif-title { color: #24292f; }
+
+@media(max-width:480px){
+  .notif-dropdown { width: 280px; right: -60px; }
+}
 </style>
 </head>
 <body class="dark">
@@ -111,10 +229,20 @@
       <span class="search-kbd">⌘K</span>
     </button>
 
+    <div class="notif-wrapper" id="notifWrapper">
+      <button class="nav-btn notif-btn" onclick="toggleNotifDropdown()" title="Notifications">
+        <i class="fa-solid fa-bell"></i>
+        <span class="notif-badge" id="notifBadge" style="display:none;"></span>
+      </button>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-dropdown-header">Notifications</div>
+        <div class="notif-list" id="notifList"></div>
+      </div>
+    </div>
+
     <button class="nav-btn" onclick="toggleQuickBar()" title="Quick Menu">
       <i class="fa-solid fa-bars"></i>
     </button>
-
     <div class="dropdown">
       <button class="nav-btn" onclick="toggleMenu()" title="More Options">
         <i class="fa-solid fa-ellipsis"></i>
@@ -140,26 +268,32 @@
 <div class="body">
 
   <!-- ===================== CATEGORY FILTER TABS ===================== -->
-  <div class="filter-bar" id="filterBar">
-    <button class="filter-tab active" data-filter="all" onclick="setFilter('all')">
-      <i class="fa-solid fa-grip"></i> All <span class="filter-count" id="count-all"></span>
+  <div class="category-filter" id="categoryFilter">
+  <button class="category-filter-btn" onclick="toggleCategoryDropdown()" id="categoryFilterBtn">
+    <span id="categoryFilterLabel">All Categories</span>
+    <i class="fa-solid fa-chevron-down category-caret" id="categoryCaret"></i>
+  </button>
+  <div class="category-dropdown-menu" id="categoryDropdownMenu">
+    <button class="category-option active" data-filter="all" onclick="setFilter('all')">
+      <span><i class="fa-solid fa-grip"></i> All</span> <span class="filter-count" id="count-all"></span>
     </button>
-    <button class="filter-tab" data-filter="personal" onclick="setFilter('personal')">
-      <i class="fa-solid fa-user"></i> Personal <span class="filter-count" id="count-personal"></span>
+    <button class="category-option" data-filter="personal" onclick="setFilter('personal')">
+      <span><i class="fa-solid fa-user"></i> Personal</span> <span class="filter-count" id="count-personal"></span>
     </button>
-    <button class="filter-tab" data-filter="academic" onclick="setFilter('academic')">
-      <i class="fa-solid fa-graduation-cap"></i> Academic <span class="filter-count" id="count-academic"></span>
+    <button class="category-option" data-filter="academic" onclick="setFilter('academic')">
+      <span><i class="fa-solid fa-graduation-cap"></i> Academic</span> <span class="filter-count" id="count-academic"></span>
     </button>
-    <button class="filter-tab" data-filter="competitive" onclick="setFilter('competitive')">
-      <i class="fa-solid fa-trophy"></i> Competitive <span class="filter-count" id="count-competitive"></span>
+    <button class="category-option" data-filter="competitive" onclick="setFilter('competitive')">
+      <span><i class="fa-solid fa-trophy"></i> Competitive</span> <span class="filter-count" id="count-competitive"></span>
     </button>
-    <button class="filter-tab" data-filter="study" onclick="setFilter('study')">
-      <i class="fa-solid fa-book-open"></i> Study Material <span class="filter-count" id="count-study"></span>
+    <button class="category-option" data-filter="study" onclick="setFilter('study')">
+      <span><i class="fa-solid fa-book-open"></i> Study Material</span> <span class="filter-count" id="count-study"></span>
     </button>
-    <button class="filter-tab" data-filter="subjects" onclick="setFilter('subjects')">
-      <i class="fa-solid fa-book"></i> Subjects <span class="filter-count" id="count-subjects"></span>
+    <button class="category-option" data-filter="subjects" onclick="setFilter('subjects')">
+      <span><i class="fa-solid fa-book"></i> Subjects</span> <span class="filter-count" id="count-subjects"></span>
     </button>
   </div>
+</div>
 
   <!-- ===================== ONE UNIFIED GRID ===================== -->
   <div class="grid" id="mainGrid">
@@ -581,16 +715,34 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+    const filterLabels = {
+    all: 'All Categories', personal: 'Personal', academic: 'Academic',
+    competitive: 'Competitive', study: 'Study Material', subjects: 'Subjects'
+  };
+
+  window.toggleCategoryDropdown = function(){
+    document.getElementById('categoryFilter').classList.toggle('open');
+  }
+
   window.setFilter = function(filter){
-    document.querySelectorAll('.filter-tab').forEach(btn => {
+    document.querySelectorAll('.category-option').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-filter') === filter);
     });
+    document.getElementById('categoryFilterLabel').textContent = filterLabels[filter];
     document.querySelectorAll('#mainGrid .card').forEach(card => {
       const cat = card.getAttribute('data-cat');
       const show = (filter === 'all' || cat === filter);
       card.classList.toggle('hidden', !show);
     });
+    document.getElementById('categoryFilter').classList.remove('open');
   }
+
+  document.addEventListener('click', function(e){
+    const wrap = document.getElementById('categoryFilter');
+    if(wrap && wrap.classList.contains('open') && !wrap.contains(e.target)){
+      wrap.classList.remove('open');
+    }
+  });
 
   updateFilterCounts();
 </script>

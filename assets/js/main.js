@@ -718,3 +718,122 @@ document.addEventListener('keydown', e => {
     if(fs && fs.classList.contains('on')) window.closeVaultFullscreen();
   }
 });
+
+
+// ============================================================
+// NOTIFICATIONS — bell icon, dropdown, unread badge
+// ============================================================
+
+const CATEGORY_META = {
+  TICKER: { label: 'Info Ticker', icon: 'fa-bolt' },
+  DSA2: { label: 'DSA 2', icon: 'fa-sitemap' },
+  SE: { label: 'Software Engg', icon: 'fa-diagram-project' },
+  MATH: { label: 'Complex Variables', icon: 'fa-square-root-variable' },
+  NUM: { label: 'Numerical Methods', icon: 'fa-calculator' },
+  DCOM: { label: 'Data Communication', icon: 'fa-network-wired' },
+  IPLAB: { label: 'Internet Prog. Lab', icon: 'fa-globe' },
+  LINKS: { label: 'Reference Links', icon: 'fa-link' },
+  COURSES: { label: 'Upcoming Courses', icon: 'fa-graduation-cap' },
+  FACULTY: { label: 'Faculty List', icon: 'fa-chalkboard-user' },
+  CLASSROOM: { label: 'Classroom Code', icon: 'fa-hashtag' },
+  CLSROUTINE: { label: 'Class Routine', icon: 'fa-table-list' },
+  HACKATHON: { label: 'Upcoming Hackathon', icon: 'fa-laptop-code' },
+  CP: { label: 'Upcoming CP', icon: 'fa-trophy' },
+  PQS: { label: 'PQ Solutions', icon: 'fa-scroll' },
+  ROUTINE: { label: 'Exam Routine', icon: 'fa-calendar-days' },
+  NOTES: { label: 'Notes', icon: 'fa-book-open' },
+  SUG: { label: 'Suggestions', icon: 'fa-lightbulb' },
+  BOOKS: { label: 'Books', icon: 'fa-book' }
+};
+
+let notifications = [];
+let notifLastSeen = parseInt(localStorage.getItem('cse57_notif_last_seen') || '0', 10);
+
+onValue(ref(db, 'notifications'), (snapshot) => {
+  const val = snapshot.val() || {};
+  notifications = Object.entries(val)
+    .map(([id, n]) => ({ id, ...n }))
+    .sort((a, b) => b.timestamp - a.timestamp)
+    .slice(0, 30);
+  renderNotifications();
+});
+
+function getTimeAgo(ts){
+  const diff = Date.now() - ts;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  const days = Math.floor(hrs / 24);
+  return days + 'd ago';
+}
+
+function renderNotifications(){
+  const badge = document.getElementById('notifBadge');
+  const list = document.getElementById('notifList');
+  if (!list) return;
+
+  const unread = notifications.filter(n => n.timestamp > notifLastSeen).length;
+  if (badge) {
+    if (unread > 0) {
+      badge.textContent = unread > 9 ? '9+' : unread;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  if (notifications.length === 0) {
+    list.innerHTML = '<div class="notif-empty"><i class="fa-regular fa-bell-slash"></i><span>No notifications yet.</span></div>';
+    return;
+  }
+
+  list.innerHTML = notifications.map(n => {
+    const meta = CATEGORY_META[n.category] || { label: n.category, icon: 'fa-circle-info' };
+    const isNew = n.timestamp > notifLastSeen;
+    return `
+      <div class="notif-row ${isNew ? 'unread' : ''}" data-category="${n.category}">
+        <div class="notif-icon"><i class="fa-solid ${meta.icon}"></i></div>
+        <div class="notif-text">
+          <div class="notif-title">${escapeHtml(n.title || meta.label)}</div>
+          <div class="notif-meta">${meta.label} · ${getTimeAgo(n.timestamp)}</div>
+        </div>
+        ${isNew ? '<span class="notif-dot"></span>' : ''}
+      </div>`;
+  }).join('');
+
+  list.querySelectorAll('.notif-row').forEach(row => {
+    row.addEventListener('click', () => window.openNotification(row.dataset.category));
+  });
+}
+
+window.openNotification = function(category){
+  closeNotifDropdown();
+  if (category === 'TICKER') return;
+  const meta = CATEGORY_META[category] || { label: category, icon: 'fa-file' };
+  window.open_modal(meta.label, meta.label, category, meta.icon);
+}
+
+window.toggleNotifDropdown = function(){
+  const wrap = document.getElementById('notifWrapper');
+  const opening = !wrap.classList.contains('open');
+  wrap.classList.toggle('open');
+
+  if (opening) {
+    notifLastSeen = Date.now();
+    localStorage.setItem('cse57_notif_last_seen', notifLastSeen);
+    document.getElementById('notifBadge').style.display = 'none';
+  }
+}
+
+function closeNotifDropdown(){
+  document.getElementById('notifWrapper').classList.remove('open');
+}
+
+document.addEventListener('click', function(e){
+  const wrap = document.getElementById('notifWrapper');
+  if (wrap && wrap.classList.contains('open') && !wrap.contains(e.target)) {
+    wrap.classList.remove('open');
+  }
+});

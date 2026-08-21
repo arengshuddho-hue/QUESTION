@@ -1,5 +1,5 @@
 ﻿﻿import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { getDatabase, ref, onValue, set, push } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -185,16 +185,25 @@ window.addItem = async function() {
     }
   }
 
-  if (!dbData[category]) dbData[category] = [];
+   if (!dbData[category]) dbData[category] = [];
   dbData[category].push(valToSave);
-  
-  set(ref(db, 'portalData'), dbData).then(() => {
+
+  try {
+    await set(ref(db, 'portalData'), dbData);
+
+    await push(ref(db, 'notifications'), {
+      category: category,
+      title: valToSave.title || 'Update',
+      timestamp: Date.now()
+    });
+
     document.getElementById('itemTitle').value = '';
     document.getElementById('itemContent').value = '';
     alert('Item Added Successfully!');
-  });
+  } catch (err) {
+    alert('Something went wrong: ' + err.message);
+  }
 };
-
 window.deleteItem = function(category, index) {
   if (confirm('Are you sure you want to delete this?')) {
     dbData[category].splice(index, 1);
