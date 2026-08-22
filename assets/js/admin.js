@@ -33,6 +33,18 @@ onAuthStateChanged(auth, (user) => {
       if (snapshot.val()) dbData = snapshot.val();
       window.renderItems();
     });
+
+    // Live stats: active visitors + total visits
+    onValue(ref(db, 'presence'), (snap) => {
+      const count = snap.exists() ? Object.keys(snap.val()).length : 0;
+      const el = document.getElementById('statActiveNow');
+      if(el) el.textContent = count;
+    });
+
+    onValue(ref(db, 'stats/totalVisits'), (snap) => {
+      const el = document.getElementById('statTotalVisits');
+      if(el) el.textContent = snap.exists() ? snap.val() : 0;
+    });
   } else {
     document.getElementById('loginScreen').style.display = 'block';
     document.getElementById('adminScreen').style.display = 'none';

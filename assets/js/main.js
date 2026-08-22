@@ -1100,3 +1100,19 @@ window.switchViewWebPanel = function(btn, panel){
   document.getElementById('vaultViewCss').style.display = panel === 'css' ? 'block' : 'none';
   document.getElementById('vaultViewJs').style.display = panel === 'js' ? 'block' : 'none';
 }
+
+
+// ============================================================
+// VISITOR PRESENCE — active now + total visits (admin-only view)
+// ============================================================
+
+import { onDisconnect, push as presencePush, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+(function trackPresence(){
+  const presenceRef = presencePush(ref(db, 'presence'));
+  set(presenceRef, { connectedAt: serverTimestamp() });
+  onDisconnect(presenceRef).remove();
+
+  // Atomically bump total visit counter
+  runTransaction(ref(db, 'stats/totalVisits'), (current) => (current || 0) + 1);
+})();
