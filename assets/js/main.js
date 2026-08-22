@@ -197,6 +197,28 @@ window.closeSearchOutside = function(e){
   if(e.target.id === 'searchOverlay') closeSearchPalette();
 }
 
+function getItemSearchIndex(){
+  const index = [];
+  Object.keys(window.data || {}).forEach(catKey => {
+    if(catKey === 'TICKER') return;
+    const meta = CATEGORY_META[catKey];
+    if(!meta) return;
+    const items = window.data[catKey] || [];
+    items.forEach(item => {
+      if(typeof item === 'string') return;
+      const title = item.title || item.label || item.name;
+      if(!title) return;
+      index.push({
+        name: title,
+        code: meta.label,
+        key: catKey,
+        icon: meta.icon
+      });
+    });
+  });
+  return index;
+}
+
 window.paletteSearch = function(query){
   const q = normalize(query);
   const emptyState = document.getElementById('paletteEmptyState');
@@ -213,10 +235,10 @@ window.paletteSearch = function(query){
     return;
   }
 
-  const all = getSearchIndex();
+  const all = [...getSearchIndex(), ...getItemSearchIndex()];
   paletteMatches = all.filter(item =>
     normalize(item.name).includes(q) || normalize(item.code).includes(q)
-  ).slice(0, 8);
+  ).slice(0, 10);
 
   emptyState.style.display = 'none';
 
