@@ -411,9 +411,12 @@ body.light .vault-web-tab.active { background: rgba(130,80,223,0.08); color: #82
      
       <div class="ic"><i class="fa-solid fa-chalkboard-user"></i></div><div class="name">Faculty List</div><div class="code">Teachers & Advisors</div>
     </div>
-    <div class="card classroom" data-cat="academic" onclick="open_modal('Classroom Code','Google Classroom','CLASSROOM','fa-hashtag')">
+        <div class="card classroom" data-cat="academic" onclick="open_modal('Classroom Code','Google Classroom','CLASSROOM','fa-hashtag')">
    
       <div class="ic"><i class="fa-solid fa-hashtag"></i></div><div class="name">Classroom Code</div><div class="code">Google Classroom</div>
+    </div>
+    <div class="card gclassroom" data-cat="academic" onclick="openClassroomHub()">
+      <div class="ic"><i class="fa-solid fa-chalkboard"></i></div><div class="name">Google Classroom</div><div class="code">Synced Materials</div>
     </div>
     <div class="card clsroutine" data-cat="academic" onclick="open_modal('Class Routine','Weekly Schedule','CLSROUTINE','fa-table-list')">
     
@@ -738,6 +741,7 @@ body.light .vault-web-tab.active { background: rgba(130,80,223,0.08); color: #82
       <a href="#" onclick="quickOpen('Upcoming Courses','Course List','COURSES','fa-graduation-cap'); return false;"><i class="fa-solid fa-graduation-cap"></i> Upcoming Courses</a>
       <a href="#" onclick="quickOpen('Faculty List','Teachers & Advisors','FACULTY','fa-chalkboard-user'); return false;"><i class="fa-solid fa-chalkboard-user"></i> Faculty List</a>
       <a href="#" onclick="quickOpen('Classroom Code','Google Classroom','CLASSROOM','fa-hashtag'); return false;"><i class="fa-solid fa-hashtag"></i> Classroom Code</a>
+            <a href="#" onclick="closeQuickBar(); window.openClassroomHub(); return false;"><i class="fa-solid fa-chalkboard"></i> Google Classroom</a>
       <a href="#" onclick="quickOpen('Class Routine','Weekly Schedule','CLSROUTINE','fa-table-list'); return false;"><i class="fa-solid fa-table-list"></i> Class Routine</a>
       <a href="#" onclick="quickOpen('Exam Routine','No Exam Currently','ROUTINE','fa-calendar-days'); return false;"><i class="fa-solid fa-calendar-days"></i> Exam Routine</a>
 

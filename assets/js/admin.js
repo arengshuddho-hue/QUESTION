@@ -14,9 +14,11 @@ const firebaseConfig = {
 };
 
 // ---- Cloudinary Config ----
-// এখানে তোমার Card Vault-এ যে Cloud Name আর Upload Preset ব্যবহার করেছ, সেটাই বসাও
+
 const CLOUDINARY_CLOUD_NAME = "dwvomd7wd";
 const CLOUDINARY_UPLOAD_PRESET = "CSE57C";
+
+const CLASSROOM_SYNC_URL = "https://script.google.com/macros/s/AKfycbyNvAY1Ute23pNAMk8BX2W0ZV9fYgZs_Icq12Vx-v_FxrScVUgzto-TGCDTWbzY8QrX/exec";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -220,5 +222,56 @@ window.deleteItem = function(category, index) {
   if (confirm('Are you sure you want to delete this?')) {
     dbData[category].splice(index, 1);
     set(ref(db, 'portalData'), dbData);
+  }
+};
+
+window.syncClassroom = async function() {
+  const btn = document.getElementById('classroomSyncBtn');
+  const resultBox = document.getElementById('classroomSyncResult');
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Syncing...';
+  resultBox.innerHTML = '';
+
+  try {
+    const res = await fetch(CLASSROOM_SYNC_URL);
+    if (!res.ok) throw new Error('Server error (' + res.status + ')');
+    const data = await res.json();
+
+    if (!data.success) throw new Error(data.error || 'Sync failed');
+
+    const newItems = (data.newItems || []).filter(item => !item.error && item.content);
+
+    if (newItems.length === 0) {
+      resultBox.innerHTML = '<div style="padding:12px 16px; border-radius:8px; background:rgba(88,166,255,0.08); color:#58a6ff; font-size:0.85em;"><i class="fa-solid fa-circle-check"></i> No new materials found. Everything is up to date.</div>';
+    } else {
+      newItems.forEach(item => {
+        const cat = item.category || 'GCLASSROOM';
+        if (!dbData[cat]) dbData[cat] = [];
+        dbData[cat].unshift({ type: 'link', title: item.title, content: item.content });
+      });
+
+      await set(ref(db, 'portalData'), dbData);
+
+      await push(ref(db, 'notifications'), {
+        category: 'GCLASSROOM',
+        title: newItems.length + ' new Classroom material(s)',
+        timestamp: Date.now()
+      });
+
+      resultBox.innerHTML = '<div style="padding:12px 16px; border-radius:8px; background:rgba(63,185,80,0.08); color:#56d364; font-size:0.85em;"><i class="fa-solid fa-circle-check"></i> Synced ' + newItems.length + ' new file(s) successfully!</div>';
+
+      const currentCat = document.getElementById('categorySelect').value;
+      if (newItems.some(item => (item.category || 'GCLASSROOM') === currentCat)) {
+        window.renderItems();
+      }
+    }
+
+  } catch (err) {
+    console.error(err);
+    resultBox.innerHTML = '<div style="padding:12px 16px; border-radius:8px; background:rgba(248,81,73,0.08); color:#f85149; font-size:0.85em;"><i class="fa-solid fa-circle-exclamation"></i> Sync failed: ' + err.message + '</div>';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Sync from Classroom';
   }
 };

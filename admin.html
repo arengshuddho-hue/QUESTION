@@ -69,6 +69,14 @@
       <div id="statTotalVisits" style="font-size:2em; font-weight:700; color:#58a6ff;">—</div>
     </div>
   </div>
+    <div style="background: rgba(88,166,255,0.06); border: 1px solid rgba(88,166,255,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+    <div>
+      <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px;"><i class="fa-solid fa-chalkboard"></i> Google Classroom Sync</div>
+      <div style="font-size: 0.8em; color: #8b949e;">Pull new materials from Classroom into the portal</div>
+    </div>
+    <button class="btn" id="classroomSyncBtn" onclick="syncClassroom()"><i class="fa-solid fa-rotate"></i> Sync from Classroom</button>
+  </div>
+  <div id="classroomSyncResult" style="margin-bottom: 20px;"></div>
   <div class="form-group">
     <label for="categorySelect" style="color: var(--gold); font-size: 16px;">📂 Select Category to Manage</label>
     <select id="categorySelect" onchange="renderItems()" style="border: 2px solid var(--gold);">
@@ -83,6 +91,7 @@
       <option value="COURSES">Upcoming Courses</option>
       <option value="FACULTY">Faculty List</option>
       <option value="CLASSROOM">Classroom Code</option>
+      <option value="GCLASSROOM">Google Classroom (Synced)</option>
       <option value="CLSROUTINE">Class Routine</option>
       <option value="HACKATHON">Upcoming Hackathon</option>
       <option value="CP">Upcoming CP</option>

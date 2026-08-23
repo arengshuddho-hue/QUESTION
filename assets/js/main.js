@@ -51,6 +51,36 @@ window.toggle_theme = function(){
 }
 
 // Modal Logic (Completely Upgraded)
+const GCLASSROOM_SUBJECTS = [
+  { key: 'GC_DSA_LAB', label: 'DSA Lab', icon: 'fa-flask' },
+  { key: 'GC_DSA_THEORY', label: 'DSA II Theory', icon: 'fa-sitemap' },
+  { key: 'GC_SE_THEORY', label: 'SE Theory', icon: 'fa-diagram-project' },
+  { key: 'GC_SE_LAB', label: 'SE Lab', icon: 'fa-laptop-code' },
+  { key: 'GC_DCOM_THEORY', label: 'Data Comm Theory', icon: 'fa-network-wired' },
+  { key: 'GC_IPLAB', label: 'IP Lab', icon: 'fa-globe' }
+];
+
+window.openClassroomHub = function(){
+  document.getElementById('m-title').textContent = 'Google Classroom';
+  document.getElementById('m-code').textContent = 'Select a subject';
+  document.getElementById('m-icon').className = 'fa-solid fa-chalkboard';
+
+  const list = document.getElementById('m-pdfs');
+  list.innerHTML = '';
+
+  GCLASSROOM_SUBJECTS.forEach(sub => {
+    const count = (window.data[sub.key] || []).length;
+    const div = document.createElement('div');
+    div.className = 'pdf-item';
+    div.style.cursor = 'pointer';
+    div.innerHTML = `<div class="fi"><i class="fa-solid ${sub.icon}"></i></div><span class="pdf-label">${sub.label}</span><span class="pdf-num">${count}</span><i class="fa-solid fa-arrow-right pdf-arrow"></i>`;
+    div.onclick = () => window.open_modal(sub.label, 'Google Classroom', sub.key, sub.icon);
+    list.appendChild(div);
+  });
+
+  document.getElementById('overlay').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
 window.open_modal = function(name, code, key, icon){
   document.getElementById('m-title').textContent = name;
   document.getElementById('m-code').textContent = code;
@@ -847,6 +877,13 @@ const CATEGORY_META = {
   COURSES: { label: 'Upcoming Courses', icon: 'fa-graduation-cap' },
   FACULTY: { label: 'Faculty List', icon: 'fa-chalkboard-user' },
   CLASSROOM: { label: 'Classroom Code', icon: 'fa-hashtag' },
+  GCLASSROOM: { label: 'Google Classroom', icon: 'fa-chalkboard' },
+  GC_DSA_LAB: { label: 'DSA Lab', icon: 'fa-flask' },
+  GC_DSA_THEORY: { label: 'DSA II Theory', icon: 'fa-sitemap' },
+  GC_SE_THEORY: { label: 'SE Theory', icon: 'fa-diagram-project' },
+  GC_SE_LAB: { label: 'SE Lab', icon: 'fa-laptop-code' },
+  GC_DCOM_THEORY: { label: 'Data Comm Theory', icon: 'fa-network-wired' },
+  GC_IPLAB: { label: 'IP Lab', icon: 'fa-globe' },
   CLSROUTINE: { label: 'Class Routine', icon: 'fa-table-list' },
   HACKATHON: { label: 'Upcoming Hackathon', icon: 'fa-laptop-code' },
   CP: { label: 'Upcoming CP', icon: 'fa-trophy' },
