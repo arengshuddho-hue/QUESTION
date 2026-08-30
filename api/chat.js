@@ -28,51 +28,37 @@ Jodi kono direct link deyar moto hoy, seta o diye dibe.
 ${PORTAL_INFO}
 `;
 
-  // Gemini er format e history convert kora hocche:
-  // { role: 'user'|'assistant', content: '...' } -> { role: 'user'|'model', parts: [{text}] }
-  const geminiHistory = (Array.isArray(history) ? history : []).map((m) => ({
-    role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.content }],
-  }));
-
-  const contents = [
-    ...geminiHistory,
-    { role: 'user', parts: [{ text: message }] },
+  // Groq OpenAI-compatible format: { role: 'user'|'assistant', content: '...' }
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...(Array.isArray(history) ? history : []),
+    { role: 'user', content: message },
   ];
 
   try {
-    const response = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': process.env.GEMINI_API_KEY,
-        },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemPrompt }] },
-          contents: contents,
-          generationConfig: {
-            maxOutputTokens: 500,
-          },
-        }),
-      }
-    );
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: messages,
+        max_tokens: 500,
+      }),
+    });
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error('Gemini API error:', errText);
+      console.error('Groq API error:', errText);
       return res.status(500).json({ error: 'AI response failed' });
     }
 
     const data = await response.json();
     const reply =
-      data.candidates &&
-      data.candidates[0] &&
-      data.candidates[0].content &&
-      data.candidates[0].content.parts &&
-      data.candidates[0].content.parts[0]
-        ? data.candidates[0].content.parts[0].text
+      data.choices && data.choices[0] && data.choices[0].message
+        ? data.choices[0].message.content
         : 'Answer generate kora jayni.';
 
     return res.status(200).json({ reply });
