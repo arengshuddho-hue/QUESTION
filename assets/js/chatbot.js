@@ -1,8 +1,3 @@
-// assets/js/chatbot.js
-// Ei script ta pura chatbot widget ta (button + window + logic) inject
-// kore, ebong /api/chat endpoint e call kore answer niye ashe.
-// Kono onno file er sathe conflict korবে না — plain script hishebe kaj kore.
-
 (function () {
   const fabHtml = `
     <button class="chatbot-fab" id="chatbotFab" title="Portal Assistant">
@@ -13,9 +8,14 @@
         <div class="chatbot-header-title">
           <i class="fa-solid fa-robot"></i> Portal Assistant
         </div>
-        <button class="chatbot-close" id="chatbotClose">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <div class="chatbot-header-actions">
+          <button class="chatbot-fullscreen" id="chatbotFullscreen" title="Fullscreen">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+          <button class="chatbot-close" id="chatbotClose">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
       </div>
       <div class="chatbot-messages" id="chatbotMessages"></div>
       <div class="chatbot-input-row">
@@ -30,6 +30,7 @@
   const fab = document.getElementById('chatbotFab');
   const win = document.getElementById('chatbotWindow');
   const closeBtn = document.getElementById('chatbotClose');
+  const fullscreenBtn = document.getElementById('chatbotFullscreen');
   const messagesBox = document.getElementById('chatbotMessages');
   const input = document.getElementById('chatbotInput');
   const sendBtn = document.getElementById('chatbotSend');
@@ -53,7 +54,21 @@
   }
 
   fab.addEventListener('click', openChat);
-  closeBtn.addEventListener('click', () => win.classList.remove('on'));
+
+  closeBtn.addEventListener('click', () => {
+    win.classList.remove('on');
+    win.classList.remove('fullscreen');
+    fullscreenBtn.innerHTML = '<i class="fa-solid fa-expand"></i>';
+    fullscreenBtn.title = 'Fullscreen';
+  });
+
+  fullscreenBtn.addEventListener('click', () => {
+    const isFull = win.classList.toggle('fullscreen');
+    fullscreenBtn.innerHTML = isFull
+      ? '<i class="fa-solid fa-compress"></i>'
+      : '<i class="fa-solid fa-expand"></i>';
+    fullscreenBtn.title = isFull ? 'Exit Fullscreen' : 'Fullscreen';
+  });
 
   async function sendMessage() {
     const text = input.value.trim();
