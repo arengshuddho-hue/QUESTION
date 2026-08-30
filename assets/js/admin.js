@@ -225,6 +225,12 @@ window.deleteItem = function(category, index) {
   }
 };
 
+// Replace the existing `window.syncClassroom` function in assets/js/admin.js
+// with this version. The only real change is in the loop near the bottom:
+// it now keeps whatever `type` the Apps Script sent (text / link) instead
+// of always forcing `type: 'link'`, and it no longer silently drops items
+// that don't have `content` set but do have an `error`.
+
 window.syncClassroom = async function() {
   const btn = document.getElementById('classroomSyncBtn');
   const resultBox = document.getElementById('classroomSyncResult');
@@ -240,26 +246,44 @@ window.syncClassroom = async function() {
 
     if (!data.success) throw new Error(data.error || 'Sync failed');
 
-    const newItems = (data.newItems || []).filter(item => !item.error && item.content);
+    const allItems = data.newItems || [];
+    const newItems = allItems.filter(item => !item.error && item.content);
+    const errorItems = allItems.filter(item => item.error);
 
-    if (newItems.length === 0) {
+    if (newItems.length === 0 && errorItems.length === 0) {
       resultBox.innerHTML = '<div style="padding:12px 16px; border-radius:8px; background:rgba(88,166,255,0.08); color:#58a6ff; font-size:0.85em;"><i class="fa-solid fa-circle-check"></i> No new materials found. Everything is up to date.</div>';
     } else {
       newItems.forEach(item => {
         const cat = item.category || 'GCLASSROOM';
         if (!dbData[cat]) dbData[cat] = [];
-        dbData[cat].unshift({ type: 'link', title: item.title, content: item.content });
+        // Preserve the type sent by the sync script (text / link).
+        // Default to 'link' only if nothing was specified.
+        dbData[cat].unshift({
+          type: item.type || 'link',
+          title: item.title,
+          content: item.content
+        });
       });
 
-      await set(ref(db, 'portalData'), dbData);
+      if (newItems.length > 0) {
+        await set(ref(db, 'portalData'), dbData);
 
-      await push(ref(db, 'notifications'), {
-        category: 'GCLASSROOM',
-        title: newItems.length + ' new Classroom material(s)',
-        timestamp: Date.now()
-      });
+        await push(ref(db, 'notifications'), {
+          category: 'GCLASSROOM',
+          title: newItems.length + ' new Classroom material(s)',
+          timestamp: Date.now()
+        });
+      }
 
-      resultBox.innerHTML = '<div style="padding:12px 16px; border-radius:8px; background:rgba(63,185,80,0.08); color:#56d364; font-size:0.85em;"><i class="fa-solid fa-circle-check"></i> Synced ' + newItems.length + ' new file(s) successfully!</div>';
+      let html = '';
+      if (newItems.length > 0) {
+        html += '<div style="padding:12px 16px; border-radius:8px; background:rgba(63,185,80,0.08); color:#56d364; font-size:0.85em; margin-bottom:8px;"><i class="fa-solid fa-circle-check"></i> Synced ' + newItems.length + ' new item(s) successfully!</div>';
+      }
+      if (errorItems.length > 0) {
+        html += '<div style="padding:12px 16px; border-radius:8px; background:rgba(248,81,73,0.08); color:#f85149; font-size:0.85em;"><i class="fa-solid fa-circle-exclamation"></i> ' + errorItems.length + ' item(s) failed to sync (check console for details).</div>';
+        console.warn('Classroom sync errors:', errorItems);
+      }
+      resultBox.innerHTML = html;
 
       const currentCat = document.getElementById('categorySelect').value;
       if (newItems.some(item => (item.category || 'GCLASSROOM') === currentCat)) {
