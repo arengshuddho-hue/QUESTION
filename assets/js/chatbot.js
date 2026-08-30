@@ -37,13 +37,33 @@
 
   let history = []; // { role: 'user'|'assistant', content: '...' }
 
-  function addMessage(text, who) {
-    const div = document.createElement('div');
-    div.className = 'chatbot-msg ' + who;
+  function linkify(text) {
+  const escaped = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  const urlRegex = /(https?:\/\/[^\s<]+)/g;
+  return escaped.replace(urlRegex, (url) => {
+    // Trailing punctuation (., ,, )) often gets caught accidentally — strip it off the link
+    const trailingMatch = url.match(/[.,)]+$/);
+    const trailing = trailingMatch ? trailingMatch[0] : '';
+    const cleanUrl = trailing ? url.slice(0, -trailing.length) : url;
+    return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer">${cleanUrl}</a>${trailing}`;
+  });
+}
+
+function addMessage(text, who) {
+  const div = document.createElement('div');
+  div.className = 'chatbot-msg ' + who;
+  if (who === 'bot') {
+    div.innerHTML = linkify(text);
+  } else {
     div.innerText = text;
-    messagesBox.appendChild(div);
-    messagesBox.scrollTop = messagesBox.scrollHeight;
   }
+  messagesBox.appendChild(div);
+  messagesBox.scrollTop = messagesBox.scrollHeight;
+}
 
   function openChat() {
     win.classList.add('on');

@@ -172,3 +172,9 @@ body.light .chatbot-input-row input { background: #f6f8fa; border-color: #d0d7de
 .chatbot-window.fullscreen .chatbot-messages {
   flex: 1;
 }
+
+.chatbot-msg.bot a {
+  color: var(--accent-purple, #a371f7);
+  text-decoration: underline;
+  word-break: break-all;
+}
