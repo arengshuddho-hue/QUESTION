@@ -1,13 +1,3 @@
-// api/chat.js
-// Ei file ta Vercel Serverless Function hishebe kaj korbe.
-// Path: /api/chat.js  -> deploy hobar por endpoint hobe: https://tomar-site.vercel.app/api/chat
-//
-// SETUP:
-// 1. Vercel dashboard e giye Project -> Settings -> Environment Variables e
-//    ANTHROPIC_API_KEY name diye tomar Anthropic API key ta add koro.
-// 2. Ei file ta tomar project er root e "api" folder er moddhe rakho.
-// 3. "knowledge-base.js" file ta o project root e rakho (ekhane import kora hocche).
-
 const { PORTAL_INFO } = require('../knowledge-base.js');
 
 module.exports = async function handler(req, res) {
@@ -38,34 +28,52 @@ Jodi kono direct link deyar moto hoy, seta o diye dibe.
 ${PORTAL_INFO}
 `;
 
+  // Gemini er format e history convert kora hocche:
+  // { role: 'user'|'assistant', content: '...' } -> { role: 'user'|'model', parts: [{text}] }
+  const geminiHistory = (Array.isArray(history) ? history : []).map((m) => ({
+    role: m.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: m.content }],
+  }));
+
+  const contents = [
+    ...geminiHistory,
+    { role: 'user', parts: [{ text: message }] },
+  ];
+
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 500,
-        system: systemPrompt,
-        messages: [
-          ...(Array.isArray(history) ? history : []),
-          { role: 'user', content: message },
-        ],
-      }),
-    });
+    const response = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': process.env.GEMINI_API_KEY,
+        },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: systemPrompt }] },
+          contents: contents,
+          generationConfig: {
+            maxOutputTokens: 500,
+          },
+        }),
+      }
+    );
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error('Anthropic API error:', errText);
+      console.error('Gemini API error:', errText);
       return res.status(500).json({ error: 'AI response failed' });
     }
 
     const data = await response.json();
-    const textBlock = data.content.find((block) => block.type === 'text');
-    const reply = textBlock ? textBlock.text : 'Answer generate kora jayni.';
+    const reply =
+      data.candidates &&
+      data.candidates[0] &&
+      data.candidates[0].content &&
+      data.candidates[0].content.parts &&
+      data.candidates[0].content.parts[0]
+        ? data.candidates[0].content.parts[0].text
+        : 'Answer generate kora jayni.';
 
     return res.status(200).json({ reply });
   } catch (err) {
